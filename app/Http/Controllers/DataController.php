@@ -1,0 +1,189 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Branch;
+use App\Crm;
+use App\Http\Requests;
+use App\Leasing;
+use App\User;
+use App\VehicleSales;
+use DB;
+use Excel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
+class DataController extends Controller
+{
+    public function getSales(Request $request)
+    {
+        $branches = Branch::lists('name', 'id');
+
+    	return view('data.sales', compact('branches'));
+    }
+
+    public function postSales(Request $request)
+    {	
+        $branch = $request->input('branch_id');
+
+    	if (Input::hasFile('import_sales')) {
+    		$path = Input::file('import_sales')->getRealPath();
+    		$data = Excel::load($path, function($reader){})->get();
+    		if (!empty($data) && $data->count()) {
+    			foreach ($data as $key => $value) 
+                {
+                    //set pt
+                    $company = Branch::where('id', $branch)->first()->company_id;
+                    // set Branch Manager
+                    $bm = User::where('branch_id',$branch)->where('position_id', 'B5')->first()->id;
+                    // set telphone
+                    $telp_crm = preg_replace("/^0/", "+62",$value->telp);
+                    $telp_stnk = preg_replace("/^0/", "+62",$value->stnktelp);
+                    if (!$telp_crm || !$telp_stnk) {
+                        $telp_crm = substr_replace($value->telp,"+62",0,0);
+                        $telp_stnk = substr_replace($value->stnktelp,"+62",0,0);
+                    }
+
+                    // get user id
+    				$user = User::where('name', $value->sales)->first();
+                    //validation sales id
+                    if (!$user) 
+                    {
+                        $user = '';
+                        $pic = $bm;
+                        $position = 'B7MK';
+                    }
+                    else
+                    {
+                        if ($user->pic_id && $user->position_id) {
+                            $pic = $user->pic_id;
+                            $position = $user->position_id;
+                            $user = $user->id;
+                        }
+                        else{
+                            $pic = $bm;
+                            $position = 'B7MK';
+                            $user = $user->id;
+                        }
+                    }
+
+                    // get crm id
+                    $crm = Crm::where('name_personal', $value->nama)
+                            ->where('branch_id', $branch)
+                            ->first();
+                    $stnk = Crm::where('name_personal', $value->stnknama)
+                            ->where('branch_id', $branch)
+                            ->first();
+
+                    if ($value->name == $value->stnkname) 
+                    {
+                        if (!$crm || !$stnk) 
+                        {
+                            $crm = Crm::create([
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->nama,
+                                'address_personal'=>$value->alamat,
+                                'ponsel_number'=>$telp_crm,
+                                'branch_id'=>$branch,
+                            ]);
+                            $crm->crmtypes()->sync(['1','2']);
+                        }
+                    }
+                    else
+                    {
+                        if (!$crm) 
+                        {
+                            $crm = Crm::create([
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->nama,
+                                'address_personal'=>$value->alamat,
+                                'ponsel_number'=>$telp_crm,
+                                'branch_id'=>$branch,
+                            ]);
+                            $crm->crmtypes()->sync('1');
+                        }
+
+                        if (!$stnk) 
+                        {
+                            $stnk = Crm::create([
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->nama,
+                                'address_personal'=>$value->alamat,
+                                'ponsel_number'=>$telp_stnk,
+                                'branch_id'=>$branch,
+                            ]);
+                            $stnk->crmtypes()->sync('2');
+                        }
+                    }
+
+                    // get sales type
+                    
+                    if ($value->leasing == 'CASH') 
+                    {
+                        $cash = $value->leasing;
+                        $leasing = '';
+                        $leasing_group ='';
+                    }
+                    elseif ($value->leasing == 'TEMPO') 
+                    {
+                        $cash = $value->leasing;
+                        $leasing ='';
+                        $leasing_group='';
+
+                    }
+                    else
+                    {
+                        $cash = 'CREDIT';
+                        $leasings = Leasing::where('name', $value->leasing)->first();
+                        $leasing = $leasings->id;
+                        $leasing_group = $leasings->group_leasing;
+                    }
+
+                    $sales = VehicleSales::where('no_faktur', $value->jlfkt)->first();
+                    if (!$sales) {
+                        $sale=[
+                            'no_faktur'=>$value->jlfkt,
+                            'faktur_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                            'faktur_note'=>$value->ketjualxx,
+                            'sales_type'=>$cash,
+                            'nomor_crm'=>$crm->nomor_crm,
+                            'stock_nama' =>$value->brnama,
+                            'stock_warna'=> $value->brwarna,
+                            'stock_tahun' => $value->tahun,
+                            'stock_nomesin'=>$value->nomesin,
+                            'stock_norangka'=> $value->norangka,
+                            'branch_id'=>$branch,
+                            'company_id'=>$company,
+                            'user_id'=>$user,
+                            'position_id'=>$position,
+                            'price_otr'=>$value->ttlotr,
+                            'price_dp'=>$value->ttlmuka,
+                            'price_disc'=>$value->potdeal2,
+                            'price_bbn'=>$value->bbn,
+                            'leasing_id'=>$leasing,
+                            'leasing_group'=>$leasing_group,
+                            'pic_id'=>$pic,
+                            'active'=>true,
+                        ];
+
+        				VehicleSales::create($sale);
+                    }
+    			}
+                // return response()->json($sale);
+    		}
+
+    	}
+
+        return back();
+
+    }
+
+    public function getUser()
+    {
+        # code...
+    }
+    public function postUser(Request $request)
+    {
+        # code...
+    }
+}
