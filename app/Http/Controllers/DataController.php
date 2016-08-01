@@ -17,6 +17,7 @@ class DataController extends Controller
 {
     public function getSales(Request $request)
     {
+        $this->authorize('upload.sales');
         $branches = Branch::lists('name', 'id');
 
     	return view('data.sales', compact('branches'));
@@ -24,6 +25,8 @@ class DataController extends Controller
 
     public function postSales(Request $request)
     {	
+        $this->authorize('upload.sales');
+
         $branch = $request->input('branch_id');
 
     	if (Input::hasFile('import_sales')) {
@@ -62,7 +65,7 @@ class DataController extends Controller
                         }
                         else{
                             $pic = $bm;
-                            $position = 'B7MK';
+                            $position = $user->position_id;
                             $user = $user->id;
                         }
                     }
@@ -178,12 +181,51 @@ class DataController extends Controller
 
     }
 
-    public function getUser()
+    public function getHr()
     {
-        # code...
+        $this->authorize('upload.hrd');
+        $branches = Branch::lists('name', 'id');
+
+        return view('data.hr', compact('branches'));     
     }
-    public function postUser(Request $request)
+    public function postHr(Request $request)
     {
-        # code...
+        $this->authorize('upload.hrd');
+
+        $faker = \Faker\Factory::create();
+
+        if (Input::hasFile('import_hr')) {
+            $path = Input::file('import_hr')->getRealPath();
+            $data = Excel::load($path, function($reader){})->get();
+            if (!empty($data) && $data->count()) {
+                foreach ($data as $key => $value) 
+                {
+                    $user_id = User::where('id', $value->npk)->first();
+                    if(!$user_id){
+                        $user = [
+                            'id'=>$value->npk,
+                            'name'=>$value->nama,
+                            'email'=>$faker->email,
+                            'password'=>bcrypt('1234567890'),
+                            'password_default'=>bcrypt('1234567890'),
+                            'branch_id'=>$value->cabang,
+                            'gender'=>$value->gender,
+                            'bank_name'=>$value->bank,
+                            'bank_account'=>$value->rekening,
+                            'job_start'=>$value->tanggal,
+                            'job_end'=>$value->tanggalkeluar,
+                            'job_status'=>($value->tanggalkeluar) ? 'Retired' : 'Active',
+                            'position_id'=>$value->jabatan,
+                            'company_id'=>$value->pt,
+                            'grade'=>$value->grade,
+                            'is_user'=>false,
+                        ];
+                        User::create($user);
+                    }
+                    
+                }
+                return back();
+            }
+        }
     }
 }

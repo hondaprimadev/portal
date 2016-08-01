@@ -64,96 +64,161 @@ class DatabaseSeeder extends Seeder
             ['id'=>'B7MK','name'=>'SALES','department_id'=>'D6','created_at' => $now, 'updated_at' => $now],
         ]);
 
-
-
-
         // user data
-    	App\User::insert([
-	        [
-                'id'=>'1111',
-                'name' => 'ARDIANA KUSUMA DEWI',
-                'email'=>'dina@gmail.com',
-                'branch_id'=>'101',
+    	// App\User::insert([
+	    //     [
+     //            'id'=>'1111',
+     //            'name' => 'ARDIANA KUSUMA DEWI',
+     //            'email'=>'dina@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B7CS',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+	    //     [
+     //            'id'=>'1112',
+     //            'name' => 'IDA ARYANI',
+     //            'email'=>'ida@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B7CS',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+	    //     [
+     //            'id'=>'1113',
+     //            'name' => 'DIAH AYU SEPTIANA ANGGRAINI',
+     //            'email'=>'diah@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B7CS',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+	    //     [
+     //            'id'=>'1114',
+     //            'name' => 'SADENI',
+     //            'email'=>'sadeni@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B7MK',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+     //        [
+     //            'id'=>'1115',
+     //            'name' => 'HARMINTOYO',
+     //            'email'=>'harmintoyo@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B5MK',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+     //        [
+     //            'id'=>'1116',
+     //            'name' => 'MARTIN NATA MANALU',
+     //            'email'=>'martin@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B5',
+     //            'pic_id'=>'',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+     //        [
+     //            'id'=>'1117',
+     //            'name' => 'ATIQUR ROHMAN',
+     //            'email'=>'atiqur@gmail.com',
+     //            'branch_id'=>'101',
+     //            'company_id'=>'1',
+     //            'department_id'=>'D6',
+     //            'position_id'=>'B7MK',
+     //            'pic_id'=>'1115',
+     //            'created_at' => $now, 
+     //            'updated_at' => $now
+     //        ],
+    	// ]);
+
+        App\Role::insert([
+            ['name'=>'super', 'created_at'=> $now, 'updated_at'=> $now],
+            ['name'=>'admin', 'created_at'=> $now, 'updated_at'=> $now],
+            ['name'=>'operator', 'created_at'=> $now, 'updated_at'=> $now],
+            ['name'=>'hrd', 'created_at'=> $now, 'updated_at'=> $now],
+            ['name'=>'marketing', 'created_at'=> $now, 'updated_at'=> $now],
+        ]);
+
+        App\Permission::insert([
+            ['name' => 'user.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'user.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'user.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'user.delete','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'user.super','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'role.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'role.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'role.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'role.delete','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'role.super','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'permission.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'permission.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'permission.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'permission.delete','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'permission.super','created_at' => $now, 'updated_at' => $now],
+
+            // UPLOAD DataController
+            ['name' => 'upload.sales','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'upload.hrd','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'marketing.report.admin','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.report.branch','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.report.pic','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.team','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'hrd.department.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.department.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.department.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.department.delete','created_at' => $now, 'updated_at' => $now],
+            
+            ['name' => 'hrd.employee.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.employee.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.employee.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.employee.delete','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.employee.add.user','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'hrd.position.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.position.create','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.position.edit','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'hrd.position.delete','created_at' => $now, 'updated_at' => $now],
+
+        ]);
+
+        $super = App\User::create([
+                'id'=>'1283',
+                'name'=>'PRAMANDA TIRTA MULYA',
+                'email'=>'tmulya@gmail.com',
+                'password'=>bcrypt('1234567890'),
+                'branch_id'=>'100',
                 'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B7CS',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-	        [
-                'id'=>'1112',
-                'name' => 'IDA ARYANI',
-                'email'=>'ida@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B7CS',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-	        [
-                'id'=>'1113',
-                'name' => 'DIAH AYU SEPTIANA ANGGRAINI',
-                'email'=>'diah@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B7CS',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-	        [
-                'id'=>'1114',
-                'name' => 'SADENI',
-                'email'=>'sadeni@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B7MK',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-            [
-                'id'=>'1115',
-                'name' => 'HARMINTOYO',
-                'email'=>'harmintoyo@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B5MK',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-            [
-                'id'=>'1116',
-                'name' => 'MARTIN NATA MANALU',
-                'email'=>'martin@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B5',
+                'department_id'=>'D4',
+                'position_id'=>'H4IT',
                 'pic_id'=>'',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-            [
-                'id'=>'1117',
-                'name' => 'ATIQUR ROHMAN',
-                'email'=>'atiqur@gmail.com',
-                'branch_id'=>'101',
-                'company_id'=>'1',
-                'department_id'=>'D6',
-                'position_id'=>'B7MK',
-                'pic_id'=>'1115',
-                'created_at' => $now, 
-                'updated_at' => $now
-            ],
-    	]);
+                'is_user'=>true
+        ]);
+        $super->assignRole('super');
 
         App\Crmtype::insert([
             ['name'=>'Customer', 'created_at'=>$now, 'updated_at'=>$now],
@@ -166,6 +231,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         App\Branch::insert([
+            ['id'=>100,'name'=>'HO','address'=>'Jl Habiproyo','phone'=>'0298323567','email'=>'customer_kendal@hondaprima.co.id','company_id'=>1,'created_at'=>$now,'updated_at'=>$now],
             ['id'=>101,'name'=>'Kendal','address'=>'Jl Habiproyo','phone'=>'0298323567','email'=>'customer_kendal@hondaprima.co.id','company_id'=>1,'created_at'=>$now,'updated_at'=>$now],
             ['id'=>102,'name'=>'Batang','address'=>'Jl Sudirman','phone'=>'0298323567','email'=>'customer_batang@hondaprima.co.id','company_id'=>1,'created_at'=>$now,'updated_at'=>$now],
             ['id'=>103,'name'=>'Pemalang','address'=>'Jl Sudirman','phone'=>'0298323567','email'=>'customer_batang@hondaprima.co.id','company_id'=>1,'created_at'=>$now,'updated_at'=>$now],
@@ -422,6 +488,13 @@ class DatabaseSeeder extends Seeder
             [
                 'id' => 'LSG-000051',
                 'name' => 'KSM BCA',
+                'group_leasing' => 'OTHER',
+                'created_at' => $now, 
+                'updated_at' => $now
+            ],
+            [
+                'id' => 'LSG-000052',
+                'name' => 'MANDIRI BMRI',
                 'group_leasing' => 'OTHER',
                 'created_at' => $now, 
                 'updated_at' => $now

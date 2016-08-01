@@ -103,16 +103,19 @@ class MarketingReportController extends Controller
     	$ends = $end->modify('+1 day');
         $interval = new \DateInterval('P1D');
         $daterange = new \DatePeriod($begin, $interval ,$ends);
-
         $end = $end->modify('-1 day');
+        $tahun = $begin->format('Y');
+        $bulan = $begin->format('m');
+        $day = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
 
         $first_day_last_month = date('Y-m-d', strtotime($begin->format('Y-m-d')."-1 month"));
         $tahun_m1 = date("Y", strtotime($first_day_last_month));
         $bulan_m1 = date("m", strtotime($first_day_last_month));
         $day_m1 = cal_days_in_month(CAL_GREGORIAN, $bulan_m1, $tahun_m1);
-        $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day_m1);
+        $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day);
         $begin_m1 = new \DateTime($first_day_last_month);
         $end_m1 = new \DateTime($last_day_last_month);
+
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
 
@@ -146,8 +149,8 @@ class MarketingReportController extends Controller
         	'vs_total_par_m1',
         	'tableSales'
         	));
-
     }
+
     public function getSpvReport(Request $request)
     {
     	$spv = $request->input('s');
@@ -185,14 +188,16 @@ class MarketingReportController extends Controller
     	$ends = $end->modify('+1 day');
         $interval = new \DateInterval('P1D');
         $daterange = new \DatePeriod($begin, $interval ,$ends);
-
         $end = $end->modify('-1 day');
+        $tahun = $begin->format('Y');
+        $bulan = $begin->format('m');
+        $day = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
 
         $first_day_last_month = date('Y-m-d', strtotime($begin->format('Y-m-d')."-1 month"));
         $tahun_m1 = date("Y", strtotime($first_day_last_month));
         $bulan_m1 = date("m", strtotime($first_day_last_month));
         $day_m1 = cal_days_in_month(CAL_GREGORIAN, $bulan_m1, $tahun_m1);
-        $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day_m1);
+        $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day);
         $begin_m1 = new \DateTime($first_day_last_month);
         $end_m1 = new \DateTime($last_day_last_month);
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
@@ -229,6 +234,75 @@ class MarketingReportController extends Controller
         	'vs_total_branch_m1',
         	'tableSales'
         	));
+    }
 
+    public function getTeam(Request $request)
+    {
+        $this->authorize('marketing.team');
+
+        $pic_id = $request->input('p');
+        $branch = $request->input('b');
+        if (!$branch) {
+            $branch = '101';
+            if (!$pic_id) {
+                $getPIC = User::where('branch_id', $branch)->where('position_id','B5')->first();
+                $pic_id = $getPIC->id;
+            }
+        }
+        else{
+            if (!$pic_id) {
+                $getPIC = User::where('branch_id', $branch)->where('position_id','B5')->first();
+                $pic_id = $getPIC->id;
+            }   
+        }
+        
+        $branches = Branch::lists('name','id');
+        $pic = User::whereIn('position_id',['B5','B5MK','B6MK'])
+                        ->where('branch_id', $branch)
+                        ->where('job_status', 'Active')
+                        ->lists('name','id');
+        $sales = User::whereIn('position_id',['B7CS','B7MK'])
+                        ->where('branch_id', $branch)
+                        ->where('job_status', 'Active')
+                        ->where('pic_id',null)
+                        ->orderBy('name','asc')
+                        ->lists('name','id');
+
+        $sales_pic = User::whereIn('position_id',['B7CS','B7MK'])
+                        ->where('branch_id', $branch)
+                        ->where('pic_id', $pic_id)
+                        ->where('job_status', 'Active')
+                        ->orderBy('name','asc')
+                        ->lists('name','id');
+
+        return view('marketing.team.index', compact('branches','branch', 'pic','pic_id', 'sales','sales_pic'));
+    }
+
+    public function postTeam(Request $request)
+    {
+         $this->authorize('marketing.team');
+         
+        $pic_id = $request->input('pic_id');
+        $sales = $request->input('sales');
+        $sales_pic = $request->input('sales_pic');
+        $branch_id = $request->input('branch_id');
+
+        if ($sales_pic) 
+        {
+            foreach ($request->input('sales_pic') as $key => $value) {
+                $user = User::where('id', $value)->first();
+                $user->pic_id = $pic_id;
+                $user->save();
+            }   
+        }
+
+        if ($sales) {
+            foreach ($request->input('sales') as $key => $value) {
+                $user = User::where('id', $value)->first();
+                $user->pic_id = null;
+                $user->save();
+            }      
+        }
+        return back();
     }
 }

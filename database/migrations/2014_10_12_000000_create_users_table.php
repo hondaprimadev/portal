@@ -13,12 +13,11 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('id')->index();
+            $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('password_default');
-            // data karyawan
             $table->text('address');
             $table->string('city');
             $table->date('birthday');
@@ -28,19 +27,21 @@ class CreateUsersTable extends Migration
             $table->enum('blood_type',['A', 'AB','B','0']);
             $table->string('zipcode');
             $table->enum('gender',['male', 'female']);
-            $table->string('bank_account');
+            $table->string('bank_account')->nullable();
             $table->string('npwp');
             $table->string('bank_branch');
-            $table->string('bank_name');
+            $table->string('bank_name')->nullable();
             $table->enum('job_status',['Active', 'Skorsing', 'Move', 'Retired', 'Fired']);
             $table->date('job_start');
-            $table->date('job_end');
+            $table->date('job_end')->nullable();
             $table->integer('branch_id')->unsigned();
             $table->integer('company_id')->unsigned();
             $table->string('department_id');
-            $table->string('position_id');
+            $table->string('position_id')->nullable();
+            $table->string('grade')->nullable();
             $table->string('mother_name');
             $table->string('pic_id')->nullable();
+            $table->boolean('is_user');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -71,16 +72,16 @@ class CreateUsersTable extends Migration
             $table->enum('blood_type',['A', 'AB','B','0']);
             $table->timestamps();
         });
-        Schema::create('user_pictures', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('filename');
-            $table->string('original_name');
-            $table->string('filetype');
-            $table->string('filesize');
-            $table->timestamps();
-        });
+        // Schema::create('user_pictures', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->integer('user_id');
+        //     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        //     $table->string('filename');
+        //     $table->string('original_name');
+        //     $table->string('filetype');
+        //     $table->string('filesize');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -93,7 +94,7 @@ class CreateUsersTable extends Migration
         Schema::drop('user_positions');
         Schema::drop('user_departments');
         Schema::drop('user_families');
-        Schema::drop('user_pictures');
+        // Schema::drop('user_pictures');
         Schema::drop('users');
     }
 }

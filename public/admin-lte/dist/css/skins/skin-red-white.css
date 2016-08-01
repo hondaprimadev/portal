@@ -1,0 +1,180 @@
+/*
+ * Skin: Black
+ * -----------
+ */
+/* skin-black navbar */
+@font-face {
+  font-family: 'typicons';
+  src: url("admin-lte/plugins/typicons.font/src/font/typicons.eot");
+  src: url("admin-lte/plugins/typicons.font/src/font/typicons.eot?#iefix") format('embedded-opentype'),
+       url("admin-lte/plugins/typicons.font/src/font/typicons.woff") format('woff'),
+       url("admin-lte/plugins/typicons.font/src/font/typicons.ttf") format('truetype'),
+       url("admin-lte/plugins/typicons.font/src/font/typicons.svg#typicons") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.skin-red-white .main-header {
+  -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+}
+.skin-red-white .main-header .navbar-toggle {
+  color: #333;
+}
+.skin-red-white .main-header .navbar-brand {
+  color: #333;
+  border-right: 1px solid #eee;
+}
+.skin-red-white .main-header .navbar {
+  background-color: #ffffff;
+}
+.skin-red-white .main-header .navbar .nav > li > a {
+  color: #333333;
+}
+.skin-red-white .main-header .navbar .nav > li > a:hover,
+.skin-red-white .main-header .navbar .nav > li > a:active,
+.skin-red-white .main-header .navbar .nav > li > a:focus,
+.skin-red-white .main-header .navbar .nav .open > a,
+.skin-red-white .main-header .navbar .nav .open > a:hover,
+.skin-red-white .main-header .navbar .nav .open > a:focus,
+.skin-red-white .main-header .navbar .nav > .active > a {
+  background: #ffffff;
+  color: #999999;
+}
+.skin-red-white .main-header .navbar .sidebar-toggle {
+  color: #333333;
+}
+.skin-red-white .main-header .navbar .sidebar-toggle:hover {
+  color: #999999;
+  background: #ffffff;
+}
+.skin-red-white .main-header .navbar > .sidebar-toggle {
+  color: red;
+  border-right: 1px solid #fff;
+}
+.skin-red-white .main-header .navbar .navbar-nav > li > a {
+  border-right: 1px solid #fff;
+}
+.skin-red-white .main-header .navbar .navbar-nav > li > a:hover {
+  background-color: #ECF0F5;
+  color: #000;
+}
+.skin-red-white .main-header .navbar .navbar-custom-menu .navbar-nav > li > a,
+.skin-red-white .main-header .navbar .navbar-right > li > a {
+  border-left: 1px solid #fff;
+  border-right-width: 0;
+}
+.skin-red-white .main-header > .logo {
+  background: #EB3349; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+.skin-red-white .main-header > .logo:hover {
+  background-color: #2C2E2F;
+}
+@media (max-width: 767px) {
+  .skin-red-white .main-header > .logo {
+    background-color: #222d32;
+    color: #ffffff;
+    border-bottom: 0 solid transparent;
+    border-right: none;
+  }
+  .skin-red-white .main-header > .logo:hover {
+    background-color: #222d32;
+  }
+}
+.skin-red-white .main-header li.user-header {
+  background-color: #222;
+}
+.skin-red-white .content-header {
+  background: transparent;
+  box-shadow: none;
+}
+.skin-red-white .wrapper,
+.skin-red-white .main-sidebar,
+.skin-red-white .left-side {
+  background-color: #ffffff;
+}
+.skin-red-white .user-panel > .info,
+.skin-red-white .user-panel > .info > a {
+  color: #707070;
+}
+.skin-red-white .sidebar-menu > li.header {
+  color: #707070;
+  background: #ffffff;
+}
+.skin-red-white .sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+  color: #707070;
+}
+.skin-red-white .sidebar-menu > li:hover > a,
+.skin-red-white .sidebar-menu > li.active > a {
+  color: #EB3349;
+  background: #ffffff;
+  border-left-color: #EB3349;
+}
+.skin-red-white .sidebar-menu > li > .treeview-menu {
+  margin: 0 1px;
+  background: #F5F5F5;
+}
+.skin-red-white .sidebar a {
+  color: #C7C7C7;
+}
+.skin-red-white .sidebar a:hover {
+  text-decoration: none;
+}
+
+.skin-red-white .treeview-menu > li > a {
+  color: #707070;
+}
+.skin-red-white .treeview-menu > li.active > a,
+.skin-red-white .treeview-menu > li > a:hover {
+  color: #EB3349;
+}
+.skin-red-white .sidebar-form {
+  border-radius: 3px;
+  border: 1px solid #313334;
+  margin: 10px 10px;
+}
+.skin-red-white .sidebar-form input[type="text"],
+.skin-red-white .sidebar-form .btn {
+  box-shadow: none;
+  background-color: #fff;
+  border: 1px solid transparent;
+  height: 35px;
+}
+.skin-red-white .sidebar-form input[type="text"] {
+  color: #666;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 2px;
+}
+.skin-red-white .sidebar-form input[type="text"]:focus,
+.skin-red-white .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  background-color: #fff;
+  color: #666;
+}
+.skin-red-white .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  border-left-color: #fff;
+}
+.skin-red-white .sidebar-form .btn {
+  color: #999;
+  border-top-left-radius: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 0;
+}
+.skin-red-white .pace .pace-progress {
+  background: #222;
+}
+.skin-red-white .pace .pace-activity {
+  border-top-color: #222;
+  border-left-color: #222;
+}
+
+.skin-red-white .content-header{
+  /*background-color: #fff;
+  padding-bottom: 25px;*/
+}

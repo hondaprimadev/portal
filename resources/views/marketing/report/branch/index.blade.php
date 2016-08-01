@@ -2,14 +2,14 @@
 
 @section('styles')
   <style type="text/css">
-    #reportrange{
+    /*#reportrange{
       background: #fff; 
       cursor: pointer; 
       padding: 7px; 
       border: 1px solid #00A65A;
       border-radius: 5px;
       color: #00A65A;
-    }
+    }*/
   </style>
 @stop
 @section('content-header')
@@ -33,7 +33,7 @@
       <div class="box">
         <div class="box-header"></div>
         <div class="box-body">
-          <button type="button" class="btn btn-primary pull-right" id="reportrange">
+          <button type="button" class="btn btn-red pull-right" id="reportrange">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
             <span>
               @if ($begin)
@@ -53,7 +53,7 @@
   <div class="row">
     <div class="col-lg-3 col-xs-6">
       <!-- small box -->
-      <div class="small-box bg-green">
+      <div class="small-box bg-navy">
         <div class="inner">
           <h3>{{ $vs_total }}</h3>
 
@@ -68,11 +68,12 @@
 
     <div class="col-lg-3 col-xs-6">
       <!-- small box -->
-      <div class="small-box bg-green">
+      <div class="small-box bg-navy">
         <div class="inner">
           <h3>
             @if ($vs_total_m1)
-              {{ substr(($vs_total / $vs_total_m1) - 1, 0,5) }}
+              <?php $total_growth_branch = (($vs_total / $vs_total_m1) - 1) * 100;?>
+              {{ substr($total_growth_branch, 0,5) }}
             @else
               0
             @endif
@@ -90,7 +91,7 @@
 
     <div class="col-lg-3 col-xs-6">
       <!-- small box -->
-      <div class="small-box bg-green">
+      <div class="small-box bg-maroon">
         <div class="inner">
           <h3>{{ $vs_total_par }}</h3>
 
@@ -105,11 +106,12 @@
 
     <div class="col-lg-3 col-xs-6">
       <!-- small box -->
-      <div class="small-box bg-green">
+      <div class="small-box bg-maroon">
         <div class="inner">
           <h3>
             @if ($vs_total_par_m1)
-              {{ substr(($vs_total_par / $vs_total_par_m1) - 1, 0,5) }}
+              <?php $total_growth_par = (($vs_total_par / $vs_total_par_m1) - 1) * 100;?>
+              {{ substr($total_growth_par, 0,5) }}
             @else
               0
             @endif
@@ -129,7 +131,7 @@
   <!-- BAR CHART -->
   <div class="row">
     <div class="col-xs-12">
-      <div class="box box-success">
+      <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title">Branch {{ $branch }}</h3>
 
@@ -172,18 +174,31 @@
           <table id="tableBranch" class="table table-bordered table-hover">
             <thead>
               <tr>
+                <?php $dateno = 0;?>
                 @foreach ($daterange as $date)
                   <th>{{ $date->format('d') }}</th>
+                  <?php $dateno+=1;?>
                 @endforeach
                 <th>Total</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr style="background-color: #485563;color: #fff">
                 @foreach ($vs as $v)
                   <td>{{ $v->total_sales }}</td>
                 @endforeach
                 <td>{{ $vs_total }}</td>
+              </tr>
+              <tr style="background-color:#EB3349;color:#fff">
+                <?php $nom1 = 0;?>
+                @foreach ($vs_m1 as $vm1)
+                  <td>{{ $vm1->total_sales }}</td>
+                  <?php $nom1+=1;?>
+                @endforeach
+                @if ($dateno != $nom1)
+                  <td>0</td>
+                @endif
+                <td>{{ $vs_total_m1 }}</td>
               </tr>
             </tbody>
           </table>
@@ -193,7 +208,7 @@
   </div>
 
   {{-- Table M-1 --}}
-  <div class="row">
+  {{-- <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
@@ -209,7 +224,7 @@
             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
           </div>
         </div>
-        <!-- /.box-header -->
+        /.box-header
         <div class="box-body">
           <table id="tableBranch" class="table table-bordered table-hover">
             <thead>
@@ -232,7 +247,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 
   <!-- Table Rank -->
   <div class="row">
@@ -285,13 +300,27 @@
                   <td>{{ $t->total_month_m1 }}</td>
                   <td>
                     @if ($t->total_month_m1)
-                      {{ substr(($t->total_month / $t->total_month_m1) - 1, 0,5) }} %
+                      {{ substr((($t->total_month / $t->total_month_m1) - 1) * 100, 0,5) }} %
                     @endif
                   </td>
                   <td>{{ $t->total_cs }}</td>
-                  <td>{{ $t->total_marketing + $t->total_spv + $t->total_bm }}</td>
-                  <td>{{ $t->total_cash }}</td>
-                  <td>{{ $t->total_credit }}</td>
+                  <td>{{ $t->total_marketing + $t->total_spv + $t->total_rh + $t->total_bm }}</td>
+                  <td>
+                    @if ($t->total_cash)
+                      {{ substr(($t->total_cash/$t->total_month) * 100, 0,5) }}
+                    @else
+                      0
+                    @endif
+                      %
+                  </td>
+                  <td>
+                    @if ($t->total_credit)
+                      {{ substr(($t->total_credit/$t->total_month) * 100, 0, 5) }}
+                    @else
+                      0
+                    @endif
+                      %
+                  </td>
                   <td>{{ $t->total_tempo }}</td>
                   <td>{{ $t->total_leasing_adira }}</td>
                   <td>{{ $t->total_leasing_csf }}</td>
@@ -304,7 +333,6 @@
             </tbody>
           </table>
         </div>
-        
       </div>
     </div>
   </div>
@@ -320,30 +348,30 @@
               @endforeach],
       datasets: [
         {
-          @if ($vs)
-          label: "{{ $begin->format('F') }}",
-          fillColor: "rgba(210, 214, 222, 1)",
-          strokeColor: "rgba(210, 214, 222, 1)",
-          pointColor: "rgba(210, 214, 222, 1)",
-          pointStrokeColor: "#c1c7d1",
+          @if ($vs_m1)
+          label: "{{ date('F', strtotime($begin->format('Y-m-d')."-1 month")) }}",
+          fillColor: "rgba(235, 51, 73, 1)",
+          strokeColor: "rgba(235, 51, 73, 1)",
+          pointColor: "rgba(235, 51, 73, 1)",
+          pointStrokeColor: "#EB3349",
           pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(220,220,220,1)",
-          data: [@foreach ($vs as $vs)
-            {{ $vs->total_sales }},
+          pointHighlightStroke: "rgba(235, 51, 73,1)",
+          data: [@foreach ($vs_m1 as $v)
+            {{ $v->total_sales }},
           @endforeach]
           @endif
         },
         {
-          @if ($vs_m1)
-          label: "{{ date('F', strtotime($begin->format('Y-m-d')."-1 month")) }}",
-          fillColor: "rgba(60,141,188,0.9)",
-          strokeColor: "rgba(60,141,188,0.8)",
-          pointColor: "#3b8bba",
-          pointStrokeColor: "rgba(60,141,188,1)",
+          @if ($vs)
+          label: "{{ $begin->format('F') }}",
+          fillColor: "rgba(59,139,186,0.9)",
+          strokeColor: "rgba(59,139,186,0.8)",
+          pointColor: "#485563",
+          pointStrokeColor: "rgba(59,139,186,1)",
           pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(60,141,188,1)",
-          data: [@foreach ($vs_m1 as $v)
-            {{ $v->total_sales }},
+          pointHighlightStroke: "rgba(59,139,186,1)",
+          data: [@foreach ($vs as $vs)
+            {{ $vs->total_sales }},
           @endforeach]
           @endif
         }
@@ -355,9 +383,9 @@
     var branchChartCanvas = $("#branchChart").get(0).getContext("2d");
     var branchChart = new Chart(branchChartCanvas);
     var branchChartData = branchChartData;
-    branchChartData.datasets[1].fillColor = "#00a65a";
-    branchChartData.datasets[1].strokeColor = "#00a65a";
-    branchChartData.datasets[1].pointColor = "#00a65a";
+    branchChartData.datasets[1].fillColor = "#485563";
+    branchChartData.datasets[1].strokeColor = "#485563";
+    branchChartData.datasets[1].pointColor = "#485563";
     var branchChartOptions = {
       //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
       scaleBeginAtZero: true,

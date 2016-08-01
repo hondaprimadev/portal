@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserPosition extends Model
 {
-    protected $fillable = ['name','department_id'];
+    protected $fillable = ['id','name','department_id'];
     public $incrementing = false;
+
+    public function department()
+    {
+    	return $this->belongsTo('App\UserDepartment');
+    }
 }
