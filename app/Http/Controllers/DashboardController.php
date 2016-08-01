@@ -8,5 +8,8 @@ use App\Http\Requests;
 
 class DashboardController extends Controller
 {
-    return view('dashboard');
+    public function index()
+    {
+    	return view('dashboard');
+    }
 }

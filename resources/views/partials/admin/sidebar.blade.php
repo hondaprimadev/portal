@@ -29,7 +29,7 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-        <li><a href="#"><i class="fa fa-dashcube fa-lg"></i><span>Dashboard</span></a></li>
+        <li><a href="/"><i class="fa fa-dashcube fa-lg"></i><span>Dashboard</span></a></li>
         {{-- <li class="header">Administrator</li> --}}
         <li class="treeview {{ set_active(['admin.user..index','admin.user.role.index','admin.user.permission.index']) }}">
           <a href="#">

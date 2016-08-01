@@ -2,8 +2,10 @@
 Route::get('login', 'Auth\AuthController@showLoginForm');
 Route::post('login', 'Auth\AuthController@login');
 Route::get('logout', 'Auth\AuthController@logout');
-Route::get('dashboard', function(){
-	return "Welcome";
+Route::group([
+	'middleware'=>'auth',
+], function(){
+	Route::get('/','DashboardController@index');
 });
 
 Route::group([
