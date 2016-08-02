@@ -6,6 +6,9 @@ Route::group([
 	'middleware'=>'auth',
 ], function(){
 	Route::get('/','DashboardController@index');
+	Route::delete('profile/delete/{file}',['as'=>'profile.delete','uses'=>'UserPictureController@deleteProfile']);
+	Route::get('/profile/{token}',['as'=>'profile.index','uses'=>'DashboardController@getProfile']);
+	Route::patch('/profile/{token}',['as'=>'profile.store','uses'=>'DashboardController@postProfile']);
 });
 
 Route::group([
@@ -15,16 +18,18 @@ Route::group([
 	Route::get('role/setting', ['as'=>'admin.user.role.setting.get','uses'=>'RoleController@setPermission']);
 	Route::post('role/setting', ['as'=>'admin.user.role.setting.post','uses'=>'RoleController@postPermission']);
 
+	Route::post('user/delete', ['as'=>'admin.user.delete', 'uses'=>'UserController@destroy']);
 	Route::post('permission/delete', ['as'=>'admin.user.permission.delete','uses'=>'PermissionController@delete']);
 	Route::post('role/delete', ['as'=>'admin.user.role.delete','uses'=>'RoleController@delete']);
+
 	Route::resource('/permission','PermissionController');
 	Route::resource('/role','RoleController');
-	Route::resource('/','UserController');
+	Route::resource('/user','UserController');
 });
 
 Route::group([
 	'prefix'=>'upload',
-	// 'middleware'=>'auth'
+	'middleware'=>'auth'
 ], function(){
 	Route::get('sales', ['as'=>'upload.sales.get','uses'=>'DataController@getSales']);
 	Route::post('sales', ['as'=>'upload.sales.post','uses'=>'DataController@postSales']);
@@ -34,7 +39,7 @@ Route::group([
 
 Route::group([
 	'prefix'=>'marketing',
-	// 'middleware'=>'auth'
+	'middleware'=>'auth'
 ], function(){
 	Route::get('report/branch/spv', ['as'=>'marketing.report.branch.spv.get', 'uses'=>'MarketingReportController@getSpvReport']);
 	Route::get('report/branch', ['as'=>'marketing.report.branch.get', 'uses'=>'MarketingReportController@getBranchReport']);
@@ -49,14 +54,15 @@ Route::group([
 
 Route::group([
 	'prefix'=>'hrd',
-	// 'middleware'=>'auth'
+	'middleware'=>'auth'
 ], function(){
 	Route::post('user/create', ['as'=>'hrd.user.create', 'uses'=>'HrdEmployeeController@addUser']);
 	//delete employee
 	Route::post('employee/delete', ['as'=>'hrd.employee.delete', 'uses'=>'HrdEmployeeController@delete']);
 	Route::post('department/delete', ['as'=>'hrd.department.delete', 'uses'=>'HrdDepartmentController@delete']);
 	Route::post('position/delete', ['as'=>'hrd.position.delete', 'uses'=>'HrdPositionController@delete']);
-
+	
+	Route::delete('employee/profile/delete/{file}',['as'=>'hrd.employee.profile.delete','uses'=>'UserPictureController@deleteProfile']);
 	Route::post('employee/profile',['as'=>'hrd.employee.profile.post', 'uses'=>'UserPictureController@postPicture']);
 	Route::get('employee/profile/{file}',['as'=>'hrd.employee.profile.get', 'uses'=>'UserPictureController@getPicture']);
 	Route::get('employee/profile/tmp/{file}',['as'=>'hrd.employee.profile.tmp.get', 'uses'=>'UserPictureController@getTmpPicture']);

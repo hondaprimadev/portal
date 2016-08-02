@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Permission;
 use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class RoleController extends Controller
 {
@@ -121,10 +122,10 @@ class RoleController extends Controller
         $role = Role::where('name', $r)->first();
         $roles = Role::lists('name','name')->all();
 
-        $permissions = Permission::lists('name','id')->all();
-        $permission_role = $role->permissions()->lists('id');
-        $permissions = Permission::whereNotIn('id', $permission_role)->lists('name','id');
-        $permission_role = $role->permissions()->lists('name','id');
+        $permissions = Permission::orderBy('name','asc')->lists('name','id');
+        $permission_role = $role->permissions()->orderBy('name','asc')->lists('id');
+        $permissions = Permission::whereNotIn('id', $permission_role)->orderBy('name','asc')->lists('name','id');
+        $permission_role = $role->permissions()->orderBy('name','asc')->lists('name','id');
         
         return view('user.role.setpermission', compact('r','roles','permissions','permission_role'));
     }

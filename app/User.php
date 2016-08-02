@@ -11,7 +11,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['id','name', 'email', 'password','employer_id','address','city','birthday','birthplace','phone','marrital','blood_type','zipcode','gender','bank_account','npwp','bank_branch','bank_name','job_status','job_start','job_end','branch_id','company_id','department_id','position_id','mother_name','pic_id','grade','is_user'
+    protected $fillable = ['id','name','alias', 'email', 'password','employer_id','address','city','birthday','birthplace','phone','marrital','blood_type','zipcode','gender','bank_account','npwp','bank_branch','bank_name','job_status','job_start','job_end','branch_id','company_id','department_id','position_id','mother_name','pic_id','grade','is_user','token'
     ];
 
     public $incrementing = false;

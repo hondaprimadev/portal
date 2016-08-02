@@ -46,10 +46,19 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->authorize('user.create');
+        
+        $user = User::create([
+            'id' => intval(User::max('id')) + 1,
+            'name'=> $request->input('name'),
+            'email' => $request->input('email'),
+            'branch_id'=>$request->input('branch_id'),
+            'password'=>bcrypt($request->input('password')),
+            'is_user'=>true,
+        ]);
 
-        User::create($request->all());
+        $user->roles()->sync($request->input('role'));
 
-        return redirect('/admin/user/');
+        return redirect('/admin/user/user');
     }
 
     /**
@@ -86,9 +95,26 @@ class UserController extends Controller
         $this->authorize('user.edit');
 
         $user = User::findOrFail($id);
-        $user->update($request->all());
+        if($request->input('password')){
+            $user->update([
+                'name'=> $request->input('name'),
+                'email' => $request->input('email'),
+                'branch_id'=>$request->input('branch_id'),
+                'password'=>bcrypt($request->input('password'))
+            ]);
+        }else{
+            $user->update([
+                'name'=> $request->input('name'),
+                'email' => $request->input('email'),
+                'branch_id'=>$request->input('branch_id'),
+            ]);
+        }
 
-        return redirect('/admin/user');
+        if (!empty($request->input('role'))) {
+            $user->roles()->sync($request->input('role'));   
+        }
+
+        return redirect('/admin/user/user');
     }
 
     /**
@@ -97,16 +123,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         $this->authorize('user.delete');
 
         foreach ($request->input('id') as $key => $value) {
             $user = User::findOrFail($value);
-            $user->delete();
+            $user->is_user = false;
+            $user->save();
         }
         session()->flash('flash_message','Your Department has been deleted!');
 
-        return redirect('/admin/user');
+        return redirect('/admin/user/user');
     }
 }

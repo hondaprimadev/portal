@@ -38,7 +38,7 @@ class DataController extends Controller
                     //set pt
                     $company = Branch::where('id', $branch)->first()->company_id;
                     // set Branch Manager
-                    $bm = User::where('branch_id',$branch)->where('position_id', 'B5')->first()->id;
+                    $bm = User::where('branch_id',$branch)->where('position_id', 'B4')->first()->id;
                     // set telphone
                     $telp_crm = preg_replace("/^0/", "+62",$value->telp);
                     $telp_stnk = preg_replace("/^0/", "+62",$value->stnktelp);
@@ -219,6 +219,7 @@ class DataController extends Controller
                             'company_id'=>$value->pt,
                             'grade'=>$value->grade,
                             'is_user'=>false,
+                            'token'=>md5(uniqid($value->npk, true)),
                         ];
                         User::create($user);
                     }

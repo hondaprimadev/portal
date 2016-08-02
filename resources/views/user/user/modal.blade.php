@@ -10,21 +10,6 @@
 			</div>
 			<div class="modal-body">
 				{!! Form::open(['url'=> '/admin/user/user']) !!}
-					<div class="outer-div">
-						<div class="progress progress-body">
-              				<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                				<span id="progress-val"></span>
-              				</div>
-            			</div>
-						<div class="inner-div"><img class="profile_img"></div>
-						<button type="button" class="btn-upload-profile fileinput-button">
-							<i class="fa fa-camera" aria-hidden="true"></i>
-						</button>
-						<button type="button" class="btn-delete-profile" onclick="deletePicture()">
-							<i class="fa fa-times" aria-hidden="true"></i>
-						</button>
-						<input type="hidden" class="profile_text" name="profile_text"/>
-					</div>
 					<div class="form-group">
 						{!! Form::label('name', 'Name:') !!}
 						{!! Form::text('name',null,['class'=>'form-control']) !!}
@@ -32,12 +17,6 @@
 						{!! Form::label('email', 'Email:') !!}
 						{!! Form::text('email',null,['class'=>'form-control']) !!}
 						
-						{!! Form::label('phone', 'Phone:') !!}
-						{!! Form::text('phone',null,['class'=>'form-control']) !!}
-
-						{!! Form::label('notif', 'Notif:') !!}
-						{!! Form::text('notif',null,['class'=>'form-control']) !!}
-
 						{!! Form::label('dealer_id', 'Dealer:') !!}
 						{!! Form::select('dealer_id',$branch,null,['class'=>'form-control']) !!}
 
@@ -69,21 +48,6 @@
 			</div>
 			<div class="modal-body">
 				{!! Form::open(['url'=> '/admin/user/user','method'=>"PATCH",'id'=>'editUser']) !!}
-					<div class="outer-div">
-						<div class="progress progress-body">
-              				<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                				<span id="progress-val"></span>
-              				</div>
-            			</div>
-						<div class="inner-div"><img class="profile_img"></div>
-						<button type="button" class="btn-upload-profile fileinput-button">
-							<i class="fa fa-camera" aria-hidden="true"></i>
-						</button>
-						<button type="button" class="btn-delete-profile" onclick="deletePicture()">
-							<i class="fa fa-times" aria-hidden="true"></i>
-						</button>
-						<input type="hidden" class="profile_text" name="profile_text"/>
-					</div>
 					<div class="form-group">
 						{!! Form::label('name', 'Name:') !!}
 						{!! Form::text('name',null,['class'=>'form-control','id'=>'nameUser']) !!}
@@ -91,11 +55,6 @@
 						{!! Form::label('email', 'Email:') !!}
 						{!! Form::text('email',null,['class'=>'form-control','id'=>'emailUser']) !!}
 						
-						{!! Form::label('phone', 'Phone:') !!}
-						{!! Form::text('phone',null,['class'=>'form-control','id'=>'phoneUser']) !!}
-
-						{!! Form::label('notif', 'Notif:') !!}
-						{!! Form::text('notif',null,['class'=>'form-control','id'=>'notifUser']) !!}
 
 						{!! Form::label('dealer_id', 'Dealer:') !!}
 						{!! Form::select('dealer_id',$branch,null,['class'=>'form-control','id'=>'dealerUser']) !!}

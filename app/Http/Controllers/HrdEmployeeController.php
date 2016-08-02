@@ -48,10 +48,10 @@ class HrdEmployeeController extends Controller
     public function create()
     {
         $this->authorize('hrd.employee.create');
-
-        $branch = Branch::lists('name', 'id');
-        $depts = UserDepartment::lists('name', 'id');
-        $position = UserPosition::lists('name', 'id');
+        
+        $branch = [''=>'---'] + Branch::lists('name', 'id')->all();
+        $depts = [''=>'---'] + UserDepartment::lists('name', 'id')->all();
+        $position = [''=>'---'] + UserPosition::lists('name', 'id')->all();
 
         return view('hrd.employee.create', compact('branch','depts','position'));
     }
@@ -125,9 +125,9 @@ class HrdEmployeeController extends Controller
         $this->authorize('hrd.employee.edit');
 
         $user = User::findOrFail($id);
-        $branch = Branch::lists('name', 'id');
-        $depts = UserDepartment::lists('name', 'id');
-        $position = UserPosition::lists('name', 'id');
+        $branch = [''=>'---'] + Branch::lists('name', 'id')->all();
+        $depts = [''=>'---'] + UserDepartment::lists('name', 'id')->all();
+        $position = [''=>'---'] + UserPosition::lists('name', 'id')->all();
 
         return view('hrd.employee.edit',compact('user','branch','depts','position'));
     }

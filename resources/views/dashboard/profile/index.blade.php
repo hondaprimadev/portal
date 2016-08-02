@@ -3,19 +3,17 @@
 @section('content-header')
 	<section class="content-header">
     <h1>
-      <i class="fa fa-newspaper-o"></i> {{ auth()->user()->name }}
-      <small>Emplyoee / User Data Management</small>
+      <i class="fa fa-newspaper-o"></i> Profile
+      <small>Profile edit</small>
     </h1>
     <ol class="breadcrumb">
-      <li><a href="#">Hrd</a></li>
-      <li><a href="{{ route('hrd.employee.index') }}">Employee</a></li>
-      <li class="active">Create</li>
+      <li><a href="/profile/">Profile</a></li>
     </ol>
   </section>
 @stop
 
 @section('content')
-  {!! Form::open(['route'=>'hrd.employee.store','class'=>'form-horizontal']) !!}
+  {!! Form::model($user, ['class'=>'form-horizontal', 'id'=>'formEditEmployee', 'method'=>'PATCH', 'action'=>['DashboardController@postProfile', $user->token]]) !!}
     @include('dashboard.profile._form',['nikStat' => true])
 
     <div class="box-footer">
@@ -28,5 +26,5 @@
 @stop
 
 @section('scripts')
-  @include('hrd.employee._js')
+  @include('dashboard.profile._js')
 @stop

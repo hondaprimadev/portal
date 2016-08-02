@@ -86,8 +86,9 @@
 	// picture method
 	function deletePicture() {
 		var name = $("#profile_text").val();
+    
   		$.ajax({
-  			url: "",
+  			url: "/hrd/employee/profile/delete/"+name,
   			type: 'DELETE',
   			data:{
   				'_token': $('[name=_token').val(),

@@ -285,6 +285,8 @@ desired effect
 <script src="{{ asset('/admin-lte/dist/js/app.min.js') }}"></script>
 <!-- ChartJs -->
 <script src="{{ asset('/admin-lte/plugins/chartjs/Chart.min.js') }}"></script>
+<!-- Slimscroll -->
+<script src="{{ asset('/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
 <!-- Datatables -->
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>

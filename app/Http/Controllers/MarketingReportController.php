@@ -245,19 +245,19 @@ class MarketingReportController extends Controller
         if (!$branch) {
             $branch = '101';
             if (!$pic_id) {
-                $getPIC = User::where('branch_id', $branch)->where('position_id','B5')->first();
+                $getPIC = User::where('branch_id', $branch)->where('position_id','B4')->first();
                 $pic_id = $getPIC->id;
             }
         }
         else{
             if (!$pic_id) {
-                $getPIC = User::where('branch_id', $branch)->where('position_id','B5')->first();
+                $getPIC = User::where('branch_id', $branch)->where('position_id','B4')->first();
                 $pic_id = $getPIC->id;
             }   
         }
         
         $branches = Branch::lists('name','id');
-        $pic = User::whereIn('position_id',['B5','B5MK','B6MK'])
+        $pic = User::whereIn('position_id',['B4','B5MK','B6MK'])
                         ->where('branch_id', $branch)
                         ->where('job_status', 'Active')
                         ->lists('name','id');

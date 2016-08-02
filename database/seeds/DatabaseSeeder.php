@@ -180,8 +180,13 @@ class DatabaseSeeder extends Seeder
             ['name' => 'permission.super','created_at' => $now, 'updated_at' => $now],
 
             // UPLOAD DataController
+            ['name' =>'upload.open','created_at' => $now, 'updated_at' => $now],
             ['name' => 'upload.sales','created_at' => $now, 'updated_at' => $now],
             ['name' => 'upload.hrd','created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'marketing.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.report.open','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.team.open','created_at' => $now, 'updated_at' => $now],
 
             ['name' => 'marketing.report.admin','created_at' => $now, 'updated_at' => $now],
             ['name' => 'marketing.report.branch','created_at' => $now, 'updated_at' => $now],
@@ -216,7 +221,8 @@ class DatabaseSeeder extends Seeder
                 'department_id'=>'D4',
                 'position_id'=>'H4IT',
                 'pic_id'=>'',
-                'is_user'=>true
+                'is_user'=>true,
+                'token'=>md5(uniqid('1283', true)),
         ]);
         $super->assignRole('super');
 
@@ -499,6 +505,14 @@ class DatabaseSeeder extends Seeder
                 'created_at' => $now, 
                 'updated_at' => $now
             ],
+            [
+                'id' => 'LSG-000053',
+                'name' => 'ARTHA PEMALANG',
+                'group_leasing'=>'OTHER',
+                'created_at' => $now, 
+                'updated_at' => $now
+            ],
+
     	]);
  
     }

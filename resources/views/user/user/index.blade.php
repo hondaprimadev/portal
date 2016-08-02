@@ -90,6 +90,8 @@
                       {{ $role->name }}, 
                     @endforeach
                     <input type="hidden" id="roleTableUser" value="{{ $user->roles->lists('id') }}"/>
+                  @else 
+                    <input type="hidden" id="roleTableUser" value="[0]">
                   @endif
                 </td>
                 <td>{{ $user->created_at }}</td>
@@ -119,140 +121,53 @@
       tableUser.columns(4).search( this.value ).draw();
     });
 
-    /*dropzone*/
-		var myDropzone = new Dropzone(document.body, { 
-			// Make the whole body a dropzone
-        	url: "/",
-        	paramName: "profile_picture",
-        	createImageThumbnails: false,
-        	previewTemplate : '<div style="display:none"></div>',
-        	parallelUploads: 20,
-        	clickable: ".fileinput-button",
-        	// Define the element that should be used as click trigger to select files.
-      	});
+    $('#tableUser tbody').on('dblclick', 'tr', function () {
+      if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+      }
+      else {
+        tableUser.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
 
-		myDropzone.on("sending", function(file, xhr, formData){
+        var id = $(this).find('#idTableUser').val();
+        var name = $(this).find('#nameTableUser').val();
+        var email = $(this).find('#emailTableUser').val();
+        var role = $(this).find('#roleTableUser').val();
 
-			console.log('token', $('[name=_token').val());
-			console.log('upload started', file);
+        editUser(id, name, email, role);
+      }
+    });
 
-			$('.progress').show();
-			formData.append("_token", $('[name=_token').val());
-		});
+  	function addUser() {
+  		$('.profile_img').attr('src', '');
+    		$( ".btn-upload-profile" ).show();
+    		$( ".btn-delete-profile" ).hide();
+  		$("#createUserModal").modal("show");
+  	}
 
-      	myDropzone.on("totaluploadprogress", function(progress){
-        	console.log("progress", progress);
-        	$('.progress-bar').width(progress + '%');
-        	$('#progress-val').text(progress + '%');
-      	});
+  	function editUser(id, name, email, role) {
+  		$("#editUser").attr('action', '/admin/user/user/' + id);
+    		$("#idUser").val(id);
+    		$("#nameUser").val(name);
+    		$("#emailUser").val(email);
+    		$("#roleUser").val(JSON.parse(role));
 
-      	myDropzone.on("queuecomplete", function(progress){
-        	$('.progress').hide();
-      	});
+    		$("#editUserModal").modal("show");
+  	}
 
-      	myDropzone.on("success", function(file, response){
-      		console.log('url', response.urltemp);
-      		console.log('filename', response.filename);
-        	$('.profile_img').attr('src', response.urltemp + '?' + new Date().getTime());
-        	$('.profile_text').val(response.filename);
-        	$( ".btn-upload-profile" ).hide();
-      		$( ".btn-delete-profile" ).show();
-
-      	});
-      	/*End Dropzone*/
-      	
-
-    	$('#tableUser tbody').on('dblclick', 'tr', function () {
-    		if ( $(this).hasClass('selected') ) {
-    			$(this).removeClass('selected');
+  	function DeleteUser() {
+  		if ($('.checkin').is(':checked')) 
+    		{
+      		$('#deleteUserModal').modal("show");
     		}
-    		else {
-    			tableUser.$('tr.selected').removeClass('selected');
-    			$(this).addClass('selected');
-        		
-        		var id = $(this).find('#idTableUser').val();
-        		var name = $(this).find('#nameTableUser').val();
-        		var email = $(this).find('#emailTableUser').val();
-        		var phone = $(this).find('#phoneTableUser').val();
-        		var notif = $(this).find('#notifTableUser').val();
-        		var dealer = $(this).find('#dealerTableUser').val();
-        		var role = $(this).find('#roleTableUser').val();
-        		if (!$(this).find('#pictureTableUser').val()) {
-        			var picture = 0;
-        			var urlpicture = 0;
-        		}
-        		else {
-        			var picture = $(this).find('#pictureTableUser').val();
-        			var urlpicture = $(this).find('#urlpictureTableUser').val();
-        		}
-
-        		editUser(id, name, email, phone, notif, dealer, role, urlpicture, picture);
+    		else
+    		{
+      		$('#deleteNoModal').modal("show");
     		}
-    	});
+  	}
 
-    	function addUser() {
-    		$('.profile_img').attr('src', '');
-      		$( ".btn-upload-profile" ).show();
-      		$( ".btn-delete-profile" ).hide();
-    		$("#createUserModal").modal("show");
-    	}
-
-    	function editUser(id, name, email, phone, notif, dealer, role, urlpicture, picture) {
-    		$("#editUser").attr('action', '/admin/user/user/' + id);
-      		$("#idUser").val(id);
-      		$("#nameUser").val(name);
-      		$("#emailUser").val(email);
-      		$("#phoneUser").val(phone);
-      		$("#notifUser").val(notif);
-      		$("#dealerUser").val(dealer);
-      		$("#roleUser").val(JSON.parse(role));
-      		if (picture != 0) {
-      			$('.profile_img').attr('src', urlpicture);
-      			$('.profile_text').val(picture);
-      			$( ".btn-upload-profile" ).hide();
-      			$( ".btn-delete-profile" ).show();
-      		}else{
-      			$('.profile_img').attr('src', '');
-      			$('.profile_text').val('');
-      			$( ".btn-upload-profile" ).show();
-      			$( ".btn-delete-profile" ).hide();
-      		}
-
-      		$("#editUserModal").modal("show");
-    	}
-
-    	function DeleteUser() {
-    		if ($('.checkin').is(':checked')) 
-      		{
-        		$('#deleteUserModal').modal("show");
-      		}
-      		else
-      		{
-        		$('#deleteNoModal').modal("show");
-      		}
-    	}
-
-    	function deleteUser() {
-    		$('#formUserDelete').submit();
-    	}
-
-    	// picture method
-    	function deletePicture() {
-    		var name = $(".profile_text").val();
-      		$.ajax({
-      			url: "/admin/user/picture/"+ name,
-      			type: 'DELETE',
-      			data:{
-      				'_token': $('[name=_token').val(),
-      			},
-      			success: function(response){
-      				console.log('delete picture', response);
-      				$( ".btn-upload-profile" ).show();
-      				$( ".btn-delete-profile" ).hide();
-      				$('.profile_img').attr('src', '');
-      				$('.profile_text').val('');
-      			}
-      		});
-    	}
+  	function deleteUser() {
+  		$('#formUserDelete').submit();
+  	}
 	</script>
 @stop
