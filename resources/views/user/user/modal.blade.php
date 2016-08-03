@@ -17,8 +17,8 @@
 						{!! Form::label('email', 'Email:') !!}
 						{!! Form::text('email',null,['class'=>'form-control']) !!}
 						
-						{!! Form::label('dealer_id', 'Dealer:') !!}
-						{!! Form::select('dealer_id',$branch,null,['class'=>'form-control']) !!}
+						{!! Form::label('branch_id', 'Dealer:') !!}
+						{!! Form::select('branch_id',$branch,null,['class'=>'form-control']) !!}
 
 						{!! Form::label('role', 'Role:') !!}
 						{!! Form::select('role[]',$roles, null, ['class'=>'form-control','id'=>'idRole', 'multiple'=>'multiple']) !!}
@@ -56,8 +56,8 @@
 						{!! Form::text('email',null,['class'=>'form-control','id'=>'emailUser']) !!}
 						
 
-						{!! Form::label('dealer_id', 'Dealer:') !!}
-						{!! Form::select('dealer_id',$branch,null,['class'=>'form-control','id'=>'dealerUser']) !!}
+						{!! Form::label('branch_id', 'Dealer:') !!}
+						{!! Form::select('branch_id',$branch,null,['class'=>'form-control','id'=>'dealerUser']) !!}
 
 						{!! Form::label('role', 'Role:') !!}
 						{!! Form::select('role[]',$roles, null, ['class'=>'form-control','id'=>'roleUser', 'multiple'=>'multiple']) !!}

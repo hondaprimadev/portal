@@ -20,7 +20,7 @@ class UserController extends Controller
         $this->authorize('user.open');
 
         $users = User::where('is_user', true)->get();
-        $branch = Branch::lists('name','id');
+        $branch = [''=>'-- Branch --'] + Branch::lists('name','id')->all();
         $roles = Role::lists('name','id');
         $branches = [''=>'All Branch'] + Branch::lists('name','name')->all();
 
@@ -93,7 +93,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->authorize('user.edit');
-
+        
         $user = User::findOrFail($id);
         if($request->input('password')){
             $user->update([
