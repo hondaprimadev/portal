@@ -219,7 +219,6 @@ class DataController extends Controller
                             'company_id'=>$value->pt,
                             'grade'=>$value->grade,
                             'is_user'=>false,
-                            'token'=>md5(uniqid($value->npk, true)),
                         ];
                         User::create($user);
                     }
