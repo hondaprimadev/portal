@@ -261,14 +261,14 @@ class MarketingReportController extends Controller
                         ->where('branch_id', $branch)
                         ->where('job_status', 'Active')
                         ->lists('name','id');
-        $sales = User::whereIn('position_id',['B7CS','B7MK'])
+        $sales = User::whereIn('position_id',['B7CS','B7MK','B5MK','B6MK'])
                         ->where('branch_id', $branch)
                         ->where('job_status', 'Active')
                         ->where('pic_id',null)
                         ->orderBy('name','asc')
                         ->lists('name','id');
 
-        $sales_pic = User::whereIn('position_id',['B7CS','B7MK'])
+        $sales_pic = User::whereIn('position_id',['B7CS','B7MK','B5MK','B6MK'])
                         ->where('branch_id', $branch)
                         ->where('pic_id', $pic_id)
                         ->where('job_status', 'Active')
