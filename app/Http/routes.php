@@ -11,6 +11,7 @@ Route::group([
 	Route::patch('/profile/{token}',['as'=>'profile.store','uses'=>'DashboardController@postProfile']);
 });
 
+// Group user
 Route::group([
 	'prefix'=>'admin/user',
 	'middleware'=>'auth',
@@ -27,6 +28,7 @@ Route::group([
 	Route::resource('/user','UserController');
 });
 
+// Group Upload
 Route::group([
 	'prefix'=>'upload',
 	'middleware'=>'auth'
@@ -37,6 +39,7 @@ Route::group([
 	Route::post('hr', ['as'=>'upload.hr.post','uses'=>'DataController@postHr']);
 });
 
+// Group marketing
 Route::group([
 	'prefix'=>'marketing',
 	'middleware'=>'auth'
@@ -52,6 +55,7 @@ Route::group([
 
 });
 
+// Group HRD
 Route::group([
 	'prefix'=>'hrd',
 	'middleware'=>'auth'
@@ -73,4 +77,12 @@ Route::group([
 	Route::resource('department', 'HrdDepartmentController');
 	Route::resource('position', 'HrdPositionController');
 
+});
+
+// Group CRM
+Route::group([
+	'middleware'=>'auth',
+], function(){
+	Route::post('/crm/delete', 'CrmController@delete');
+	Route::resource('/crm', 'CrmController');
 });

@@ -3,35 +3,27 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use DB;
 
 class Crm extends Model
 {
-    protected $fillable =[
+	protected $fillable =[
 		'type_customer','nomor_crm','active_crm','branch_id','name_personal','email_personal',
 		'birthdate','birthplace','identity_number','address_personal','gender',
 		'rt','rw','postalcode','kelurahan','kecamatan',
 		'kabupaten','city','province','phone_number','ponsel_number',
 		'kk_number','name_group','address_group','npwp_group','email_group'
 	];
-
-    public function vs()
-    {
-        return $this->hasMany('App\VehicleSales','nomor_crm', 'nomor_crm');
-    }
-	public function crmtypes()
+	
+    public function crmtypes()
     {
     	return $this->belongsToMany('App\Crmtype')->withTimestamps();
     }
 
-    public function branch()
-    {
-        return $this->belongsTo('App\Branch');
-    }
-
     public function getTypeListAttribute()
     {
-        return $this->crmtypes->lists('id')->all();
+    	return $this->crmtypes->lists('id')->all();
     }
 
     public function setActiveCrmAttribute($value)
@@ -49,16 +41,15 @@ class Crm extends Model
             $this->attributes['branch_id'] = $value;
         }
     }
-    
+
     public function scopeCrmBranch($query)
     {
         return $query->where('branch_id', auth()->user()->branch->id);
     }
-
-	public function scopeOfMaxno($query, $dealer)
+    public function scopeMaxNumber($query)
     {
-        $branch_id = $dealer;
-        $kd_fix;
+    	$branch_id = auth()->user()->branch->id;
+    	$kd_fix;
         $year=substr(date('Y'), 2);
 
     	$kd_max =  $query->select(DB::raw('MAX( SUBSTR(`nomor_crm` , 4, 4 ) ) AS kd_max'))

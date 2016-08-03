@@ -3,7 +3,7 @@
 @section('content-header')
 	<section class="content-header">
     <h1>
-      <i class="fa fa-newspaper-o"></i> {{ auth()->user()->name }}
+      <i class="fa fa-newspaper-o"></i> Employee Management
       <small>Emplyoee / User Data Management</small>
     </h1>
     <ol class="breadcrumb">

@@ -114,6 +114,13 @@
             @endcan
           </ul>
         </li>
+        <li class="treeview {{ set_active(['crm.index']) }}">
+          @can('crm.open')
+          <a href="{{ route('crm.index') }}">
+            <i class="fa fa-database fa-lg"></i><span>Customer</span>
+          </a>
+          @endcan
+        </li>
 
       </ul>
     </section>
