@@ -46,6 +46,18 @@
         					{!! Form::select('branch_id', $branch_filter, $branch_select, ['class'=>'btn btn-red', 'id'=>'branch_id']) !!}
           			</span>
           			@endif
+
+          			<button type="button" class="btn btn-red" id="reportrange">
+				    	<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+						<span>
+							@if ($begin)
+								{{ $begin->format('M d, Y') }}
+								-
+								{{  $end->format('M d, Y') }}
+							@endif
+						</span>
+						<b class="caret"></b>
+				    </button>
         </div>
 
         <div class="col-md-4">
@@ -64,6 +76,7 @@
 							<th>Name Company/Group</th>
 							<th>Branch</th>
 							<th>Sales Count</th>
+							<th>Date</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -78,6 +91,7 @@
 								<td>{{$crm->name_group}}</td>
 								<td>{{ $crm->branch->name }}</td>
 								<td>{{ $crm->vs()->count() }}</td>
+								<td>{{ date('d F Y',strtotime($crm->crm_date)) }}</td>
 							</tr>
 						@endforeach
 					</tbody>
@@ -119,6 +133,34 @@
             	window.location="{{  request()->url() }}/"+id+"/edit";
     		}
     	});
+
+		$('#reportrange').daterangepicker({
+			buttonClasses: ['btn', 'btn-sm'],
+			applyClass: 'btn-red',
+			cancelClass: 'btn-default',
+			startDate: '{{ $begin->format('m/d/y') }}',
+			endDate: '{{ $end->format('m/d/y') }}',
+			locale: {
+				applyLabel: 'Submit',
+				cancelLabel: 'Cancel',
+				fromLabel: 'From',
+				toLabel: 'To',
+			},
+			ranges: {
+				'Today': [moment(), moment()],
+				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+				'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+				'This Month': [moment().startOf('month'), moment().endOf('month')],
+				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+			}
+		}, function(start, end, label){
+			console.log(start.toISOString(), end.toISOString(), label);
+
+			$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+			window.location="{{  request()->url() }}?b="+ start.format('Y-MM-DD') +"&e=" + end.format('Y-MM-DD');
+
+		});
 
 		function DeleteCrm(id)
 		{

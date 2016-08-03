@@ -21,14 +21,31 @@ class CrmController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('crm.open');
         
+        $begin = $request->input('b');
+        $end = $request->input('e');
+
+        if(!$begin && !$end)
+        {
+            $now = date('Y-m-');
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now.'01');
+            $end = new \DateTime($now.$d1);
+        }else{
+            $begin = new \DateTime($begin);
+            $end = new \DateTime($end);
+        }
+
+
         if (Gate::allows('crm.super')) {
             $crms = Crm::with(['crmtypes' => function($query){
                 $query->where('name', 'Customer');
-            }])->get();
+            }])
+            ->whereBetween('crm_date', [$begin, $end])
+            ->get();
             if (auth()->user()->branch->id == '100') {
                 $branch_select = '';
             }else{
@@ -38,15 +55,18 @@ class CrmController extends Controller
         else{
             $crms = Crm::with(['crmtypes' => function($query){
                 $query->where('name', 'Customer');
-            }])->CrmBranch()->get();
+            }])
+            ->whereBetween('crm_date', [$begin, $end])
+            ->CrmBranch()
+            ->get();
+            
             $branch_select = auth()->user()->branch->name;
         }
 
-        // return $crms;
         $type_filter = [''=>'Type Customer'] + Crmtype::lists('name','id')->all();
         $branch_filter = [''=>'All Branch'] + Branch::lists('name','name')->all();
 
-        return view('crm.index', compact('crms', 'branch_filter', 'branch_select', 'type_filter'));
+        return view('crm.index', compact('crms', 'branch_filter', 'branch_select', 'type_filter','begin','end'));
     }
 
     /**

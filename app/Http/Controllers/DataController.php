@@ -88,6 +88,7 @@ class DataController extends Controller
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
                             ]);
                             $crm->crmtypes()->sync(['1','2']);
                         }
@@ -102,6 +103,7 @@ class DataController extends Controller
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
                             ]);
                             $crm->crmtypes()->sync('1');
                         }
@@ -114,6 +116,7 @@ class DataController extends Controller
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_stnk,
                                 'branch_id'=>$branch,
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
                             ]);
                             $stnk->crmtypes()->sync('2');
                         }

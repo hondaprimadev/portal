@@ -16,6 +16,7 @@ class CreateCrmsTable extends Migration
             $table->increments('id');
             $table->enum('type_customer',['Personal', 'Group']);
             $table->string('nomor_crm')->unique();
+            $table->date('crm_date');
             $table->boolean('active_crm');
             $table->integer('branch_id');
             $table->string('name_personal');

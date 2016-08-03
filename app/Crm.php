@@ -8,7 +8,7 @@ use DB;
 class Crm extends Model
 {
     protected $fillable =[
-		'type_customer','nomor_crm','active_crm','branch_id','name_personal','email_personal',
+		'type_customer','nomor_crm','crm_date','active_crm','branch_id','name_personal','email_personal',
 		'birthdate','birthplace','identity_number','address_personal','gender',
 		'rt','rw','postalcode','kelurahan','kecamatan',
 		'kabupaten','city','province','phone_number','ponsel_number',
