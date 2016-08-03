@@ -43,7 +43,7 @@ class CreateUsersTable extends Migration
             $table->string('mother_name');
             $table->string('pic_id')->nullable();
             $table->boolean('is_user');
-            $table->string('token')->unique();
+            $table->string('token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

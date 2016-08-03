@@ -50,7 +50,9 @@ class DashboardController extends Controller
             ]);
         }
 
-        $uploadProfile = $this->manager->uploadProfile($photo,$user->id);
+        if ($photo) {
+            $uploadProfile = $this->manager->uploadProfile($photo,$user->id);   
+        }
 
     	return back();
     }

@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $now = Carbon\Carbon::now();
         
         // calendar loop
-        $begin = new DateTime('2016-01-01');
+        $begin = new DateTime('2015-01-01');
         $end = new DateTime('2016-12-31');
         $end = $end->modify('+1 day'); 
         $interval = new DateInterval('P1D');

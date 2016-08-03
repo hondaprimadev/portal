@@ -130,6 +130,7 @@ class UserController extends Controller
         foreach ($request->input('id') as $key => $value) {
             $user = User::findOrFail($value);
             $user->is_user = false;
+            $user->token = null;
             $user->save();
         }
         session()->flash('flash_message','Your Department has been deleted!');

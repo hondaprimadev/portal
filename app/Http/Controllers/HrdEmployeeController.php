@@ -228,7 +228,7 @@ class HrdEmployeeController extends Controller
             $user = User::findOrFail($value);
             $user->is_user = true;
             $user->password = bcrypt('1234567890');
-            $user->token = md5(uniqid($user->id, true));
+            $user->token = md5(uniqid($user->email, true));
             $user->save();
         }
 

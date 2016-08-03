@@ -47,7 +47,7 @@
 
     <div class="col-md-6">
       <div class="form-group">
-        {!! Form::label('alias', 'Name', ['class'=>'col-sm-2 control-label']) !!}
+        {!! Form::label('alias', 'Name(alias)', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
           {!! Form::text('alias', null,['class'=> 'form-control']) !!}
         </div>

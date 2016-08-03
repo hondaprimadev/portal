@@ -206,8 +206,6 @@ class DataController extends Controller
                             'id'=>$value->npk,
                             'name'=>$value->nama,
                             'email'=>$faker->email,
-                            'password'=>bcrypt('1234567890'),
-                            'password_default'=>bcrypt('1234567890'),
                             'branch_id'=>$value->cabang,
                             'gender'=>$value->gender,
                             'bank_name'=>$value->bank,

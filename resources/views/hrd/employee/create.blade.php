@@ -16,7 +16,7 @@
 
 @section('content')
   {!! Form::open(['route'=>'hrd.employee.store','class'=>'form-horizontal']) !!}
-    @include('dashboard.profile._form',['nikStat' => true])
+    @include('hrd.employee._form',['nikStat' => true])
 
     <div class="box-footer">
       <button type="submit" class="btn btn-success">
