@@ -49,7 +49,7 @@ class MarketingReportController extends Controller
         $vspma_total_m1 = VehicleSales::OfTotalCompany(date($tahun_m1."-".$bulan_m1),'2')->count();
 
         // Table
-        $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'), $tahun_m1, $bulan_m1)->get();
+        $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1)->get();
 
         return view('marketing.report.index', compact(
         	'branches', 
@@ -130,7 +130,7 @@ class MarketingReportController extends Controller
         $vs_total_par_m1 = VehicleSales::OfTotalCompany(date($tahun_m1."-".$bulan_m1),'1')->count();
 
         // Table
-        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $tahun_m1, $bulan_m1, $branch_id)->get();
+        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $branch_id)->get();
         // return $tableSales;
         return view('marketing.report.branch.index', compact(
         	'branch',
@@ -214,7 +214,7 @@ class MarketingReportController extends Controller
         $vs_total_branch_m1 = VehicleSales::OfTotalBranch(date($tahun_m1."-".$bulan_m1),$branch_id)->count();
 
         // Table
-        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'), $tahun_m1, $bulan_m1, $pic_id)->get();
+        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $pic_id)->get();
         // return $tableSales;
         return view('marketing.report.spv.index', compact(
         	'spv',
@@ -234,6 +234,125 @@ class MarketingReportController extends Controller
         	'vs_total_branch_m1',
         	'tableSales'
         	));
+    }
+
+    public function getSalesReport(Request $request)
+    {
+
+        $sales = $request->input('s');
+        $begin = $request->input('begin');
+        $end  =$request->input('end');
+
+        $salesid = User::where('id', $sales)->first();
+        if ($salesid==false) {
+            abort(403, 'Unauthorized action.');
+        }
+        else{
+            $sales_id = $salesid->id;
+            $branch_id = $salesid->branch_id;
+            $branch_name = $salesid->branch->name;
+            $sales_name = $salesid->name;
+        }
+
+        if (!$sales) {
+            abort(403, 'Unauthorized action.');
+        }
+        else{
+            if(!$request->input('begin') && !$request->input('end'))
+            {
+                $now = date('Y-m-');
+                $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+                $begin = new \DateTime($now.'01');
+                $end = new \DateTime($now.$d1);
+            }else{
+                $begin = new \DateTime($request->input('begin'));
+                $end = new \DateTime($request->input('end'));
+            }
+        }
+
+        $ends = $end->modify('+1 day');
+        $interval = new \DateInterval('P1D');
+        $daterange = new \DatePeriod($begin, $interval ,$ends);
+        $end = $end->modify('-1 day');
+        $tahun = $begin->format('Y');
+        $bulan = $begin->format('m');
+        $day = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+
+        $first_day_last_month = date('Y-m-d', strtotime($begin->format('Y-m-d')."-1 month"));
+        $tahun_m1 = date("Y", strtotime($first_day_last_month));
+        $bulan_m1 = date("m", strtotime($first_day_last_month));
+        $day_m1 = cal_days_in_month(CAL_GREGORIAN, $bulan_m1, $tahun_m1);
+        $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day);
+        $begin_m1 = new \DateTime($first_day_last_month);
+        $end_m1 = new \DateTime($last_day_last_month);
+        $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
+        $end_m1 = $end_m1->modify('-1 day');
+
+        // Table Sales range date
+        $vs = VehicleSales::OfSaleSales($begin->format('Y-m-d'), $end->format('Y-m-d'), $sales_id)->get();
+        $vs_total = VehicleSales::OfTotalSales($begin->format('Y-m'), $sales_id)->count();
+        $vs_m1 = VehicleSales::OfSaleSales($first_day_last_month, $last_day_last_month, $sales_id)->get();
+        $vs_total_m1 = VehicleSales::OfTotalSales(date($tahun_m1."-".$bulan_m1),$sales_id)->count();
+
+        // Branch
+        $vs_total_branch = VehicleSales::OfTotalBranch($begin->format('Y-m'),$branch_id)->count();
+        $vs_total_branch_m1 = VehicleSales::OfTotalBranch(date($tahun_m1."-".$bulan_m1),$branch_id)->count();
+
+        // Table Growth
+        $tableSales = VehicleSales::OfTableSales($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $sales_id)->get();
+
+        return view('marketing.report.sales.index', compact(
+            'sales',
+            'branch_name',
+            'sales_name',
+            'daterange',
+            'daterange_m1',
+            'begin',
+            'end',
+            'vs', 
+            'vs_total',
+            'begin_m1',
+            'end_m1',
+            'vs_m1',
+            'vs_total_m1',
+            'vs_total_branch',
+            'vs_total_branch_m1',
+            'tableSales'
+            ));
+    }
+
+    public function getSalesIdReport(Request $request)
+    {
+        $begin = $request->input('begin');
+        $end  =$request->input('end');
+        $branch = $request->input('b');
+
+        if ($branch) {
+            $branch = $branch;
+        }else{
+            $branch = '101';
+        }
+
+        if(!$request->input('begin') && !$request->input('end'))
+        {
+            $now = date('Y-m-');
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now.'01');
+            $end = new \DateTime($now.$d1);
+        }else{
+            $begin = new \DateTime($request->input('begin'));
+            $end = new \DateTime($request->input('end'));
+        }
+
+        $branches = [''=>'Branch'] + Branch::lists('name','id')->all();
+        $sales = User::where('branch_id', $branch)
+                ->whereIn('position_id',['B7MK','B7CS'])
+                ->where('job_status', 'Active')
+                ->lists('name','id')
+                ->all();
+
+        return view('marketing.report.sales.search', compact('sales','branches','branch','begin','end'));
+
     }
 
     public function getTeam(Request $request)

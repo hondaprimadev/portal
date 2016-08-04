@@ -44,12 +44,16 @@ Route::group([
 	'prefix'=>'marketing',
 	'middleware'=>'auth'
 ], function(){
+	Route::get('report/sales', ['as'=>'marketing.report.sales.get','uses'=>'MarketingReportController@getSalesIdReport']);
+	Route::get('report/branch/sales', ['as'=>'marketing.report.branch.sales.get', 'uses'=>'MarketingReportController@getSalesReport']);
 	Route::get('report/branch/spv', ['as'=>'marketing.report.branch.spv.get', 'uses'=>'MarketingReportController@getSpvReport']);
 	Route::get('report/branch', ['as'=>'marketing.report.branch.get', 'uses'=>'MarketingReportController@getBranchReport']);
 	Route::get('report', ['as'=>'marketing.report.get', 'uses'=>'MarketingReportController@getReport']);
 	Route::get('team', ['as'=>'marketing.team.index','uses'=>'MarketingReportController@getTeam']);
 	Route::post('team', ['as'=>'marketing.team.post','uses'=>'MarketingReportController@postTeam']);
 
+	Route::post('/vehicle/sales/delete', 'VehicleSalesController@delete');
+	
 	Route::resource('/vehicle/sales', 'VehicleSalesController');
 	Route::resource('/vehicle/stock', 'VehicleStockController');
 

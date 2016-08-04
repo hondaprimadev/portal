@@ -25,6 +25,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function vs()
+    {
+        return $this->hasMany('App\VehicleSales');
+    }
     public function branch()
     {
         return $this->belongsTo('App\Branch');

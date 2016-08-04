@@ -67,8 +67,14 @@
           </a>
           @endcan
           <ul class="treeview-menu">
+            @can('marketing.vehicle.sales.open')
+            <li class="{{ set_active('marketing.vehicle.sales.index') }}"><a href="{{ route('marketing.vehicle.sales.index') }}"><i class="fa fa-barcode" aria-hidden="true"></i> Vehicle Sales</a></li>  
+            @endcan
             @can('marketing.report.open')
             <li class="{{ set_active('marketing.report.get') }}"><a href="{{ route('marketing.report.get') }}"><i class="fa fa-bar-chart fa-lg" aria-hidden="true"></i> Daily Report</a></li>
+            @endcan
+            @can('marketing.report.open')
+            <li class="{{ set_active('marketing.report.sales.get') }}"><a href="{{ route('marketing.report.sales.get') }}"><i class="fa fa-bar-chart fa-lg" aria-hidden="true"></i> Daily Report by Sales</a></li>
             @endcan
             @can('marketing.team.open')
             <li class="{{ set_active('marketing.team.index') }}"><a href="{{ route('marketing.team.index') }}"><i class="fa fa-child fa-lg" aria-hidden="true"></i> Team Marketing</a></li>

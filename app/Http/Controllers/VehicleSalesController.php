@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\VehicleSales;
+use App\Branch;
 
 class VehicleSalesController extends Controller
 {
@@ -13,9 +15,27 @@ class VehicleSalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $begin = $request->input('b');
+        $end = $request->input('e');
+
+        if(!$begin && !$end)
+        {
+            $now = date('Y-m-');
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now.'01');
+            $end = new \DateTime($now.$d1);
+        }else{
+            $begin = new \DateTime($begin);
+            $end = new \DateTime($end);
+        }
+
+        $vs = VehicleSales::whereBetween('faktur_date', [$begin, $end])->get();
+
+        $branch_filter = [''=>'All Branch'] + Branch::lists('name','name')->all();
+
+        return view('vehicle.sales.index',compact('vs','branch_filter', 'begin','end'));
     }
 
     /**
@@ -82,5 +102,15 @@ class VehicleSalesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function delete(Request $request)
+    {
+        foreach ($request->input('id') as $key => $value) {
+            $vs = VehicleSales::findOrFail($value);
+            $vs->delete();
+        }
+
+        return redirect('marketing/vehicle/sales');
     }
 }

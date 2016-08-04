@@ -17,4 +17,8 @@ class Branch extends Model
     	return $this->belongsTo('App\Company');
     }
 
+    public function vs()
+    {
+    	return $this->hasMany('App\VehicleSales');
+    }
 }
