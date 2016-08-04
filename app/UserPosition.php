@@ -13,4 +13,9 @@ class UserPosition extends Model
     {
     	return $this->belongsTo('App\UserDepartment');
     }
+
+    public function crm()
+    {
+    	return $this->belongsTo('App\Crm');
+    }
 }

@@ -36,9 +36,9 @@
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
             <span>
               @if ($begin)
-                {{ $begin->format('M d, Y') }}
+                {{ $begin->format('F d, Y') }}
                 -
-                {{ $end->format('M d, Y') }}
+                {{ $end->format('F d, Y') }}
               @endif
             </span>
             <b class="caret"></b>
@@ -425,6 +425,7 @@
       "ordering": true,
       "info": true,
       "autoWidth": true,
+      "scrollX": "100%",
       dom: 'Bfrtip',
         buttons: [
             'csv', 'excel'

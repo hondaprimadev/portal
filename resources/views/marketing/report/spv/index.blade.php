@@ -38,9 +38,9 @@
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
             <span>
               @if ($begin)
-                {{ $begin->format('M d, Y') }}
+                {{ $begin->format('F d, Y') }}
                 -
-                {{ $end->format('M d, Y') }}
+                {{ $end->format('F d, Y') }}
               @endif
             </span>
             <b class="caret"></b>
@@ -172,7 +172,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table id="tableBranch" class="table table-bordered table-hover">
+          <table id="tableSpv" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <?php $dateno = 0;?>
@@ -384,6 +384,16 @@
 
     picChartOptions.datasetFill = false;
     picChart.Bar(picChartData, picChartOptions);
+    $('#tableSpv').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      'scrollX': "100%",
+    });
+
     $('#tableSpvSales').DataTable({
       "paging": false,
       "lengthChange": false,
@@ -391,10 +401,11 @@
       "ordering": true,
       "info": true,
       "autoWidth": true,
+      'scrollX': "100%",
       dom: 'Bfrtip',
         buttons: [
             'csv', 'excel'
-        ]
+      ]
     });
 
     $('#reportrange').daterangepicker({

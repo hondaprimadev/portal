@@ -19,6 +19,13 @@ class Crm extends Model
     {
         return $this->hasMany('App\VehicleSales','nomor_crm', 'nomor_crm');
     }
+    /*
+    *   hasMany Through
+    */
+    public function user()
+    {
+        return $this->hasManyThrough('App\User','App\VehicleSales','nomor_crm','id','id');
+    }
 	public function crmtypes()
     {
     	return $this->belongsToMany('App\Crmtype')->withTimestamps();

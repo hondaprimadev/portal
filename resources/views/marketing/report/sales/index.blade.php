@@ -166,7 +166,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table id="tableBranch" class="table table-bordered table-hover">
+          <table id="tableSales" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <?php $dateno = 0;?>
@@ -483,5 +483,16 @@
       window.location="{{  request()->url() }}?s={{ $sales }}&begin="+ start.format('Y-MM-DD') +"&end=" + end.format('Y-MM-DD');
 
     });
+
+    $('#tableSales').DataTable({
+      "sorting":false,
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "scrollX": "100%",
+      "scrollCollapse": true,
+    })
   </script>
 @stop

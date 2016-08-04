@@ -18,9 +18,6 @@ class VehicleSales extends Model
     {
         return $this->belongsTo('App\Branch');
     }
-    
-
-
 
     public function scopeOfSales($query, $begin, $end, $c)
     {
