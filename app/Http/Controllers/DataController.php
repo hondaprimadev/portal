@@ -38,7 +38,11 @@ class DataController extends Controller
                     //set pt
                     $company = Branch::where('id', $branch)->first()->company_id;
                     // set Branch Manager
-                    $bm = User::where('branch_id',$branch)->where('position_id', 'B4')->first()->id;
+                    $bm = User::where('branch_id',$branch)
+                            ->where('position_id', 'B4')
+                            ->where('job_status', 'Active')
+                            ->first()->id;
+                            
                     // set telphone
                     $telp_crm = preg_replace("/^0/", "+62",$value->telp);
                     $telp_stnk = preg_replace("/^0/", "+62",$value->stnktelp);
