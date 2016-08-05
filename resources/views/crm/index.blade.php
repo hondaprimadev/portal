@@ -76,7 +76,6 @@
 							<th>Name Company/Group</th>
 							<th>Branch</th>
 							<th>Sales Count</th>
-							<th>Sales Id</th>
 							<th>Date</th>
 						</tr>
 					</thead>
@@ -92,12 +91,6 @@
 								<td>{{$crm->name_group}}</td>
 								<td>{{ $crm->branch->name }}</td>
 								<td>{{ $crm->vs()->count() }}</td>
-								<td>
-									@foreach ($crm->vs as $vs)
-										{{ $vs->user_id }}
-										,
-									@endforeach
-								</td>
 								<td>{{ date('d F Y',strtotime($crm->crm_date)) }}</td>
 							</tr>
 						@endforeach
