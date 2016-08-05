@@ -78,7 +78,6 @@ class CrmController extends Controller
     {
         $this->authorize('crm.create');
 
-
         $crmtypes = Crmtype::lists('name','id')->all();
         $branches = Branch::lists('name', 'id')->all();
 
@@ -197,5 +196,30 @@ class CrmController extends Controller
     {
         $no = $request->input('nomor_supplier');
         return Crm::MaxNumber();
+    }
+
+    public function MaxNo($dealer)
+    {
+        $branch_id = $dealer;
+        $kd_fix;
+        $year=substr(date('Y'), 2);
+
+        $kd_max =  Crm::select(DB::raw('MAX( SUBSTR(`nomor_crm` , 4, 4 ) ) AS kd_max'))
+        ->where('branch_id', $branch_id)
+        ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
+        ->get();
+        
+        if ($kd_max->count() >0) {
+            foreach ($kd_max as $k) 
+            {
+                $tmp = ((int)$k->kd_max)+1;
+                $kd_fix = sprintf("%04s", $tmp);
+            }
+        }
+        else{
+            $kd_fix = '0001';
+        }
+
+        return 'CRM'. $kd_fix.$branch_id.$year;
     }
 }

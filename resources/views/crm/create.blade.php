@@ -18,7 +18,7 @@
 @section('content')
 	<div class="container">
 		{!! Form::model($crm = new \App\Crm, ['route' => 'crm.store','class'=>'form-horizontal','id'=>'formCreateCrm']) !!}
-					@include('crm._form',['submitButtonText' => 'Create Supplier','crm_no'=>$crm->OfMaxno(auth()->user()->branch->id)])
+					@include('crm._form',['submitButtonText' => 'Create Supplier'])
 		    <div class="box-footer">
 		      <button type="button" class="btn btn-success" onclick="addCRM()">
 		        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save

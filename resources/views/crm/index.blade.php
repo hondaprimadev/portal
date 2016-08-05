@@ -85,13 +85,13 @@
 								<td>
 									<input type="checkbox" id="idTableCrm" name="id[]" class="checkin" value="{{ $crm->id }}"/>
 								</td>
-								<td>{{$crm->type_customer}}</td>
-								<td>{{$crm->nomor_crm }}</td>
-								<td>{{$crm->name_personal }}</td>
-								<td>{{$crm->name_group}}</td>
-								<td>{{ $crm->branch->name }}</td>
-								<td>{{ $crm->vs()->count() }}</td>
-								<td>{{ date('d F Y',strtotime($crm->crm_date)) }}</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
 							</tr>
 						@endforeach
 					</tbody>

@@ -87,7 +87,7 @@ class DataController extends Controller
                         if (!$crm || !$stnk) 
                         {
                             $crm = Crm::create([
-                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'nomor_crm'=> $this->MaxNo($branch),
                                 'name_personal'=>$value->nama,
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_crm,
@@ -102,7 +102,7 @@ class DataController extends Controller
                         if (!$crm) 
                         {
                             $crm = Crm::create([
-                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'nomor_crm'=> $this->MaxNo($branch),
                                 'name_personal'=>$value->nama,
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_crm,
@@ -115,7 +115,7 @@ class DataController extends Controller
                         if (!$stnk) 
                         {
                             $stnk = Crm::create([
-                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'nomor_crm'=> $this->MaxNo($branch),
                                 'name_personal'=>$value->nama,
                                 'address_personal'=>$value->alamat,
                                 'ponsel_number'=>$telp_stnk,
@@ -232,5 +232,30 @@ class DataController extends Controller
                 return back();
             }
         }
+    }
+
+    public function MaxNo($dealer)
+    {
+        $branch_id = $dealer;
+        $kd_fix;
+        $year=substr(date('Y'), 2);
+
+        $kd_max =  Crm::select(DB::raw('MAX( SUBSTR(`nomor_crm` , 4, 4 ) ) AS kd_max'))
+        ->where('branch_id', $branch_id)
+        ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
+        ->get();
+        
+        if ($kd_max->count() >0) {
+            foreach ($kd_max as $k) 
+            {
+                $tmp = ((int)$k->kd_max)+1;
+                $kd_fix = sprintf("%04s", $tmp);
+            }
+        }
+        else{
+            $kd_fix = '0001';
+        }
+
+        return 'CRM'. $kd_fix.$branch_id.$year;
     }
 }

@@ -110,7 +110,7 @@ class VehicleSales extends Model
     {
         $query->select(
             DB::raw('sum(case when faktur_date = "'.date('Y-m-d').'" then active else 0 end) as total_today'),
-            DB::raw('sum(case when vehicle_sales.branch_id="101" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_month'),
+            DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_month'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$tahun_m1.'-'.$bulan_m1.'" then active else 0 end) as total_month_m1'),
             DB::raw('sum(case when vehicle_sales.position_id="B7CS" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_cs'),
             DB::raw('sum(case when vehicle_sales.position_id="B7MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_marketing'),
