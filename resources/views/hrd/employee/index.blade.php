@@ -78,6 +78,7 @@
               <th>Grade</th>
 							<th>Status</th>
               <th>User?</th>
+              <th>Pic(marketing)</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -117,6 +118,7 @@
                     <i class="fa fa-check-circle" aria-hidden="true" style="color: #2ecc71"></i>
                   @endif
                 </td>
+                <td>{{ $user->pic_id }}</td>
               </tr>
             @endforeach
           </tbody>

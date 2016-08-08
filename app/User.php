@@ -45,7 +45,6 @@ class User extends Authenticatable
         return $this->hasMany('App\UserPicture');
     }
 
-
     public function isSuper()
     {
        if ($this->roles->contains('name', 'super')) {
