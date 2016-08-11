@@ -51,6 +51,7 @@ class MarketingReportController extends Controller
         // Table
         $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1)->get();
         // return $tableSales;
+        $lastupdate = VehicleSales::max('updated_at');
 
         return view('marketing.report.index', compact(
         	'branches', 
@@ -65,7 +66,9 @@ class MarketingReportController extends Controller
 			'vspma_total_m1',
         	'begin', 
         	'end',
-        	'tableSales'));
+        	'tableSales',
+            'lastupdate'
+        ));
     }
 
     public function getBranchReport(Request $request)
@@ -132,7 +135,9 @@ class MarketingReportController extends Controller
 
         // Table
         $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $branch_id)->get();
-        // return $tableSales;
+        
+        $lastupdate = VehicleSales::max('updated_at');
+
         return view('marketing.report.branch.index', compact(
         	'branch',
         	'company_alias',
@@ -148,7 +153,8 @@ class MarketingReportController extends Controller
         	'vs_total_m1',
         	'vs_total_par',
         	'vs_total_par_m1',
-        	'tableSales'
+        	'tableSales',
+            'lastupdate'
         	));
     }
 
@@ -216,7 +222,9 @@ class MarketingReportController extends Controller
 
         // Table
         $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $pic_id)->get();
-        // return $tableSales;
+        
+        $lastupdate = VehicleSales::max('updated_at');
+
         return view('marketing.report.spv.index', compact(
         	'spv',
         	'branch_name',
@@ -233,8 +241,9 @@ class MarketingReportController extends Controller
         	'vs_total_m1',
         	'vs_total_branch',
         	'vs_total_branch_m1',
-        	'tableSales'
-        	));
+        	'tableSales',
+            'lastupdate'
+        ));
     }
 
     public function getSalesReport(Request $request)

@@ -30,9 +30,11 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box-header"></div>
+        <div class="box-header">
+          <span><i>Last update: {{ date('d F Y H:i:s',strtotime($lastupdate)) }}</i></span>
+        </div>
         <div class="box-body">
-          <button type="button" class="btn btn-red pull-right" id="reportrange">
+          <button type="button" class="btn btn-red" id="reportrange">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
             <span>
               @if ($begin)
@@ -202,7 +204,7 @@
                 <th class="bg-purple">Sport</th>
                 <th class="bg-teal">Cash</th>
                 <th class="bg-teal">Credit</th>
-                <th class="bg-maroon">Tempo</th>
+                <th class="bg-teal">Tempo</th>
                 <th class="bg-maroon">ADIRA</th>
                 <th class="bg-maroon">CSF</th>
                 <th class="bg-maroon">FIF</th>
