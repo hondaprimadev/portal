@@ -104,6 +104,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'marketing.report.branch','created_at' => $now, 'updated_at' => $now],
             ['name' => 'marketing.report.pic','created_at' => $now, 'updated_at' => $now],
             ['name' => 'marketing.team','created_at' => $now, 'updated_at' => $now],
+            ['name' => 'marketing.vehicle.sales.open','created_at' => $now, 'updated_at' => $now],
 
             ['name' => 'hrd.department.open','created_at' => $now, 'updated_at' => $now],
             ['name' => 'hrd.department.create','created_at' => $now, 'updated_at' => $now],

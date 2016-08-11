@@ -70,29 +70,35 @@
 					<thead>
 						<tr>
 							<th data-sortable="false"><input type="checkbox" id="check_all"/></th>
-              				<th>Customer Group</th>
 							<th>Supplier No.</th>
 							<th>Name Customer</th>
-							<th>Name Company/Group</th>
 							<th>Branch</th>
+							<th>Ktp</th>
 							<th>Sales Count</th>
+							<th>Sales Name</th>
 							<th>Date</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach ($crms as $crm)
+							@if ($crm->crmtypes->count() > 0)
 							<tr>
 								<td>
 									<input type="checkbox" id="idTableCrm" name="id[]" class="checkin" value="{{ $crm->id }}"/>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td>{{ $crm->nomor_crm }}</td>
+								<td>{{ $crm->name_personal }}</td>
+								<td>{{ $crm->branch->name }}</td>
+								<td>{{ $crm->identity_number }}</td>
+								<td>{{ $crm->vs()->count() }}</td>
+								<td>
+									@foreach ($crm->vs as $vs)
+										{{ $vs->sales_name }},
+									@endforeach
+								</td>
+								<td>{{ date('d M Y', strtotime($crm->created_at)) }}</td>
 							</tr>
+							@endif
 						@endforeach
 					</tbody>
 				</table>
@@ -118,7 +124,7 @@
       		tableCrm.columns(2).search( this.value ).draw();
     	});
     	$('#branch_id').on('change', function () {
-      		tableCrm.columns(5).search( this.value ).draw();
+      		tableCrm.columns(3).search( this.value ).draw();
     	});
     	$(window).bind('resize', function () {
     		tableCrm.fnAdjustColumnSizing();

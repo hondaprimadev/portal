@@ -69,6 +69,7 @@
               				<th>Credit/Cash</th>
               				<th>Leasing</th>
               				<th>Sales</th>
+              				<th>Customer</th>
               				<th>Date</th>
 						</tr>
 					</thead>
@@ -87,6 +88,11 @@
 										{{ $v->user->name }}
 									@else
 										-
+									@endif
+								</td>
+								<td>
+									@if ($v->crm()->count() > 0)
+										{{ $v->crm->name_personal }}
 									@endif
 								</td>
 								<td>{{ date('d F Y',strtotime($v->faktur_date)) }}</td>

@@ -207,48 +207,6 @@
     </div>
   </div>
 
-  {{-- Table M-1 --}}
-  {{-- <div class="row">
-    <div class="col-xs-12">
-      <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">
-            Sales Data Table M-1
-            @if ($begin_m1->format('Y-m') == $end_m1->format('Y-m'))
-              "{{ $begin_m1->format('F Y') }}"
-            @endif
-          </h3>
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-          </div>
-        </div>
-        /.box-header
-        <div class="box-body">
-          <table id="tableBranch" class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                @foreach ($daterange_m1 as $date)
-                  <th>{{ $date->format('d') }}</th>
-                @endforeach
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                @foreach ($vs_m1 as $vm1)
-                  <td>{{ $vm1->total_sales }}</td>
-                @endforeach
-                <td>{{ $vs_total_m1 }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div> --}}
-
   <!-- Table Rank -->
   <div class="row">
     <div class="col-xs-12">
@@ -266,23 +224,26 @@
           <table id="tableVSales" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th>Rank</th>
-                <th>Branch</th>
-                <th>Today</th>
-                <th>M</th>
-                <th>M-1</th>
-                <th>Growth</th>
-                <th>CS</th>
-                <th>Sales</th>
-                <th>Cash</th>
-                <th>Credit</th>
-                <th>Tempo</th>
-                <th>ADIRA</th>
-                <th>CSF</th>
-                <th>FIF</th>
-                <th>OTO</th>
-                <th>WOM</th>
-                <th>OTHER</th>
+                <th class="bg-primary">Rank</th>
+                <th class="bg-primary">Sales</th>
+                <th class="bg-primary">Today</th>
+                <th class="bg-navy">M</th>
+                <th class="bg-navy">-1</th>
+                <th class="bg-navy">Growth</th>
+                <th class="bg-orange">CS</th>
+                <th class="bg-orange">Sales</th>
+                <th class="bg-purple">Cub</th>
+                <th class="bg-purple">At</th>
+                <th class="bg-purple">Sport</th>
+                <th class="bg-teal">Cash</th>
+                <th class="bg-teal">Credit</th>
+                <th class="bg-maroon">Tempo</th>
+                <th class="bg-maroon">ADIRA</th>
+                <th class="bg-maroon">CSF</th>
+                <th class="bg-maroon">FIF</th>
+                <th class="bg-maroon">OTO</th>
+                <th class="bg-maroon">WOM</th>
+                <th class="bg-maroon">OTHER</th>
               </tr>
             </thead>
             <tbody>
@@ -305,6 +266,11 @@
                   </td>
                   <td>{{ $t->total_cs }}</td>
                   <td>{{ $t->total_marketing + $t->total_spv + $t->total_rh + $t->total_bm }}</td>
+
+                  <td>{{ $t->total_cub_low_end + $t->total_cub_mid_end + $t->total_cub_high_end }}</td>
+                  <td>{{ $t->total_at_low_end + $t->total_at_mid_end + $t->total_at_high_end }}</td>
+                  <td>{{ $t->total_sport_low_end + $t->total_sport_mid_end + $t->total_sport_high_end }}</td>
+
                   <td>
                     @if ($t->total_cash)
                       {{ substr(($t->total_cash/$t->total_month) * 100, 0,5) }}

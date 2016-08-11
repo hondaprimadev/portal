@@ -226,23 +226,26 @@
           <table id="tableSpvSales" class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th>Rank</th>
-                <th>Sales</th>
-                <th>Today</th>
-                <th>M</th>
-                <th>M-1</th>
-                <th>Growth</th>
-                <th>CS</th>
-                <th>Sales</th>
-                <th>Cash</th>
-                <th>Credit</th>
-                <th>Tempo</th>
-                <th>ADIRA</th>
-                <th>CSF</th>
-                <th>FIF</th>
-                <th>OTO</th>
-                <th>WOM</th>
-                <th>OTHER</th>
+                <th class="bg-primary">Rank</th>
+                <th class="bg-primary">Sales</th>
+                <th class="bg-primary">Today</th>
+                <th class="bg-navy">M</th>
+                <th class="bg-navy">-1</th>
+                <th class="bg-navy">Growth</th>
+                <th class="bg-orange">CS</th>
+                <th class="bg-orange">Sales</th>
+                <th class="bg-purple">Cub</th>
+                <th class="bg-purple">At</th>
+                <th class="bg-purple">Sport</th>
+                <th class="bg-teal">Cash</th>
+                <th class="bg-teal">Credit</th>
+                <th class="bg-maroon">Tempo</th>
+                <th class="bg-maroon">ADIRA</th>
+                <th class="bg-maroon">CSF</th>
+                <th class="bg-maroon">FIF</th>
+                <th class="bg-maroon">OTO</th>
+                <th class="bg-maroon">WOM</th>
+                <th class="bg-maroon">OTHER</th>
               </tr>
             </thead>
             <tbody>
@@ -272,6 +275,11 @@
                   </td>
                   <td>{{ $t->total_cs }}</td>
                   <td>{{ $t->total_marketing + $t->total_spv + $t->total_bm }}</td>
+
+                  <td>{{ $t->total_cub_low_end + $t->total_cub_mid_end + $t->total_cub_high_end }}</td>
+                  <td>{{ $t->total_at_low_end + $t->total_at_mid_end + $t->total_at_high_end }}</td>
+                  <td>{{ $t->total_sport_low_end + $t->total_sport_mid_end + $t->total_sport_high_end }}</td>
+
                   <td>
                     @if ($t->total_cash)
                       {{ substr(($t->total_cash/$t->total_month) * 100, 0,5) }}

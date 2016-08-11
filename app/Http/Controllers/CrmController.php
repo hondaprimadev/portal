@@ -27,6 +27,8 @@ class CrmController extends Controller
         
         $begin = $request->input('b');
         $end = $request->input('e');
+        $cust = $request->input('c');
+        $cust = $cust ? $cust:'Customer';
 
         if(!$begin && !$end)
         {
@@ -41,11 +43,17 @@ class CrmController extends Controller
 
 
         if (Gate::allows('crm.super')) {
-            $crms = Crm::with(['crmtypes' => function($query){
-                $query->where('name', 'Customer');
+            $crms = Crm::with(['crmtypes' => function($query) use ($cust){
+                $query->where('name', $cust);
+            }])
+            ->with(['vs'=> function($query){
+                $query->join('users','vehicle_sales.user_id','=','users.id')
+                        ->select('vehicle_sales.*','users.name as sales_name');
             }])
             ->whereBetween('crm_date', [$begin, $end])
             ->get();
+            // return $crms;
+
             if (auth()->user()->branch->id == '100') {
                 $branch_select = '';
             }else{
@@ -55,6 +63,10 @@ class CrmController extends Controller
         else{
             $crms = Crm::with(['crmtypes' => function($query){
                 $query->where('name', 'Customer');
+            }])
+            ->with(['vs'=> function($query){
+                $query->join('users','vehicle_sales.user_id','=','users.id')
+                        ->select('vehicle_sales.*','users.name as sales_name');
             }])
             ->whereBetween('crm_date', [$begin, $end])
             ->CrmBranch()

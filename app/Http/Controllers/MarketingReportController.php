@@ -50,6 +50,7 @@ class MarketingReportController extends Controller
 
         // Table
         $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1)->get();
+        // return $tableSales;
 
         return view('marketing.report.index', compact(
         	'branches', 

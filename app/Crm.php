@@ -24,7 +24,7 @@ class Crm extends Model
     */
     public function user()
     {
-        return $this->hasManyThrough('App\User','App\VehicleSales','nomor_crm','id','id');
+        return $this->hasManyThrough('App\User','App\VehicleSales','nomor_crm','id','user_id');
     }
 	public function crmtypes()
     {
@@ -47,6 +47,7 @@ class Crm extends Model
             $this->attributes['active_crm'] = true;
         }        
     }
+    
     public function setBranchIdAttribute($value)
     {
         if(empty($value)){

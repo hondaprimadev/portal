@@ -21,4 +21,9 @@ class Branch extends Model
     {
     	return $this->hasMany('App\VehicleSales');
     }
+
+    public function crms()
+    {
+        return $this->hasMany('App\Crm');
+    }
 }

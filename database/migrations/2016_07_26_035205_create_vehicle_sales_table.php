@@ -19,6 +19,7 @@ class CreateVehicleSalesTable extends Migration
             $table->text('faktur_note')->nullable();
             $table->enum('sales_type',['CASH', 'CREDIT','TEMPO']);
             $table->string('nomor_crm');
+            $table->string('vehicletype_id');
             $table->string('stock_nama');
             $table->string('stock_warna');
             $table->string('stock_tahun');

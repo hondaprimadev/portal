@@ -24,16 +24,16 @@ class DataController extends Controller
     }
 
     public function postSales(Request $request)
-    {	
+    {   
         $this->authorize('upload.sales');
 
         $branch = $request->input('branch_id');
 
-    	if (Input::hasFile('import_sales')) {
-    		$path = Input::file('import_sales')->getRealPath();
-    		$data = Excel::load($path, function($reader){})->get();
-    		if (!empty($data) && $data->count()) {
-    			foreach ($data as $key => $value) 
+        if (Input::hasFile('import_sales')) {
+            $path = Input::file('import_sales')->getRealPath();
+            $data = Excel::load($path, function($reader){})->get();
+            if (!empty($data) && $data->count()) {
+                foreach ($data as $key => $value) 
                 {
                     //set pt
                     $company = Branch::where('id', $branch)->first()->company_id;
@@ -44,15 +44,17 @@ class DataController extends Controller
                             ->first()->id;
                             
                     // set telphone
-                    $telp_crm = preg_replace("/^0/", "+62",$value->telp);
-                    $telp_stnk = preg_replace("/^0/", "+62",$value->stnktelp);
-                    if (!$telp_crm || !$telp_stnk) {
-                        $telp_crm = substr_replace($value->telp,"+62",0,0);
-                        $telp_stnk = substr_replace($value->stnktelp,"+62",0,0);
+                    $hp_crm = preg_replace("/^0/", "+62",$value->plghp);
+                    $hp_stnk = preg_replace("/^0/", "+62",$value->plghp2);
+                    $telp_crm = preg_replace("/^0/", "+62",$value->plgtelp);
+                    $telp_stnk = preg_replace("/^0/", "+62",$value->plgtelp2);
+                    if (!$hp_crm || !$hp_stnk) {
+                        $hp_crm = substr_replace($value->plghp,"+62",0,0);
+                        $hp_stnk = substr_replace($value->plghp2,"+62",0,0);
                     }
 
                     // get user id
-    				$user = User::where('name', $value->sales)->first();
+                    $user = User::where('name', $value->slnama)->first();
                     //validation sales id
                     if (!$user) 
                     {
@@ -75,68 +77,67 @@ class DataController extends Controller
                     }
 
                     // get crm id
-                    $crm = Crm::where('name_personal', $value->nama)
+                    $crm = Crm::where('identity_number', $value->plgktp2)
                             ->where('branch_id', $branch)
                             ->first();
-                    $stnk = Crm::where('name_personal', $value->stnknama)
+                    $stnk = Crm::where('identity_number', $value->plgktp)
                             ->where('branch_id', $branch)
                             ->first();
 
-                    if ($value->name == $value->stnkname) 
-                    {
-                        if (!$crm || !$stnk) 
-                        {
+                    if($value->plgnama2 != $value->plgnama){
+                        if (!$crm) {
                             $crm = Crm::create([
-                                'nomor_crm'=> $this->MaxNo($branch),
-                                'name_personal'=>$value->nama,
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->plgnama2,
                                 'address_personal'=>$value->alamat,
+                                'identity_number'=> $value->plgktp2,
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
+                                'active_crm'=>true,
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                            ]);
+                            $crm->crmtypes()->sync(['1']);
+                        }
+                        elseif (!$stnk) {
+                            $stnk = Crm::create([
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->plgnama,
+                                'address_personal'=>$value->stnkalmt,
+                                'identity_number'=> $value->plgktp,
+                                'ponsel_number'=>$telp_stnk,
+                                'branch_id'=>$branch,
+                                'active_crm'=>true,
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                            ]);
+                            $stnk->crmtypes()->sync(['2']);
+                        }
+
+                    }else{
+                        if (!$crm) {
+                            $crm = Crm::create([
+                                'nomor_crm'=> Crm::OfMaxno($branch),
+                                'name_personal'=>$value->plgnama2,
+                                'address_personal'=>$value->alamat,
+                                'identity_number'=> $value->plgktp2,
+                                'ponsel_number'=>$telp_crm,
+                                'branch_id'=>$branch,
+                                'active_crm'=>true,
                                 'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
                             ]);
                             $crm->crmtypes()->sync(['1','2']);
                         }
                     }
-                    else
-                    {
-                        if (!$crm) 
-                        {
-                            $crm = Crm::create([
-                                'nomor_crm'=> $this->MaxNo($branch),
-                                'name_personal'=>$value->nama,
-                                'address_personal'=>$value->alamat,
-                                'ponsel_number'=>$telp_crm,
-                                'branch_id'=>$branch,
-                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
-                            ]);
-                            $crm->crmtypes()->sync('1');
-                        }
-
-                        if (!$stnk) 
-                        {
-                            $stnk = Crm::create([
-                                'nomor_crm'=> $this->MaxNo($branch),
-                                'name_personal'=>$value->nama,
-                                'address_personal'=>$value->alamat,
-                                'ponsel_number'=>$telp_stnk,
-                                'branch_id'=>$branch,
-                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
-                            ]);
-                            $stnk->crmtypes()->sync('2');
-                        }
-                    }
-
                     // get sales type
                     
-                    if ($value->leasing == 'CASH') 
+                    if ($value->leasnama == 'CASH') 
                     {
-                        $cash = $value->leasing;
+                        $cash = $value->leasnama;
                         $leasing = '';
                         $leasing_group ='';
                     }
-                    elseif ($value->leasing == 'TEMPO') 
+                    elseif ($value->leasnama == 'TEMPO') 
                     {
-                        $cash = $value->leasing;
+                        $cash = $value->leasnama;
                         $leasing ='';
                         $leasing_group='';
 
@@ -144,7 +145,7 @@ class DataController extends Controller
                     else
                     {
                         $cash = 'CREDIT';
-                        $leasings = Leasing::where('name', $value->leasing)->first();
+                        $leasings = Leasing::where('name', $value->leasnama)->first();
                         $leasing = $leasings->id;
                         $leasing_group = $leasings->group_leasing;
                     }
@@ -156,7 +157,8 @@ class DataController extends Controller
                             'faktur_date'=>date('Y-m-d', strtotime($value->tanggal)),
                             'faktur_note'=>$value->ketjualxx,
                             'sales_type'=>$cash,
-                            'nomor_crm'=>$crm->nomor_crm,
+                            'nomor_crm'=>$crm['nomor_crm'],
+                            'vehicletype_id'=>$value->jeniskode,
                             'stock_nama' =>$value->brnama,
                             'stock_warna'=> $value->brwarna,
                             'stock_tahun' => $value->tahun,
@@ -168,7 +170,7 @@ class DataController extends Controller
                             'position_id'=>$position,
                             'price_otr'=>$value->ttlotr,
                             'price_dp'=>$value->ttlmuka,
-                            'price_disc'=>$value->potdeal2,
+                            'price_disc'=>$value->potongan,
                             'price_bbn'=>$value->bbn,
                             'leasing_id'=>$leasing,
                             'leasing_group'=>$leasing_group,
@@ -176,13 +178,13 @@ class DataController extends Controller
                             'active'=>true,
                         ];
 
-        				VehicleSales::create($sale);
+                        VehicleSales::create($sale);
                     }
-    			}
+                }
                 // return response()->json($sale);
-    		}
+            }
 
-    	}
+        }
 
         return back();
 
@@ -232,30 +234,5 @@ class DataController extends Controller
                 return back();
             }
         }
-    }
-
-    public function MaxNo($dealer)
-    {
-        $branch_id = $dealer;
-        $kd_fix;
-        $year=substr(date('Y'), 2);
-
-        $kd_max =  Crm::select(DB::raw('MAX( SUBSTR(`nomor_crm` , 4, 4 ) ) AS kd_max'))
-        ->where('branch_id', $branch_id)
-        ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
-        ->get();
-        
-        if ($kd_max->count() >0) {
-            foreach ($kd_max as $k) 
-            {
-                $tmp = ((int)$k->kd_max)+1;
-                $kd_fix = sprintf("%04s", $tmp);
-            }
-        }
-        else{
-            $kd_fix = '0001';
-        }
-
-        return 'CRM'. $kd_fix.$branch_id.$year;
     }
 }
