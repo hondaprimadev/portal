@@ -80,7 +80,7 @@
             <sup style="font-size: 20px">%</sup>
           </h3>
 
-          <p>Growth PAR</p>
+          <p>Growth by Date PAR</p>
         </div>
         <div class="icon">
           <i class="ion ion-stats-bars"></i>
@@ -117,7 +117,7 @@
             <sup style="font-size: 20px">%</sup>
           </h3>
 
-          <p>Growth PMA</p>
+          <p>Growth by Date PMA</p>
         </div>
         <div class="icon">
           <i class="ion ion-stats-bars"></i>

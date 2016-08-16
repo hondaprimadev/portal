@@ -202,24 +202,24 @@ class VehicleSales extends Model
         ->whereBetween('faktur_date', [$b, $e]);
     }
 
-    public function scopeOfTotalCompany($query, $date, $c)
+    public function scopeOfTotalCompany($query, $first, $last, $c)
     {
-        $query->whereRaw('DATE_FORMAT(faktur_date, "%Y-%m") = "'.$date.'"')
+        $query->whereBetween('faktur_date', [$first, $last])
                 ->where('company_id',$c);
     }
-    public function scopeOfTotalBranch($query, $date, $b)
+    public function scopeOfTotalBranch($query, $first, $last, $b)
     {
-        $query->whereRaw('DATE_FORMAT(faktur_date, "%Y-%m") = "'.$date.'"')
+        $query->whereBetween('faktur_date', [$first, $last])
                 ->where('branch_id',$b);
     }
-    public function scopeOfTotalPic($query, $date, $p)
+    public function scopeOfTotalPic($query, $first, $last, $p)
     {
-        $query->whereRaw('DATE_FORMAT(faktur_date, "%Y-%m") = "'.$date.'"')
+        $query->whereBetween('faktur_date', [$first, $last])
                 ->where('pic_id',$p);
     }
-    public function scopeOfTotalSales($query, $date, $p)
+    public function scopeOfTotalSales($query, $first, $last, $p)
     {
-        $query->whereRaw('DATE_FORMAT(faktur_date, "%Y-%m") = "'.$date.'"')
+        $query->whereBetween('faktur_date', [$first, $last])
                 ->where('user_id',$p);
     }
 }
