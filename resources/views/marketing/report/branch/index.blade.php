@@ -230,7 +230,8 @@
                 <th class="bg-primary">Sales</th>
                 <th class="bg-primary">Today</th>
                 <th class="bg-navy">M</th>
-                <th class="bg-navy">-1</th>
+                <th class="bg-navy">D-1</th>
+                <th class="bg-navy">M-1</th>
                 <th class="bg-navy">Growth</th>
                 <th class="bg-orange">CS</th>
                 <th class="bg-orange">Sales</th>
@@ -260,10 +261,11 @@
                   </td>
                   <td>{{ $t->total_today }}</td>
                   <td>{{ $t->total_month }}</td>
+                  <td>{{ $t->total_day_m1 }}</td>
                   <td>{{ $t->total_month_m1 }}</td>
                   <td>
-                    @if ($t->total_month_m1)
-                      {{ substr((($t->total_month / $t->total_month_m1) - 1) * 100, 0,5) }} %
+                    @if ($t->total_day_m1)
+                      {{ substr((($t->total_month / $t->total_day_m1) - 1) * 100, 0,5) }} %
                     @endif
                   </td>
                   <td>{{ $t->total_cs }}</td>

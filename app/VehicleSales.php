@@ -52,12 +52,13 @@ class VehicleSales extends Model
                 ->groupBy('DATE');
     }
 
-    public function scopeOfTableAll($query, $begin, $b, $e,$tahun_m1, $bulan_m1)
+    public function scopeOfTableAll($query, $begin, $b, $e,$tahun_m1, $bulan_m1, $first_m1,$now_m1)
     {
         $query->select(
             DB::raw('sum(case when faktur_date = "'.date('Y-m-d').'" then active else 0 end) as total_today'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_month'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$tahun_m1.'-'.$bulan_m1.'" then active else 0 end) as total_month_m1'),
+            DB::raw('sum(case when faktur_date between "'.$first_m1.'" and "'.$now_m1.'" then active else 0 end) as total_day_m1'),
             DB::raw('sum(case when position_id="B7CS" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_cs'),
             DB::raw('sum(case when position_id="B7MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_marketing'),
             DB::raw('sum(case when position_id="B6MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_spv'),
@@ -91,12 +92,13 @@ class VehicleSales extends Model
         ->groupBy('branch_id')
         ->orderBy('total_month', 'desc');
     }
-    public function scopeOfTableBranch($query, $begin, $b, $e, $tahun_m1, $bulan_m1, $b='')
+    public function scopeOfTableBranch($query, $begin, $b, $e, $tahun_m1, $bulan_m1, $b='',$first_m1,$now_m1)
     {
         $query->select(
             DB::raw('sum(case when faktur_date = "'.date('Y-m-d').'" then active else 0 end) as total_today'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_month'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$tahun_m1.'-'.$bulan_m1.'" then active else 0 end) as total_month_m1'),
+            DB::raw('sum(case when faktur_date between "'.$first_m1.'" and "'.$now_m1.'" then active else 0 end) as total_day_m1'),
             DB::raw('sum(case when vehicle_sales.position_id="B7CS" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_cs'),
             DB::raw('sum(case when vehicle_sales.position_id="B7MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_marketing'),
             DB::raw('sum(case when vehicle_sales.position_id="B5MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_spv'),
@@ -132,12 +134,13 @@ class VehicleSales extends Model
         ->orderBy('total_month', 'desc');
     }
 
-    public function scopeOfTablePic($query, $begin,$b,$e,$tahun_m1,$bulan_m1, $p='')
+    public function scopeOfTablePic($query, $begin,$b,$e,$tahun_m1,$bulan_m1, $p='',$first_m1,$now_m1)
     {
         $query->select(
             DB::raw('sum(case when faktur_date = "'.date('Y-m-d').'" then active else 0 end) as total_today'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_month'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$tahun_m1.'-'.$bulan_m1.'" then active else 0 end) as total_month_m1'),
+            DB::raw('sum(case when faktur_date between "'.$first_m1.'" and "'.$now_m1.'" then active else 0 end) as total_day_m1'),
             DB::raw('sum(case when vehicle_sales.position_id="B7CS" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_cs'),
             DB::raw('sum(case when vehicle_sales.position_id="B7MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_marketing'),
             DB::raw('sum(case when vehicle_sales.position_id="B5MK" AND DATE_FORMAT(faktur_date,"%Y-%m")="'.$begin.'" then active else 0 end) as total_spv'),

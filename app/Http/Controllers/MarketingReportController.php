@@ -35,6 +35,8 @@ class MarketingReportController extends Controller
         $bulan_m1 = date("m", strtotime($first_day_last_month));
         $day_m1 = cal_days_in_month(CAL_GREGORIAN, $bulan_m1, $tahun_m1);
         $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day_m1);
+        $now_day = date('d');
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
 
         //PAR chart
         $vs = VehicleSales::OfSales($begin->format('Y-m-d'), $end->format('Y-m-d'), '1')->get();
@@ -49,8 +51,8 @@ class MarketingReportController extends Controller
         $vspma_total_m1 = VehicleSales::OfTotalCompany(date($tahun_m1."-".$bulan_m1),'2')->count();
 
         // Table
-        $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1)->get();
-        // return $tableSales;
+        $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1,$first_day_last_month, $now_day_m1)->get();
+        
         $lastupdate = VehicleSales::max('updated_at');
 
         return view('marketing.report.index', compact(
@@ -119,6 +121,8 @@ class MarketingReportController extends Controller
         $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day);
         $begin_m1 = new \DateTime($first_day_last_month);
         $end_m1 = new \DateTime($last_day_last_month);
+        $now_day = date('d');
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
 
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
@@ -134,7 +138,7 @@ class MarketingReportController extends Controller
         $vs_total_par_m1 = VehicleSales::OfTotalCompany(date($tahun_m1."-".$bulan_m1),'1')->count();
 
         // Table
-        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $branch_id)->get();
+        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $branch_id, $first_day_last_month, $now_day_m1)->get();
         
         $lastupdate = VehicleSales::max('updated_at');
 
@@ -209,6 +213,8 @@ class MarketingReportController extends Controller
         $end_m1 = new \DateTime($last_day_last_month);
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
+        $now_day = date('d');
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
 
         // Table PIC
         $vs = VehicleSales::OfSalesPic($begin->format('Y-m-d'), $end->format('Y-m-d'), $pic_id)->get();
@@ -221,7 +227,7 @@ class MarketingReportController extends Controller
         $vs_total_branch_m1 = VehicleSales::OfTotalBranch(date($tahun_m1."-".$bulan_m1),$branch_id)->count();
 
         // Table
-        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $pic_id)->get();
+        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $pic_id,$first_day_last_month, $now_day_m1)->get();
         
         $lastupdate = VehicleSales::max('updated_at');
 
