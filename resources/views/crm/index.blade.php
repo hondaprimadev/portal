@@ -72,8 +72,10 @@
 							<th data-sortable="false"><input type="checkbox" id="check_all"/></th>
 							<th>Supplier No.</th>
 							<th>Name Customer</th>
-							<th>Branch</th>
+							<th>City</th>
 							<th>Ktp</th>
+							<th>City</th>
+							<th>Kecamatan</th>
 							<th>Sales Count</th>
 							<th>Sales Name</th>
 							<th>Date</th>
@@ -90,6 +92,8 @@
 								<td>{{ $crm->name_personal }}</td>
 								<td>{{ $crm->branch->name }}</td>
 								<td>{{ $crm->identity_number }}</td>
+								<td>{{ $crm->city }}</td>
+								<td>{{ $crm->kecamatan }}</td>
 								<td>{{ $crm->vs()->count() }}</td>
 								<td>
 									@foreach ($crm->vs as $vs)
