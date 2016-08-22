@@ -52,7 +52,7 @@ class MarketingReportController extends Controller
 
         // Table
         $tableSales = VehicleSales::OfTableAll($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1,$first_day_m1, $now_day_m1)->get();
-        
+
         $lastupdate = VehicleSales::max('updated_at');
 
         return view('marketing.report.index', compact(
@@ -121,8 +121,8 @@ class MarketingReportController extends Controller
         $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day);
         $begin_m1 = new \DateTime($first_day_last_month);
         $end_m1 = new \DateTime($last_day_last_month);
-        $now_day = date('d');
-        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
+        $first_day_m1 = date($tahun_m1."-".$bulan_m1."-".$begin->format('d'));
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$end->format('d'));
 
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
@@ -131,15 +131,15 @@ class MarketingReportController extends Controller
         $vs = VehicleSales::OfSalesBranch($begin->format('Y-m-d'), $end->format('Y-m-d'), $branch_id)->get();
         $vs_total = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),date('Y-m-d'), $branch_id)->count();
 
-        $vs_m1 = VehicleSales::OfSalesBranch($first_day_last_month, $last_day_last_month, $branch_id)->get();
-        $vs_total_m1 = VehicleSales::OfTotalBranch($first_day_last_month, $now_day_m1,$branch_id)->count();
+        $vs_m1 = VehicleSales::OfSalesBranch($first_day_m1, $now_day_m1, $branch_id)->get();
+        $vs_total_m1 = VehicleSales::OfTotalBranch($first_day_m1, $now_day_m1,$branch_id)->count();
 
         // Company
         $vs_total_par = VehicleSales::OfTotalCompany($begin->format('Y-m-d'),date('Y-m-d'),'1')->count();
-        $vs_total_par_m1 = VehicleSales::OfTotalCompany($first_day_last_month, $now_day_m1,'1')->count();
+        $vs_total_par_m1 = VehicleSales::OfTotalCompany($first_day_m1, $now_day_m1,'1')->count();
 
         // Table
-        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $branch_id, $first_day_last_month, $now_day_m1)->get();
+        $tableSales = VehicleSales::OfTableBranch($begin->format('Y-m'), $begin->format('Y-m-d'),$end->format('Y-m-d'),$tahun_m1, $bulan_m1, $first_day_m1, $now_day_m1, $branch_id)->get();
         
         $lastupdate = VehicleSales::max('updated_at');
 
@@ -214,22 +214,22 @@ class MarketingReportController extends Controller
         $end_m1 = new \DateTime($last_day_last_month);
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
-        $now_day = date('d');
-        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
+        $first_day_m1 = date($tahun_m1."-".$bulan_m1."-".$begin->format('d'));
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$end->format('d'));
 
         // Table PIC
         $vs = VehicleSales::OfSalesPic($begin->format('Y-m-d'), $end->format('Y-m-d'), $pic_id)->get();
         $vs_total = VehicleSales::OfTotalPic($begin->format('Y-m-d'),date('Y-m-d'), $pic_id)->count();
 
-        $vs_m1 = VehicleSales::OfSalesPic($first_day_last_month, $last_day_last_month, $pic_id)->get();
-        $vs_total_m1 = VehicleSales::OfTotalPic($first_day_last_month, $now_day_m1, $pic_id)->count();
+        $vs_m1 = VehicleSales::OfSalesPic($first_day_m1, $now_day_m1, $pic_id)->get();
+        $vs_total_m1 = VehicleSales::OfTotalPic($first_day_m1, $now_day_m1, $pic_id)->count();
 
         // Branch
         $vs_total_branch = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),date('Y-m-d'),$branch_id)->count();
-        $vs_total_branch_m1 = VehicleSales::OfTotalBranch($first_day_last_month, $now_day_m1,$branch_id)->count();
+        $vs_total_branch_m1 = VehicleSales::OfTotalBranch($first_day_m1, $now_day_m1,$branch_id)->count();
 
         // Table
-        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $pic_id,$first_day_last_month, $now_day_m1)->get();
+        $tableSales = VehicleSales::OfTablePic($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1,$first_day_m1, $now_day_m1, $pic_id)->get();
         
         $lastupdate = VehicleSales::max('updated_at');
 
