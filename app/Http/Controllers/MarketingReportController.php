@@ -18,7 +18,7 @@ class MarketingReportController extends Controller
             $now = date('Y-m-');
             $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
             $begin = new \DateTime($now.'01');
-            $end = new \DateTime($now.$d1);
+            $end = new \DateTime(date('Y-m-d'));
         }else{
             $begin = new \DateTime($request->input('begin'));
             $end = new \DateTime($request->input('end'));
@@ -35,13 +35,12 @@ class MarketingReportController extends Controller
         $bulan_m1 = date("m", strtotime($first_day_last_month));
         $day_m1 = cal_days_in_month(CAL_GREGORIAN, $bulan_m1, $tahun_m1);
         $last_day_last_month = date($tahun_m1."-".$bulan_m1."-".$day_m1);
-        $now_day = date('d');
-        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$end->format('d'));
 
         //PAR chart
         $vs = VehicleSales::OfSales($begin->format('Y-m-d'), $end->format('Y-m-d'), '1')->get();
-        $vs_m1 = VehicleSales::OfSales($first_day_last_month, $last_day_last_month, '1')->get();
-        $vs_total = VehicleSales::OfTotalCompany($begin->format('Y-m-d'),date('Y-m-d'),'1')->count();
+        $vs_m1 = VehicleSales::OfSales($first_day_last_month, $now_day_m1, '1')->get();
+        $vs_total = VehicleSales::OfTotalCompany($begin->format('Y-m-d'),$end->format('Y-m-d'),'1')->count();
         $vs_total_m1 = VehicleSales::OfTotalCompany($first_day_last_month, $now_day_m1,'1')->count();
 
         //PMA chart

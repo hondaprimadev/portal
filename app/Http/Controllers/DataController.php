@@ -42,12 +42,14 @@ class DataController extends Controller
                             ->where('position_id', 'B4')
                             ->where('job_status', 'Active')
                             ->first()->id;
-                            
+                    
                     // set telphone
                     $hp_crm = preg_replace("/^0/", "+62",$value->plghp);
                     $hp_stnk = preg_replace("/^0/", "+62",$value->plghp2);
                     $telp_crm = preg_replace("/^0/", "+62",$value->plgtelp);
                     $telp_stnk = preg_replace("/^0/", "+62",$value->plgtelp2);
+                    $address = explode(" ",$value->alamat);
+
                     if (!$hp_crm || !$hp_stnk) {
                         $hp_crm = substr_replace($value->plghp,"+62",0,0);
                         $hp_stnk = substr_replace($value->plghp2,"+62",0,0);
@@ -90,6 +92,8 @@ class DataController extends Controller
                                 'nomor_crm'=> Crm::OfMaxno($branch),
                                 'name_personal'=>$value->plgnama2,
                                 'address_personal'=>$value->alamat,
+                                'kecamatan'=> $address[count($address)-2],
+                                'city' => $value->plgkota2,
                                 'identity_number'=> $value->plgktp2,
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
@@ -103,6 +107,8 @@ class DataController extends Controller
                                 'nomor_crm'=> Crm::OfMaxno($branch),
                                 'name_personal'=>$value->plgnama,
                                 'address_personal'=>$value->stnkalmt,
+                                'kecamatan' => $value->plgcamat,
+                                'city' => $value->plgkota,
                                 'identity_number'=> $value->plgktp,
                                 'ponsel_number'=>$telp_stnk,
                                 'branch_id'=>$branch,
@@ -118,6 +124,8 @@ class DataController extends Controller
                                 'nomor_crm'=> Crm::OfMaxno($branch),
                                 'name_personal'=>$value->plgnama2,
                                 'address_personal'=>$value->alamat,
+                                'kecamatan'=> $address[count($address)-2],
+                                'city' => $value->plgkota2,
                                 'identity_number'=> $value->plgktp2,
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
