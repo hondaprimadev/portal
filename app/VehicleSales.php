@@ -170,7 +170,7 @@ class VehicleSales extends Model
         )
         ->leftJoin('users', 'vehicle_sales.user_id', '=', 'users.id')
         ->where('vehicle_sales.pic_id', $p)
-        // ->whereBetween('faktur_date', [$b, $e])
+        ->whereBetween('faktur_date', [$b, $e])
         ->groupBy('vehicle_sales.user_id')
         ->orderBy('total_month', 'desc');
     }
