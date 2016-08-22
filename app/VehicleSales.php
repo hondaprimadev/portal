@@ -52,13 +52,13 @@ class VehicleSales extends Model
                 ->groupBy('DATE');
     }
 
-    public function scopeOfTableAll($query, $begin, $b, $e,$tahun_m1, $bulan_m1, $first_m1,$now_m1)
+    public function scopeOfTableAll($query, $begin, $b, $e,$tahun_m1, $bulan_m1, $b1,$e1)
     {
         $query->select(
             DB::raw('sum(case when faktur_date = "'.date('Y-m-d').'" then active else 0 end) as total_today'),
             DB::raw('sum(case when faktur_date between "'.$b.'" and "'.$e.'" then active else 0 end) as total_month'),
             DB::raw('sum(case when DATE_FORMAT(faktur_date,"%Y-%m")="'.$tahun_m1.'-'.$bulan_m1.'" then active else 0 end) as total_month_m1'),
-            DB::raw('sum(case when faktur_date between "'.$first_m1.'" and "'.$now_m1.'" then active else 0 end) as total_day_m1'),
+            DB::raw('sum(case when faktur_date between "'.$b1.'" and "'.$e1.'" then active else 0 end) as total_day_m1'),
             DB::raw('sum(case when position_id="B7CS" AND faktur_date between "'.$b.'" and "'.$e.'" then active else 0 end) as total_cs'),
             DB::raw('sum(case when position_id="B7MK" AND faktur_date between "'.$b.'" and "'.$e.'" then active else 0 end) as total_marketing'),
             DB::raw('sum(case when position_id="B6MK" AND faktur_date between "'.$b.'" and "'.$e.'" then active else 0 end) as total_spv'),
@@ -88,7 +88,7 @@ class VehicleSales extends Model
             'branches.name as name_branch'
         )
         ->leftJoin('branches', 'vehicle_sales.branch_id', '=', 'branches.id')
-        ->whereBetween('faktur_date', [$b, $e])
+        // ->whereBetween('faktur_date', [$b, $e])
         ->groupBy('branch_id')
         ->orderBy('total_month', 'desc');
     }
@@ -170,7 +170,7 @@ class VehicleSales extends Model
         )
         ->leftJoin('users', 'vehicle_sales.user_id', '=', 'users.id')
         ->where('vehicle_sales.pic_id', $p)
-        ->whereBetween('faktur_date', [$b, $e])
+        // ->whereBetween('faktur_date', [$b, $e])
         ->groupBy('vehicle_sales.user_id')
         ->orderBy('total_month', 'desc');
     }
