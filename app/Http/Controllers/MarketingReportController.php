@@ -129,7 +129,7 @@ class MarketingReportController extends Controller
 
         // Table Branch
         $vs = VehicleSales::OfSalesBranch($begin->format('Y-m-d'), $end->format('Y-m-d'), $branch_id)->get();
-        $vs_total = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),date('Y-m-d'), $branch_id)->count();
+        $vs_total = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),$end->format('Y-m-d'), $branch_id)->count();
 
         $vs_m1 = VehicleSales::OfSalesBranch($first_day_m1, $now_day_m1, $branch_id)->get();
         $vs_total_m1 = VehicleSales::OfTotalBranch($first_day_m1, $now_day_m1,$branch_id)->count();
@@ -219,13 +219,13 @@ class MarketingReportController extends Controller
 
         // Table PIC
         $vs = VehicleSales::OfSalesPic($begin->format('Y-m-d'), $end->format('Y-m-d'), $pic_id)->get();
-        $vs_total = VehicleSales::OfTotalPic($begin->format('Y-m-d'),date('Y-m-d'), $pic_id)->count();
+        $vs_total = VehicleSales::OfTotalPic($begin->format('Y-m-d'),$end->format('Y-m-d'), $pic_id)->count();
 
         $vs_m1 = VehicleSales::OfSalesPic($first_day_m1, $now_day_m1, $pic_id)->get();
         $vs_total_m1 = VehicleSales::OfTotalPic($first_day_m1, $now_day_m1, $pic_id)->count();
 
         // Branch
-        $vs_total_branch = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),date('Y-m-d'),$branch_id)->count();
+        $vs_total_branch = VehicleSales::OfTotalBranch($begin->format('Y-m-d'),$end->format('Y-m-d'),$branch_id)->count();
         $vs_total_branch_m1 = VehicleSales::OfTotalBranch($first_day_m1, $now_day_m1,$branch_id)->count();
 
         // Table
@@ -305,19 +305,19 @@ class MarketingReportController extends Controller
         $end_m1 = new \DateTime($last_day_last_month);
         $daterange_m1 = new \DatePeriod($begin_m1, $interval, $end_m1->modify('+1 day'));
         $end_m1 = $end_m1->modify('-1 day');
-        $now_day = date('d');
-        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$now_day);
+        $first_day_m1 = date($tahun_m1."-".$bulan_m1."-".$begin->format('d'));
+        $now_day_m1 = date($tahun_m1."-".$bulan_m1."-".$end->format('d'));
 
         // Table Sales range date
         $vs = VehicleSales::OfSaleSales($begin->format('Y-m-d'), $end->format('Y-m-d'), $sales_id)->get();
-        $vs_total = VehicleSales::OfTotalSales($begin->format('Y-m-d'),date('Y-m-d'), $sales_id)->count();
+        $vs_total = VehicleSales::OfTotalSales($begin->format('Y-m-d'),$end->format('Y-m-d'), $sales_id)->count();
 
-        $vs_m1 = VehicleSales::OfSaleSales($first_day_last_month, $last_day_last_month, $sales_id)->get();
-        $vs_total_m1 = VehicleSales::OfTotalSales($first_day_last_month, $now_day_m1,$sales_id)->count();
+        $vs_m1 = VehicleSales::OfSaleSales($first_day_m1, $now_day_m1, $sales_id)->get();
+        $vs_total_m1 = VehicleSales::OfTotalSales($first_day_m1, $now_day_m1,$sales_id)->count();
 
         // Branch
         $vs_total_branch = VehicleSales::OfTotalBranch($begin->format('Y-m-d'), $end->format('Y-m-d'),$branch_id)->count();
-        $vs_total_branch_m1 = VehicleSales::OfTotalBranch($first_day_last_month, $now_day_m1,$branch_id)->count();
+        $vs_total_branch_m1 = VehicleSales::OfTotalBranch($first_day_m1, $now_day_m1,$branch_id)->count();
 
         // Table Growth
         $tableSales = VehicleSales::OfTableSales($begin->format('Y-m'),$begin->format('Y-m-d'),$end->format('Y-m-d'), $tahun_m1, $bulan_m1, $sales_id)->get();
