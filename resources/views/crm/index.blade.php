@@ -70,10 +70,11 @@
 					<thead>
 						<tr>
 							<th data-sortable="false"><input type="checkbox" id="check_all"/></th>
-							<th>Supplier No.</th>
+							<th>Customer No.</th>
 							<th>Name Customer</th>
-							<th>City</th>
+							<th>Branch</th>
 							<th>Ktp</th>
+							<th>No Telpon</th>
 							<th>City</th>
 							<th>Kecamatan</th>
 							<th>Sales Count</th>
@@ -92,6 +93,7 @@
 								<td>{{ $crm->name_personal }}</td>
 								<td>{{ $crm->branch->name }}</td>
 								<td>{{ $crm->identity_number }}</td>
+								<td>{{ $crm->ponsel_number }}</td>
 								<td>{{ $crm->city }}</td>
 								<td>{{ $crm->kecamatan }}</td>
 								<td>{{ $crm->vs()->count() }}</td>
