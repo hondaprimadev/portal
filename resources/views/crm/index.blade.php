@@ -58,12 +58,12 @@
 						</span>
 						<b class="caret"></b>
 				    </button>
-        </div>
+        		</div>
 
-        <div class="col-md-4">
-          <input type="text" id="searchDtbox" class="form-control" placeholder="search...">
-        </div>
-      </div>
+        		<div class="col-md-4">
+          			<input type="text" id="searchDtbox" class="form-control" placeholder="search...">
+        		</div>
+      		</div>
 
 			{!! Form::open(['url'=>'/crm/delete','id'=>'formCrmDelete']) !!}
 				<table id="tableCrm" class="table table-striped table-color">
