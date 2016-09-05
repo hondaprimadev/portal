@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Be right back.</title>
+        <title>Honda Prima Maintenance</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
 
@@ -18,6 +18,7 @@
                 display: table;
                 font-weight: 100;
                 font-family: 'Lato';
+                background-color: #2B2B2B;
             }
 
             .container {
