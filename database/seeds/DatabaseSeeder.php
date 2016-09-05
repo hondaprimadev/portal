@@ -131,7 +131,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $super = App\User::create([
-                'id'=>'1283',
+                'id'=>'1058',
                 'name'=>'PRAMANDA TIRTA MULYA',
                 'email'=>'tmulya@gmail.com',
                 'password'=>bcrypt('1234567890'),
