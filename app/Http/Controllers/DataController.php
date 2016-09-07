@@ -162,7 +162,7 @@ class DataController extends Controller
                     if (!$sales) {
                         $sale=[
                             'no_faktur'=>$value->jlfkt,
-                            'faktur_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                            'faktur_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             'faktur_note'=>$value->ketjualxx,
                             'sales_type'=>$cash,
                             'nomor_crm'=>$crm['nomor_crm'],

@@ -2,6 +2,7 @@
 Route::get('login', 'Auth\AuthController@showLoginForm');
 Route::post('login', 'Auth\AuthController@login');
 Route::get('logout', 'Auth\AuthController@logout');
+
 Route::group([
 	'middleware'=>'auth',
 ], function(){
@@ -89,4 +90,18 @@ Route::group([
 ], function(){
 	Route::post('/crm/delete', 'CrmController@delete');
 	Route::resource('/crm', 'CrmController');
+});
+
+Route::group([
+	'prefix'=>'api',
+	// 'middleware' => 'jwt.auth',
+], function(){
+	Route::resource('agenda','Api\MarketingAgendaController');
+});
+
+Route::group(['prefix' => 'api'], function()
+{
+    Route::resource('authenticate', 'Auth\AuthenticateJWTController', ['only' => ['index']]);
+    Route::post('authenticate', 'Auth\AuthenticateJWTController@authenticate');
+    Route::get('authenticate/user', 'Auth\AuthenticateJWTController@getAuthenticatedUser');
 });
