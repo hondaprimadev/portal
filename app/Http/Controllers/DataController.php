@@ -98,7 +98,7 @@ class DataController extends Controller
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
                                 'active_crm'=>true,
-                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             ]);
                             $crm->crmtypes()->sync(['1']);
                         }
@@ -113,7 +113,7 @@ class DataController extends Controller
                                 'ponsel_number'=>$telp_stnk,
                                 'branch_id'=>$branch,
                                 'active_crm'=>true,
-                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             ]);
                             $stnk->crmtypes()->sync(['2']);
                         }
@@ -130,7 +130,7 @@ class DataController extends Controller
                                 'ponsel_number'=>$telp_crm,
                                 'branch_id'=>$branch,
                                 'active_crm'=>true,
-                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal)),
+                                'crm_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             ]);
                             $crm->crmtypes()->sync(['1','2']);
                         }
@@ -159,8 +159,8 @@ class DataController extends Controller
                     }
 
                     $sales = VehicleSales::where('no_faktur', $value->jlfkt)->first();
-                    if (!$sales) {
-                        $sale=[
+                    // if (!$sales) {
+                        $sale[]=[
                             'no_faktur'=>$value->jlfkt,
                             'faktur_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             'faktur_note'=>$value->ketjualxx,
@@ -186,10 +186,10 @@ class DataController extends Controller
                             'active'=>true,
                         ];
 
-                        VehicleSales::create($sale);
-                    }
+                        //VehicleSales::create($sale);
+                    // }
                 }
-                // return response()->json($sale);
+                return response()->json($sale);
             }
 
         }
