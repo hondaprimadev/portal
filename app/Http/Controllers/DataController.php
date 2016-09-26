@@ -159,8 +159,8 @@ class DataController extends Controller
                     }
 
                     $sales = VehicleSales::where('no_faktur', $value->jlfkt)->first();
-                     if (!$sales) {
-                        $sale=[
+                    if (!$sales) {
+                        $sale[]=[
                             'no_faktur'=>$value->jlfkt,
                             'faktur_date'=>date('Y-m-d', strtotime($value->tanggal2)),
                             'faktur_note'=>$value->ketjualxx,
@@ -188,7 +188,7 @@ class DataController extends Controller
                         VehicleSales::create($sale);
                     }
                 }
-                // return response()->json($sale);
+                return response()->json($s);
             }
 
         }

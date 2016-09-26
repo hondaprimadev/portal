@@ -40,8 +40,22 @@ class AuthenticateJWTController extends Controller
 			//something went wrong
 			return response()->json(['error'=>'could_not_create_token'], 500);
 		}
-		$user  = User::where('id',$request->input('id'))->first();
-		return response()->json(['error'=>false,'token'=>$token,'id'=>$user->id,'name'=>$user->name,'email'=>$user->email,'branch'=>$user->branch_id,'department'=>$user->department_id,'position'=>$user->position_id,'role'=>$user->roles()->first()->name]);
+
+		$user = User::where('id', $request->input('id'))
+				->where('is_user', true)
+				->first();
+		$user['token_jwt'] = $token;
+
+		if (!$user) {
+			return response()->json([
+				'error'=>[
+					'message'=>'User does not exist'
+				]
+			], 404);
+		}
+		return response()->json(
+			$this->transform($user)
+		);
 	}
 
 	public function getAuthenticatedUser()
@@ -60,5 +74,39 @@ class AuthenticateJWTController extends Controller
 
 		// th token is valid 
 		return response()->json(compact('user'));
+	}
+
+	public function transform($user)
+	{
+		return [
+			'nik'=>$user['id'],
+			'name'=>$user['name'],
+			"alias"=> $user['alias'],
+			"email"=> $user['email'],
+			"address"=> $user['address'],
+			"city"=> $user['city'],
+			"birthday"=>$user['birthday'],
+			"birthplace"=>$user['birthplace'],
+			"phone"=>$user['phone'],
+			"marrital"=>$user['marrital'],
+			"blood_type"=> $user['blood_type'],
+			"zipcode"=> $user['zipcode'],
+			"gender"=> $user['gender'],
+			"bank_account"=>$user['bank_account'],
+			"npwp"=>$user['npwp'],
+			"bank_branch"=>$user['bank_branch'],
+			"bank_name"=>$user['bank_name'],
+			"job_status"=>$user['job_status'],
+			"job_start"=>$user['job_start'],
+			"branch_id"=>$user['branch_id'],
+			"company_id"=>$user['company_id'],
+			"department_id"=>$user['department_id'],
+			"position_id"=>$user['position_id'],
+			"grade"=>$user['grade'],
+			"mother_name"=>$user['mother_name'],
+			"pic_id"=>$user['pic_id'],
+			"is_user"=>$user['is_user'],
+			"token"=>$user['token_jwt'],
+		];
 	}
 }

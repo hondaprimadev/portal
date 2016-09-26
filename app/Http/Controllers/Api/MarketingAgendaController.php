@@ -16,23 +16,21 @@ class MarketingAgendaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $agendas = MarketingAgenda::all();
+        $agendas = MarketingAgenda::where('user_id', $request->input('id'));
 
         if (!$agendas) {
             return Response::json([
-                'error' => [
-                    'error'=>true,
-                    'message' => 'Agenda does not exist'
-                ]
+                'error'=>true,
+                'message' => 'Agenda does not exist'
             ], 404);
         }
 
         return Response::json([
             'error'=>false,
             'data' => $agendas
-        ], 200);
+        ]);
     }
 
     /**
