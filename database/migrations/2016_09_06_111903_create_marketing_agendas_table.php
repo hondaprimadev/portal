@@ -16,13 +16,21 @@ class CreateMarketingAgendasTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
-            $table->text('address');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('type_motor');
+            $table->string('nomor_crm');
+            
+            $table->enum('type_payment', ['Cash','Credit']);
+            $table->double('downpayment');
+            $table->double('price_otr');
+            $table->double('price_disc');
+            $table->string('leasing_id');
+            $table->double('leasing_payment');
+            $table->integer('leasing_tenor');
+            $table->text('program_marketing');
+
+            $table->string('motor_type');
+            $table->string('motor_color');
+
             $table->enum('status',['Hot Prospect', 'Prospect']);
-            $table->string('id_number');
             $table->text('note');
             $table->text('longitude');
             $table->text('latitude');
