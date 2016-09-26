@@ -40,8 +40,8 @@ class AuthenticateJWTController extends Controller
 			//something went wrong
 			return response()->json(['error'=>'could_not_create_token'], 500);
 		}
-
-		return response()->json(compact('token'));
+		$user  = User::where('id',$request->input('id'))->first();
+		return response()->json(['error'=>false,'token'=>$token,'id'=>$user->id,'name'=>$user->name,'email'=>$user->email,'branch'=>$user->branch_id,'department'=>$user->department_id,'position'=>$user->position_id,'role'=>$user->roles()->first()->name]);
 	}
 
 	public function getAuthenticatedUser()
