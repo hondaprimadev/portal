@@ -44,6 +44,8 @@ class AuthenticateJWTController extends Controller
 		$user = User::where('id', $request->input('id'))
 				->where('is_user', true)
 				->first();
+
+		$user['role'] = $user->roles()->first()->name;
 		$user['token_jwt'] = $token;
 
 		if (!$user) {
@@ -53,6 +55,7 @@ class AuthenticateJWTController extends Controller
 				]
 			], 404);
 		}
+
 		return response()->json(
 			$this->transform($user)
 		);
@@ -106,7 +109,8 @@ class AuthenticateJWTController extends Controller
 			"mother_name"=>$user['mother_name'],
 			"pic_id"=>$user['pic_id'],
 			"is_user"=>$user['is_user'],
-			"token"=>$user['token_jwt'],
+			"role"=>$user['role'],
+			"token"=>$user['token_jwt']
 		];
 	}
 }
