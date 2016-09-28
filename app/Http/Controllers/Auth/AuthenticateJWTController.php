@@ -33,12 +33,20 @@ class AuthenticateJWTController extends Controller
 		try {
 			// verify the credentials and create a token for the user
 			if (!$token = JWTAuth::attempt($credentials)) {
-				return response()->json(['error'=>'invalid_credentials'], 401);
+				return response()->json([
+					'error'=>true, 
+					'message'=>'invalid_credentials',
+					'data'=>''
+				], 401);
 			}
 			
 		} catch (JWTException $e) {
 			//something went wrong
-			return response()->json(['error'=>'could_not_create_token'], 500);
+			return response()->json([
+				'error'=>true,
+				'message'=>'could_not_create_token', 
+				'data'=>''
+			], 500);
 		}
 
 		$user = User::where('id', $request->input('id'))
@@ -50,15 +58,16 @@ class AuthenticateJWTController extends Controller
 
 		if (!$user) {
 			return response()->json([
-				'error'=>[
-					'message'=>'User does not exist'
-				]
+				'error'=>true,
+				'message'=>'User does not exist',
+				'data'=>''
 			], 404);
 		}
 
-		return response()->json(
-			$this->transform($user)
-		);
+		return response()->json([
+			'error' => false,
+			'data' => $this->transform($user)
+		]);
 	}
 
 	public function getAuthenticatedUser()
