@@ -66,7 +66,7 @@ class AuthenticateJWTController extends Controller
 
 		return response()->json([
 			'error' => false,
-			'data' => $this->transform($user)
+			'data' => [$this->transform($user)]
 		]);
 	}
 
