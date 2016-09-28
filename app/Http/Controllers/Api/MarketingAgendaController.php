@@ -29,7 +29,7 @@ class MarketingAgendaController extends Controller
 
         return Response::json([
             'error'=>false,
-            'data' => $agendas
+            'data' => [$agendas]
         ]);
     }
 
@@ -53,7 +53,7 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'error' => false,
             'message'=> 'success create agenda',
-            'data'=>$agenda
+            'data'=>[$agenda]
         ], 200);
 
     }
@@ -80,7 +80,7 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'error' => false,
             'message'=> 'success update agenda',
-            'data'=>$agenda
+            'data'=>[$agenda]
         ], 200);
     }
 
@@ -105,7 +105,7 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'error' => false,
             'message'=> 'success delete agenda',
-            'data'=>$agenda
+            'data'=>[$agenda]
         ], 200);
     }
 }
