@@ -69,19 +69,19 @@
 
   	function getNik() {
   		if ($('#nik_auto').is(':checked')) 
-		{
-			$.ajax({
-				url: '{{ route('hrd.employee.get.id') }}',
-				success: function(response){
-					$("#nik").val(response);
-					$("#nik").prop('disabled', true);
-				}
-			});
-		}
-		else{
-			$("#nik").val('');
-			$("#nik").prop('disabled', false);
-		}
+  		{
+  			$.ajax({
+  				url: '{{ route('hrd.employee.get.id') }}',
+  				success: function(response){
+  					$("#nik").val(response);
+  					$("#nik").prop('disabled', true);
+  				}
+  			});
+  		}
+  		else{
+  			$("#nik").val('');
+  			$("#nik").prop('disabled', false);
+  		}
   	}
 	// picture method
 	function deletePicture() {
