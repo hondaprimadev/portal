@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\MarketingAgenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class MarketingAgendaController extends Controller
 {
@@ -18,19 +19,20 @@ class MarketingAgendaController extends Controller
      */
     public function index(Request $request)
     {
-        $agendas = MarketingAgenda::where('user_id', $request->input('id'));
+        $agendas = MarketingAgenda::where('user_id', $request->input('id'))->get();
 
-        if (!$agendas) {
+        if ($agendas->count() == null || !$request->input('id')) {
             return Response::json([
-                'error'=>true,
-                'message' => 'Agenda does not exist'
+                'status' => '404',
+                'message'=>'failed to fetch agenda',
+                'data'=>[]
             ], 404);
         }
-
         return Response::json([
-            'error'=>false,
-            'data' => [$agendas]
-        ]);
+            'status' => '200',
+            'message' => 'success fetch agenda',
+            'data'=> $agendas
+        ], 200);
     }
 
     /**
@@ -41,21 +43,30 @@ class MarketingAgendaController extends Controller
      */
     public function store(Request $request)
     {
-        $agenda = MarketingAgenda::create($request->all());
-
-        if (!$agenda) {
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
             return Response::json([
-                'error'=>true,
-                'message'=>'failed to create agenda'
+                'status'=>'404',
+                'message'=>$validator->errors(),
+                'data'=>[]
             ], 404);
         }
-
-        return Response::json([
-            'error' => false,
-            'message'=> 'success create agenda',
-            'data'=>[$agenda]
-        ], 200);
-
+        
+        $agenda = MarketingAgenda::create($request->all());
+        
+        if (!$agenda) {
+            return Response::json([
+                'status'=> '404',
+                'message' => 'cannot save this data',
+                'data' => []
+            ],404);
+        }else{
+            return Response::json([
+                'status'=> '200',
+                'message' => 'Agenda Created Succesfully',
+                'data' => $agenda
+            ],200);
+        }
     }
 
     /**
@@ -67,21 +78,33 @@ class MarketingAgendaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            return Response::json([
+                'status'=>'404',
+                'message'=>$validator->errors(),
+                'data'=>[]
+            ], 404);
+        }
+
         $agenda = MarketingAgenda::findOrFail($id);
         $agenda->update($request->all());
 
         if (!$agenda) {
             return Response::json([
-                'error'=>true,
-                'message'=>'failed to update agenda'
-            ], 404);
+                'status'=> '404',
+                'message' => 'cannot update this data',
+                'data' => []
+            ],404);
+        }else{
+            return Response::json([
+                'status'=> '200',
+                'message' => 'Agenda Updated Succesfully',
+                'data' => $agenda
+            ],200);
         }
 
-        return Response::json([
-            'error' => false,
-            'message'=> 'success update agenda',
-            'data'=>[$agenda]
-        ], 200);
+
     }
 
     /**
@@ -90,22 +113,51 @@ class MarketingAgendaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if(!$id){
+            return Response::json([
+                'status'=>'404',
+                'message'=>'id required',
+                'data'=>[]
+            ], 404);
+        }
+
         $agenda = MarketingAgenda::findOrFail($id);
         $agenda->delete();
 
         if (!$agenda) {
             return Response::json([
-                'error'=>true,
-                'message'=>'failed to delete agenda'
+                'status'=>'404',
+                'message'=>'failed to delete agenda',
+                'data'=>[]
             ], 404);
         }
 
         return Response::json([
-            'error' => false,
+            'status' => '200',
             'message'=> 'success delete agenda',
-            'data'=>[$agenda]
+            'data'=>$agenda
         ], 200);
+    }
+
+    private function validator($data, $id='')
+    {
+        if ($id) {
+            return Validator::make($data, [
+                'id'=> 'required',
+                'user_id' => 'required',
+                'name'=> 'required',
+                'phone'=>'required',
+                'id_number'=>'required'
+            ]);    
+        }else{
+            return Validator::make($data, [
+                'user_id' => 'required',
+                'name'=> 'required',
+                'phone'=>'required',
+                'id_number'=>'required'
+            ]);
+        }
     }
 }

@@ -94,7 +94,6 @@ Route::group([
 
 Route::group([
 	'prefix'=>'api',
-	'middleware' => 'jwt.auth',
 ], function(){
 	Route::resource('agenda','Api\MarketingAgendaController');
 });

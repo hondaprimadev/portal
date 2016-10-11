@@ -55,12 +55,12 @@
       </div>
       @if ($nikStat == true)
         <div class="form-group">
-          {!! Form::label('id', 'Nik', ['class'=>'col-sm-2 control-label']) !!}
+          {!! Form::label('nik', 'Nik', ['class'=>'col-sm-2 control-label']) !!}
             <div class="col-sm-10">
             <label>
                 <input type="checkbox" id="nik_auto" name="nik_auto" checked=checked> Auto
             </label>
-              {!! Form::text('id', null,['class'=> 'form-control','disabled']) !!}
+              {!! Form::text('nik', null,['class'=> 'form-control','disabled']) !!}
             </div>
         </div>
       @else

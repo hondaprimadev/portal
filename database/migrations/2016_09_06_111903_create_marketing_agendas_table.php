@@ -16,7 +16,12 @@ class CreateMarketingAgendasTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nomor_crm');
+
+            $table->string('name');
+            $table->string('phone');
+            $table->string('email');
+            $table->text('address');
+            $table->string('id_number');
             
             $table->enum('type_payment', ['Cash','Credit']);
             $table->double('downpayment');
