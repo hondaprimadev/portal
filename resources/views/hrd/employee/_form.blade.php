@@ -65,9 +65,9 @@
         </div>
       @else
         <div class="form-group">
-          {!! Form::label('nik', 'Nik', ['class'=>'col-sm-2 control-label']) !!}
+          {!! Form::label('id', 'Nik', ['class'=>'col-sm-2 control-label']) !!}
             <div class="col-sm-10">
-              {!! Form::text('nik', $user->id,['id'=>'nik_edit', 'class'=> 'form-control']) !!}
+              {!! Form::text('id', $user->id,['id'=>'nik_edit', 'class'=> 'form-control']) !!}
             </div>
         </div>
       @endif
