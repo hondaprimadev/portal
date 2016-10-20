@@ -19,7 +19,23 @@ class MarketingAgendaController extends Controller
      */
     public function index(Request $request)
     {
-        $agendas = MarketingAgenda::where('user_id', $request->input('id'))->get();
+        $begin = $request->input('b');
+        $end = $request->input('e');
+
+        if(!$begin && !$end)
+        {
+            $now = date('Y-m-');
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now.'01');
+            $end = new \DateTime($now.$d1);
+        }else{
+            $begin = new \DateTime($begin);
+            $end = new \DateTime($end);
+        }
+
+        $agendas = MarketingAgenda::where('user_id', $request->input('id'))
+                    ->orderBy('name', 'asc')
+                    ->get();
 
         if ($agendas->count() == null || !$request->input('id')) {
             return Response::json([
