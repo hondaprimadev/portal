@@ -57,6 +57,7 @@ Route::group([
 	
 	Route::resource('/vehicle/sales', 'VehicleSalesController');
 	Route::resource('/vehicle/stock', 'VehicleStockController');
+	Route::resource('/agenda', 'MarketingAgendaController');
 
 });
 

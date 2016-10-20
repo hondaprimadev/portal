@@ -16,7 +16,7 @@
 
 @section('content')
   {!! Form::model($user, ['class'=>'form-horizontal', 'id'=>'formEditEmployee', 'method'=>'PUT', 'action'=>['HrdEmployeeController@update', $user->id]]) !!}
-    @include('hrd.employee._form',['nikStat' => false])
+    @include('hrd.employee._form',['nikStat' => true])
 
     <div class="box-footer">
       <button type="submit" class="btn btn-success">
