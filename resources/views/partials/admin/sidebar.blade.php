@@ -77,8 +77,17 @@
             <li class="{{ set_active('marketing.report.sales.get') }}"><a href="{{ route('marketing.report.sales.get') }}"><i class="fa fa-bar-chart fa-lg" aria-hidden="true"></i> Daily Report by Sales</a></li>
             @endcan
             @can('marketing.team.open')
-            <li class="{{ set_active('marketing.team.index') }}"><a href="{{ route('marketing.team.index') }}"><i class="fa fa-child fa-lg" aria-hidden="true"></i> Team Marketing</a></li>
+              <li class="{{ set_active('marketing.team.index') }}">
+              <a href="{{ route('marketing.team.index') }}">
+                <i class="fa fa-child fa-lg" aria-hidden="true"></i> Team Marketing
+              </a>
+            </li>
             @endcan
+            <li class="{{ set_active('marketing.agenda.index') }}">
+              <a href="{{ route('marketing.agenda.index') }}">
+                <i class="fa fa-child fa-lg" aria-hidden="true"></i> Agenda
+              </a>
+            </li>
           </ul>
         </li>
         <li class="treeview {{ set_active(['hrd.employee.index', 'hrd.department.index', 'hrd.position.index']) }}">
