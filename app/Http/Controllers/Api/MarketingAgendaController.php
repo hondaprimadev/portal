@@ -47,7 +47,7 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'status' => '200',
             'message' => 'success fetch agenda',
-            'data'=> $agendas
+            'data'=> $this->transformCollection($agendas)
         ], 200);
     }
 
@@ -175,5 +175,38 @@ class MarketingAgendaController extends Controller
                 'id_number'=>'required'
             ]);
         }
+    }
+
+    public function transformCollection($agendas)
+    {
+        return array_map([$this, 'transform'], $agendas->toArray());
+    }
+
+    public function transform($agenda)
+    {
+        return [
+            "user_id"=>$agenda['user_id'],
+            "branch_id"=>$agenda['branch_id'],
+            "name"=>ucwords($agenda['name']),
+            "phone"=>$agenda['phone'],
+            "email"=>$agenda['email'],
+            "address"=>$agenda['address'],
+            "id_number"=>$agenda['id_number'],
+            "type_payment"=>$agenda['type_payment'],
+            "downpayment"=>$agenda['downpayment'],
+            "price_otr"=>$agenda['price_otr'],
+            "price_disc"=>$agenda['price_disc'],
+            "leasing_id"=>$agenda['leasing_id'],
+            "leasing_payment"=>$agenda['leasing_payment'],
+            "leasing_tenor"=>$agenda['leasing_tenor'],
+            "program_marketing"=>$agenda['program_marketing'],
+            "motor_type"=>$agenda['motor_type'],
+            "motor_color"=>$agenda['motor_color'],
+            "status"=>$agenda['status'],
+            "note"=>$agenda['note'],
+            "longitude"=>$agenda['longitude'],
+            "latitude"=>$agenda['latitude'],
+            "created_at"=>date("d M Y", strtotime($agenda['created_at'])),
+        ];
     }
 }
