@@ -80,7 +80,7 @@ class MarketingAgendaController extends Controller
             return Response::json([
                 'status'=> '200',
                 'message' => 'Agenda Created Succesfully',
-                'data' => $agenda
+                'data' => [$this->transform($agenda)]
             ],200);
         }
     }
@@ -116,7 +116,7 @@ class MarketingAgendaController extends Controller
             return Response::json([
                 'status'=> '200',
                 'message' => 'Agenda Updated Succesfully',
-                'data' => $agenda
+                'data' => [$this->transform($agenda)]
             ],200);
         }
 
@@ -153,7 +153,7 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'status' => '200',
             'message'=> 'success delete agenda',
-            'data'=>$agenda
+            'data'=> [$this->transform($agenda)]
         ], 200);
     }
 
@@ -164,15 +164,13 @@ class MarketingAgendaController extends Controller
                 'id'=> 'required',
                 'user_id' => 'required',
                 'name'=> 'required',
-                'phone'=>'required',
-                'id_number'=>'required'
+                'phone'=>'required'
             ]);    
         }else{
             return Validator::make($data, [
                 'user_id' => 'required',
                 'name'=> 'required',
-                'phone'=>'required',
-                'id_number'=>'required'
+                'phone'=>'required'
             ]);
         }
     }
@@ -206,7 +204,7 @@ class MarketingAgendaController extends Controller
             "note"=>$agenda['note'],
             "longitude"=>$agenda['longitude'],
             "latitude"=>$agenda['latitude'],
-            "created_at"=>date("d M Y", strtotime($agenda['created_at'])),
+            "created_at"=>date("Y-m-d", strtotime($agenda['created_at'])),
         ];
     }
 }
