@@ -183,6 +183,7 @@ class MarketingAgendaController extends Controller
     public function transform($agenda)
     {
         return [
+            "id"=>$agenda['id'],
             "user_id"=>$agenda['user_id'],
             "branch_id"=>$agenda['branch_id'],
             "name"=>ucwords($agenda['name']),
