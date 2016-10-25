@@ -94,14 +94,14 @@ class MarketingAgendaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = $this->validator($request->all());
-        if ($validator->fails()) {
-            return Response::json([
-                'status'=>'404',
-                'message'=>$validator->errors(),
-                'data'=>[]
-            ], 404);
-        }
+        // $validator = $this->validator($request->all());
+        // if ($validator->fails()) {
+        //     return Response::json([
+        //         'status'=>'404',
+        //         'message'=>$validator->errors(),
+        //         'data'=>[]
+        //     ], 404);
+        // }
 
         $agenda = MarketingAgenda::findOrFail($id);
         $agenda->update($request->all());
