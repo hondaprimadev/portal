@@ -93,8 +93,10 @@ Route::group([
 	Route::resource('/crm', 'CrmController');
 });
 
+
 Route::group([
 	'prefix'=>'api',
+	'middleware'=>'jwt.auth'
 ], function(){
 	Route::resource('agenda','Api\MarketingAgendaController');
 });
