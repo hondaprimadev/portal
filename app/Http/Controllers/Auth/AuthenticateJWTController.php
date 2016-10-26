@@ -53,21 +53,21 @@ class AuthenticateJWTController extends Controller
 				->where('is_user', true)
 				->first();
 
-		$user['role'] = $user->roles()->first()->name;
-		$user['token_jwt'] = $token;
-
 		if (!$user) {
 			return response()->json([
 				'error'=>true,
 				'message'=>'User does not exist',
 				'data'=>''
 			], 404);
-		}
+		}else{
+			$user['role'] = $user->roles()->first()->name;
+			$user['token_jwt'] = $token;
 
-		return response()->json([
-			'error' => false,
-			'data' => [$this->transform($user)]
-		]);
+			return response()->json([
+				'error' => false,
+				'data' => [$this->transform($user)]
+			]);
+		}
 	}
 
 	public function getAuthenticatedUser()

@@ -163,14 +163,12 @@ class MarketingAgendaController extends Controller
             return Validator::make($data, [
                 'id'=> 'required',
                 'user_id' => 'required',
-                'name'=> 'required',
-                'phone'=>'required'
+                'name'=> 'required'
             ]);    
         }else{
             return Validator::make($data, [
                 'user_id' => 'required',
-                'name'=> 'required',
-                'phone'=>'required'
+                'name'=> 'required'
             ]);
         }
     }
@@ -205,6 +203,7 @@ class MarketingAgendaController extends Controller
             "note"=>$agenda['note'],
             "longitude"=>$agenda['longitude'],
             "latitude"=>$agenda['latitude'],
+            "active"=>$agenda['active'],
             "created_at"=>date("Y-m-d", strtotime($agenda['created_at'])),
         ];
     }
