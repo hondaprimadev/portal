@@ -36,7 +36,7 @@ class AuthenticateJWTController extends Controller
 				return response()->json([
 					'error'=>'401', 
 					'message'=>'invalid_credentials',
-					'data'=>''
+					'data'=>[]
 				], 401);
 			}
 			
@@ -45,7 +45,7 @@ class AuthenticateJWTController extends Controller
 			return response()->json([
 				'error'=>'500',
 				'message'=>'could_not_create_token', 
-				'data'=>''
+				'data'=>[]
 			], 500);
 		}
 
@@ -57,7 +57,7 @@ class AuthenticateJWTController extends Controller
 			return response()->json([
 				'error'=>'404',
 				'message'=>'User does not exist',
-				'data'=>''
+				'data'=>[]
 			], 404);
 		}else{
 			$user['role'] = $user->roles()->first()->name;
