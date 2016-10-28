@@ -33,7 +33,8 @@ class MarketingAgendaController extends Controller
             $end = new \DateTime($end);
         }
 
-        $agendas = MarketingAgenda::where('user_id', $request->input('id'))
+        $agendas = MarketingAgenda::with('histories')
+                    ->where('user_id', $request->input('id'))
                     ->orderBy('name', 'asc')
                     ->get();
 
@@ -69,6 +70,9 @@ class MarketingAgendaController extends Controller
         }
         
         $agenda = MarketingAgenda::create($request->all());
+        if ($request->input('notes') != '') {
+            $agenda->histories()->create(['notes'=>$request->input('notes')]);   
+        }
         
         if (!$agenda) {
             return Response::json([
@@ -94,17 +98,21 @@ class MarketingAgendaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $validator = $this->validator($request->all());
-        // if ($validator->fails()) {
-        //     return Response::json([
-        //         'status'=>'404',
-        //         'message'=>$validator->errors(),
-        //         'data'=>[]
-        //     ], 404);
-        // }
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            return Response::json([
+                'status'=>'404',
+                'message'=>$validator->errors(),
+                'data'=>[]
+            ], 404);
+        }
 
         $agenda = MarketingAgenda::findOrFail($id);
         $agenda->update($request->all());
+
+        if ($request->input('notes') != '') {
+            $agenda->histories()->create(['notes'=>$request->input('notes')]);   
+        }
 
         if (!$agenda) {
             return Response::json([
@@ -168,7 +176,8 @@ class MarketingAgendaController extends Controller
         }else{
             return Validator::make($data, [
                 'user_id' => 'required',
-                'name'=> 'required'
+                'name'=> 'required',
+                'phone'=>'required'
             ]);
         }
     }
@@ -189,6 +198,13 @@ class MarketingAgendaController extends Controller
             "email"=>$agenda['email'],
             "address"=>$agenda['address'],
             "id_number"=>$agenda['id_number'],
+            "city" => $agenda['city'],
+            "name_stnk"=>$agenda['name_stnk'],
+            "phone_stnk"=>$agenda['phone_stnk'],
+            "email_stnk"=>$agenda['email_stnk'],
+            "address_stnk"=>$agenda['address_stnk'],
+            "id_number_stnk"=>$agenda['id_number_stnk'],
+            "city_stnk"=>$agenda['city_stnk'],
             "type_payment"=>$agenda['type_payment'],
             "downpayment"=>$agenda['downpayment'],
             "price_otr"=>$agenda['price_otr'],
@@ -200,11 +216,11 @@ class MarketingAgendaController extends Controller
             "motor_type"=>$agenda['motor_type'],
             "motor_color"=>$agenda['motor_color'],
             "status"=>$agenda['status'],
-            "note"=>$agenda['note'],
             "longitude"=>$agenda['longitude'],
             "latitude"=>$agenda['latitude'],
             "active"=>$agenda['active'],
-            "created_at"=>date("Y-m-d", strtotime($agenda['created_at'])),
+            "created_at"=>$agenda['created_at'],
+            "histories"=>$agenda['histories'],
         ];
     }
 }
