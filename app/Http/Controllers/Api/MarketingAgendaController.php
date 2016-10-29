@@ -219,7 +219,7 @@ class MarketingAgendaController extends Controller
             "longitude"=>$agenda['longitude'],
             "latitude"=>$agenda['latitude'],
             "active"=>$agenda['active'],
-            "created_at"=>date('Y-m-d H:m:s', strtotime($agenda['created_at'])),
+            "created_at"=>date('Y-m-d', strtotime($agenda['created_at'])),
             "histories"=>$agenda['histories'],
         ];
     }
