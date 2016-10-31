@@ -220,7 +220,21 @@ class MarketingAgendaController extends Controller
             "latitude"=>$agenda['latitude'],
             "active"=>$agenda['active'],
             "created_at"=>date('Y-m-d', strtotime($agenda['created_at'])),
-            "histories"=>$agenda['histories'],
+            "histories"=>$this->transformCollectionHistories($agenda['histories']),
+        ];
+    }
+
+    public function transformCollectionHistories($histories)
+    {
+        return array_map([$this, 'transformHistories'], $histories);
+    }
+    public function transformHistories($histories)
+    {
+        return [
+            "id"=>$histories['id'],
+            "agenda_id"=>$histories['agenda_id'],
+            "notes"=>$histories['notes'],
+            "created_at"=>date("Y-m-d", strtotime($histories['created_at']))
         ];
     }
 }
