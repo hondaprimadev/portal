@@ -52,6 +52,25 @@ class MarketingAgendaController extends Controller
         ], 200);
     }
 
+    public function show($id)
+    {
+        $agenda = MarketingAgenda::with('histories')
+                    ->findOrFail($id);
+        if (!$agenda) {
+            return Response::json([
+                'status'=> '404',
+                'message' => 'cannot fetch this data',
+                'data' => []
+            ],404);
+        }else{
+            return Response::json([
+                'status'=> '200',
+                'message' => 'Agenda fetch Succesfully',
+                'data' => [$this->transformId($agenda)]
+            ],200);
+        }
+
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -84,7 +103,7 @@ class MarketingAgendaController extends Controller
             return Response::json([
                 'status'=> '200',
                 'message' => 'Agenda Created Succesfully',
-                'data' => [$this->transform($agenda)]
+                'data' => [$this->transformId($agenda)]
             ],200);
         }
     }
@@ -97,7 +116,7 @@ class MarketingAgendaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             return Response::json([
@@ -106,7 +125,6 @@ class MarketingAgendaController extends Controller
                 'data'=>[]
             ], 404);
         }
-
         $agenda = MarketingAgenda::findOrFail($id);
         $agenda->update($request->all());
 
@@ -124,7 +142,7 @@ class MarketingAgendaController extends Controller
             return Response::json([
                 'status'=> '200',
                 'message' => 'Agenda Updated Succesfully',
-                'data' => [$this->transform($agenda)]
+                'data' => [$this->transformId($agenda)]
             ],200);
         }
 
@@ -161,25 +179,17 @@ class MarketingAgendaController extends Controller
         return Response::json([
             'status' => '200',
             'message'=> 'success delete agenda',
-            'data'=> [$this->transform($agenda)]
+            'data'=> [$this->transformId($agenda)]
         ], 200);
     }
 
-    private function validator($data, $id='')
+    private function validator($data)
     {
-        if ($id) {
-            return Validator::make($data, [
-                'id'=> 'required',
-                'user_id' => 'required',
-                'name'=> 'required'
-            ]);    
-        }else{
-            return Validator::make($data, [
-                'user_id' => 'required',
-                'name'=> 'required',
-                'phone'=>'required'
-            ]);
-        }
+        return Validator::make($data, [
+            'user_id' => 'required',
+            'name'=> 'required',
+            'phone'=>'required'
+        ]);
     }
 
     public function transformCollection($agendas)
@@ -224,10 +234,55 @@ class MarketingAgendaController extends Controller
         ];
     }
 
+    public function transformId($agenda)
+    {
+        return [
+            "id"=>$agenda['id'],
+            "user_id"=>$agenda['user_id'],
+            "branch_id"=>$agenda['branch_id'],
+            "name"=>ucwords($agenda['name']),
+            "phone"=>$agenda['phone'],
+            "email"=>$agenda['email'],
+            "address"=>$agenda['address'],
+            "id_number"=>$agenda['id_number'],
+            "city" => $agenda['city'],
+            "name_stnk"=>$agenda['name_stnk'],
+            "phone_stnk"=>$agenda['phone_stnk'],
+            "email_stnk"=>$agenda['email_stnk'],
+            "address_stnk"=>$agenda['address_stnk'],
+            "id_number_stnk"=>$agenda['id_number_stnk'],
+            "city_stnk"=>$agenda['city_stnk'],
+            "type_payment"=>$agenda['type_payment'],
+            "downpayment"=>$agenda['downpayment'],
+            "price_otr"=>$agenda['price_otr'],
+            "price_disc"=>$agenda['price_disc'],
+            "leasing_id"=>$agenda['leasing_id'],
+            "leasing_payment"=>$agenda['leasing_payment'],
+            "leasing_tenor"=>$agenda['leasing_tenor'],
+            "program_marketing"=>$agenda['program_marketing'],
+            "motor_type"=>$agenda['motor_type'],
+            "motor_color"=>$agenda['motor_color'],
+            "status"=>$agenda['status'],
+            "longitude"=>$agenda['longitude'],
+            "latitude"=>$agenda['latitude'],
+            "active"=>$agenda['active'],
+            "created_at"=>date('Y-m-d', strtotime($agenda['created_at'])),
+            "histories"=>$this->transformCollectionHistoriesId($agenda['histories']),
+        ];
+    }
+
+    public function transformCollectionHistoriesId($histories)
+    {
+        return array_map([$this, 'transformHistories'], $histories->toArray());
+        
+    }
+
     public function transformCollectionHistories($histories)
     {
         return array_map([$this, 'transformHistories'], $histories);
+        
     }
+
     public function transformHistories($histories)
     {
         return [
