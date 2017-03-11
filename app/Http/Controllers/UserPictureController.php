@@ -16,7 +16,7 @@ use Request as Req;
 class UserPictureController extends Controller
 {
 	private $pmanager;
-	private $Storage;
+	private $storage;
 
 	public function __construct(UploadProfileManager $pmanager)
 	{
@@ -41,7 +41,7 @@ class UserPictureController extends Controller
     	$files = $this->storage->get('profile/'.$file);
  
         return (new Response($files, 200))
-              ->header('Content-Type', 'image/jpg');	
+              ->header('Content-Type', 'image/jpg');
     }
 
     public function getTmpPicture($file)

@@ -94,6 +94,62 @@ Route::group([
 });
 
 
+// Group Memo
+Route::group([
+	'prefix'=>'memo',
+], function(){
+	Route::delete('upload/{file}',['as'=>'memo.upload.delete','uses'=>'MemoUploadController@deleteFile']);
+	Route::post('upload',['as'=>'memo.upload.post', 'uses'=>'MemoUploadController@postFile']);
+	Route::post('upload/get',['as'=>'memo.upload.get', 'uses'=>'MemoUploadController@getFile']);
+	Route::get('upload/show/{file}',['as'=>'memo.upload.show', 'uses'=>'MemoUploadController@showFile']);
+
+	//get supplier
+	Route::get('supplier', ['as'=>'memo.supplier.get', 'uses'=>'MemoController@getSupplierId']);
+	Route::get('supplier/all', ['as'=>'memo.supplier.all', 'uses'=>'MemoController@getSupplier']);
+
+	Route::get('report', ['as'=>'memo.report.index', 'uses'=>'MemoReportController@index']);
+	Route::get('report/{id}',['as'=>'memo.report.print','uses'=>'MemoReportController@getPrint']);
+
+	//delete post
+	Route::post('category/delete',['as'=>'memo.category.delete','uses'=>'MemoCategoryController@delete']);
+	Route::post('account/delete',['as'=>'memo.account.delete','uses'=>'MemoAccountController@delete']);
+
+	Route::get('setting', ['as'=>'memo.setting.index','uses'=>'MemoSettingController@index']);
+
+	// process 
+	Route::get('process/{process}/approve', ['as'=>'memo.process.process','uses'=>'MemoProcessController@process']);
+	Route::post('process/approve/{id}', ['as'=>'memo.process.approve','uses'=>'MemoProcessController@approve']);
+	Route::post('process/reject/{id}', ['as'=>'memo.process.reject','uses'=>'MemoProcessController@reject']);
+	Route::post('process/revise/{id}', ['as'=>'memo.process.revise', 'uses'=>'MemoProcessController@revise']);
+	Route::get('inbox', ['as'=>'memo.inbox.index','uses'=>'MemoInboxController@index']);
+	
+	// 
+	Route::get('revise/{id}', ['as'=>'memo.revise.edit','uses'=>'MemoController@edit']);
+	Route::post('revise/{id}', ['as'=>'memo.revise.update','uses'=>'MemoController@update']);
+
+	Route::get('show/{id}', ['as'=>'memo.memo.show', 'uses'=>'MemoController@show']);
+
+	Route::resource('/', 'MemoController');
+	Route::resource('category', 'MemoCategoryController');
+	Route::resource('approval', 'MemoApprovalController');
+	Route::resource('transaction', 'MemoTransactionController');
+	Route::resource('sent', 'MemoSentController');
+	Route::resource('account', 'MemoAccountController');
+	Route::resource('prepayment', 'MemoPrepaymentController');
+});
+
+// Group Supplier
+Route::group([
+	// 'middleware'=>'auth'
+], function(){
+	Route::post('/supplier/delete', 'SupplierController@delete');
+	Route::resource('/supplier', 'SupplierController');
+});
+
+
+
+
+// API
 Route::group([
 	'prefix'=>'api',
 	'middleware'=>'jwt.auth'

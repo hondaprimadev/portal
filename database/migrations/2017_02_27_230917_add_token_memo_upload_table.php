@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVehicleStocksTable extends Migration
+class AddTokenMemoUploadTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,8 @@ class CreateVehicleStocksTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicle_stocks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+        Schema::table('memo_uploads', function (Blueprint $table) {
+            $table->string('token')->nullable()->unique();
         });
     }
 
@@ -25,6 +24,8 @@ class CreateVehicleStocksTable extends Migration
      */
     public function down()
     {
-        Schema::drop('vehicle_stocks');
+        Schema::table('memo_uploads', function (Blueprint $table) {
+            $table->dropColumn('token');
+        });
     }
 }

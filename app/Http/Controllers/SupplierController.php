@@ -1,0 +1,145 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\BankGroup;
+use App\Branch;
+use App\Http\Requests;
+use App\Supplier;
+use App\SupplierCategory;
+use Illuminate\Http\Request;
+
+class SupplierController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $bid = empty($request->input('branch')) ? '' : $request->input('branch');
+
+        $branch = ['0'=>'--All Branch--'] + Branch::lists('name', 'id')->all();
+
+        if(empty($bid)){
+            $supplier = Supplier::all();
+        }else{
+            $supplier = Supplier::where('branch_id', $bid)->get();
+        }
+
+        return view('supplier.index', compact('supplier','branch','bid'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $bid = $request->input('b');
+        $cid = $request->input('c');
+        
+        $branch_id = empty($bid) ? "100" : $bid;
+        $category_id = empty($cid) ? "1" : $cid;
+
+        $branch = [''=>'---'] + Branch::lists('name', 'id')->all();
+        $category = [''=>'---'] + SupplierCategory::lists('name','id')->all();
+        $bank = [''=>'---'] + BankGroup::lists('name','id')->all();
+        
+        return view('supplier.create',compact('branch_id','branch','category_id','category', 'bank'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        $supp = Supplier::create($request->all());
+
+        $supp->no_supplier = $supp->ofMaxno($supp->branch_id, $supp->category_id);
+        $supp->active = true;
+        $supp->save();
+
+        session()->flash('flash_message', 'Your Supplier has been created!');
+
+        return redirect('/supplier');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request,$id)
+    {
+        $supplier = Supplier::findOrFail($id);
+
+        $bid = $request->input('b');
+        $cid = $request->input('c');
+        
+        $branch_id = empty($bid) ? "100" : $bid;
+        $category_id = empty($cid) ? "1" : $cid;
+
+        $branch = [''=>'---'] + Branch::lists('name', 'id')->all();
+        $category = [''=>'---'] + SupplierCategory::lists('name','id')->all();
+        $bank = [''=>'---'] + BankGroup::lists('name','id')->all();
+        
+        return view('supplier.edit',compact('supplier','branch_id','branch','category_id','category', 'bank'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $supp = Supplier::findOrFail($id);
+        $supp->update($request->all());
+
+        session()->flash('flash_message', 'Your Employee has been updated!');
+
+        return redirect('/supplier');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        
+    }
+
+    public function delete(Request $request)
+    {
+        foreach ($request->input('id') as $key => $value) {
+            $s = Supplier::findOrFail($value);
+            $s->delete();
+        }
+
+        return redirect('supplier');
+    }
+}
