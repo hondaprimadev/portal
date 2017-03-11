@@ -52,12 +52,12 @@
 						</span>
 						<b class="caret"></b>
 				    </button>
-        </div>
+        		</div>
 
-        <div class="col-md-4">
-          <input type="text" id="searchDtbox" class="form-control" placeholder="search...">
-        </div>
-      </div>
+		        <div class="col-md-4">
+		          <input type="text" id="searchDtbox" class="form-control" placeholder="search...">
+		        </div>
+      		</div>
 
 			{!! Form::open(['url'=>'/marketing/vehicle/sales/delete','id'=>'formVsDelete']) !!}
 				<table id="tableVs" class="table table-striped table-color">

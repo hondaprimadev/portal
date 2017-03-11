@@ -43,7 +43,7 @@ class MarketingReportController extends Controller
         $vs_m1 = VehicleSales::OfSales($first_day_m1, $now_day_m1, '1')->get();
         $vs_total = VehicleSales::OfTotalCompany($begin->format('Y-m-d'),$end->format('Y-m-d'),'1')->count();
         $vs_total_m1 = VehicleSales::OfTotalCompany($first_day_m1, $now_day_m1,'1')->count();
-
+        
         //PMA chart
         $vspma = VehicleSales::OfSales($begin->format('Y-m-d'), $end->format('Y-m-d'), '2')->get();
         $vspma_m1 = VehicleSales::OfSales($first_day_m1, $now_day_m1, '2')->get();

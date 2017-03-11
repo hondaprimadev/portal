@@ -92,7 +92,7 @@ class UploadProfileManager
     if (Storage::exists('profile/tmp/'.$filename.'.jpg'))
       {
         $imageToken = substr(sha1(mt_rand()), 0, 5);
-      return $filename . '-' . $imageToken;
+        return $filename . '-' . $imageToken;
       }
 
       return $filename;

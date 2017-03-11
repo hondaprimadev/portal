@@ -56,7 +56,34 @@
             @endcan
           </ul>
         </li>
-        {{-- <li class="header">MAIN NAVIGATION</li> --}}
+
+        <li class="treeview {{ set_active(['memo..index','memo.inbox.index','memo.setting.index','memo.approval.index','memo.sent.index','memo.report.index', 'memo.transaction.index']) }}">
+          @can('memo.open')          
+          <a href="#">
+            <i class="fa fa-bookmark fa-lg" aria-hidden="true"></i> <span>Memo</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          @endcan
+          <ul class="treeview-menu">
+            <li class="{{ set_active('memo..index') }}"><a href="{{ route('memo..index') }}"><i class="fa fa-circle-o fa-lg"></i> Memo</a></li>
+            <li class="{{ set_active('memo.inbox.index') }}"><a href="{{ route('memo.inbox.index') }}"><i class="fa fa-circle-o fa-lg"></i> Inbox</a></li>
+            @can('memo.super')
+            <li class="{{ set_active('memo.setting.index') }}"><a href="{{ route('memo.setting.index') }}"><i class="fa fa-circle-o fa-lg"></i> Setting</a></li>
+            <li class="{{ set_active('memo.approval.index') }}"><a href="{{ route('memo.approval.index') }}"><i class="fa fa-circle-o fa-lg"></i> Approval</a></li>
+            @endcan
+            <li class="{{ set_active('memo.sent.index') }}"><a href="{{ route('memo.sent.index') }}"><i 
+            class="fa fa-circle-o fa-lg"></i> Log</a></li>
+            <li class="{{ set_active('memo.transaction.index') }}"><a href="{{ route('memo.transaction.index') }}"><i 
+            class="fa fa-circle-o fa-lg"></i> Budget</a></li>
+            @can('memo.super')
+            <li class="{{ set_active('memo.report.index') }}"><a href="{{ route('memo.report.index') }}"><i 
+            class="fa fa-circle-o fa-lg"></i> Report</a></li>
+            @endcan
+          </ul>
+        </li>
+
         <li class="treeview {{ set_active(['marketing.report.get','marketing.vehicle.sales.index','marketing.team.index']) }}">
           @can('marketing.open')
           <a href="#">
@@ -90,6 +117,7 @@
             </li>
           </ul>
         </li>
+        
         <li class="treeview {{ set_active(['hrd.employee.index', 'hrd.department.index', 'hrd.position.index']) }}">
           @can('hrd.employee.open')
           <a href="#">
@@ -111,6 +139,7 @@
             @endcan
           </ul>
         </li>
+        
         <li class="treeview {{ set_active(['upload.sales.get','upload.hr.get']) }}">
           @can('upload.open')          
           <a href="#">
@@ -129,6 +158,7 @@
             @endcan
           </ul>
         </li>
+
         <li class="treeview {{ set_active(['crm.index']) }}">
           @can('crm.open')
           <a href="{{ route('crm.index') }}">
@@ -136,7 +166,6 @@
           </a>
           @endcan
         </li>
-
       </ul>
     </section>
     <!-- /.sidebar -->

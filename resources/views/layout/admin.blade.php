@@ -40,6 +40,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   {{-- select2 --}}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
+  @yield('head')
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -56,8 +58,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
       color: white;
     }
     .table-color thead th{
-      background: #EB3349; /* fallback for old browsers */
+      background: #16a085; /* fallback for old browsers */
       color: white;
+    }
+    .table-color tfoot td{
+      background: #ddd;
+      font-weight: bold;
+    }
+    .table-color tfoot{
+      text-align: center;
     }
     .content-header-create{
       line-height: 10px;
@@ -147,6 +156,50 @@ scratch. This page gets rid of all links and provides the needed markup only.
         background-color: #7F6091;
     }
     /*end profile hrm*/
+    .fa-green{
+      color:#27ae60;
+    }
+    .fa-red{
+      color:#c0392b;
+    }
+    .fa-blue{
+      color:#2980b9;
+    }
+    .fa-yellow{
+      color:#f1c40f;
+    }
+    .fa-orange{
+      color: #f39c12;
+    }
+    /* upload style */
+    #UploadMemo ul li{
+    padding: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ecf0f1;
+  }
+
+  #UploadMemo ul li a{
+    font-style: italic;
+    font-weight: bold;
+    color:#2c3e50;
+    cursor: pointer;
+  }
+
+  #UploadMemo ul li a:hover{
+    color: #c0392b;
+  }
+
+  #UploadMemo ul li a i{
+    margin-right: 5px;
+  }
+
+  #UploadMemo ul li span{
+    margin-left: 10px;
+  }
+  /* end upload style */
   </style>
   @yield('styles')
 </head>
@@ -311,6 +364,8 @@ desired effect
 <script src="//cdn.jsdelivr.net/alertifyjs/1.7.1/alertify.min.js"></script>
 {{-- select2 --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+{{-- Knob.Js --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
 <script type="text/javascript">
   // check all table
     $('#check_all').change(function(){

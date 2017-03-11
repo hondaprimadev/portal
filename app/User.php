@@ -45,6 +45,16 @@ class User extends Authenticatable
         return $this->hasMany('App\UserPicture');
     }
 
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\UserDepartment');
+    }
+
     public function isSuper()
     {
        if ($this->roles->contains('name', 'super')) {

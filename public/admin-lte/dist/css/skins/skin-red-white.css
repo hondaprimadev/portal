@@ -116,7 +116,7 @@
 }
 .skin-red-white .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
-  background: #F5F5F5;
+  background: #DEDEDE;
 }
 .skin-red-white .sidebar a {
   color: #C7C7C7;
@@ -126,7 +126,7 @@
 }
 
 .skin-red-white .treeview-menu > li > a {
-  color: #707070;
+  color: #363434;
 }
 .skin-red-white .treeview-menu > li.active > a,
 .skin-red-white .treeview-menu > li > a:hover {
