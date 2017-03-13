@@ -258,6 +258,18 @@
           {!! Form::select('position_id', $position,null,['class'=> 'form-control']) !!}
         </div>
       </div>
+      <div class="form-group">
+        {!! Form::label('grade', 'Grade' ,['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+          {!! Form::select('grade', ['0'=>'no grade','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7'],null,['class'=> 'form-control']) !!}
+        </div>
+      </div>
+      <div class="form-group">
+        {!! Form::label('grade_marketing', 'Grade Marketing' ,['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+          {!! Form::select('grade_marketing', ['0'=>'Not Sales','Silver'=>'Silver','Gold'=>'Gold','Platinum'=>'Platinum'],null,['class'=> 'form-control']) !!}
+        </div>
+      </div>
     </div>
   </div>
 </div>

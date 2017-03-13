@@ -111,14 +111,27 @@
                     <input type="hidden" id="roleTableUser" value="{{ $user->roles->lists('id') }}"/>
                   @endif
                 </td>
-                <td>{{ $user->grade }}</td>
+                <td>
+                  @if ($user->grade_marketing)
+                    {{ $user->grade }} | {{ $user->grade_marketing }}
+                  @else
+                    {{ $user->grade }}
+                  @endif
+                </td>
                 <td>{{ $user->job_status }}</td>
                 <td>
                   @if ($user->is_user)
                     <i class="fa fa-check-circle" aria-hidden="true" style="color: #2ecc71"></i>
                   @endif
                 </td>
-                <td>{{ $user->pic_id }}</td>
+                <td>
+                  @php
+                    $pic = App\User::find($user->pic_id);
+                  @endphp
+                  @if ($pic)
+                    {{ $pic->name }}
+                  @endif
+                </td>
               </tr>
             @endforeach
           </tbody>
