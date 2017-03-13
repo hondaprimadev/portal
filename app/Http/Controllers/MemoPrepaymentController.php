@@ -39,6 +39,8 @@ class MemoPrepaymentController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('memo.create');
+
         $user_app = [''=>'---'];
         $budget=0;
         $approval_path='';

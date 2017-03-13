@@ -97,6 +97,7 @@ Route::group([
 // Group Memo
 Route::group([
 	'prefix'=>'memo',
+	'middleware'=>'auth',
 ], function(){
 	Route::delete('upload/{file}',['as'=>'memo.upload.delete','uses'=>'MemoUploadController@deleteFile']);
 	Route::post('upload',['as'=>'memo.upload.post', 'uses'=>'MemoUploadController@postFile']);
@@ -113,7 +114,7 @@ Route::group([
 	//delete post
 	Route::post('category/delete',['as'=>'memo.category.delete','uses'=>'MemoCategoryController@delete']);
 	Route::post('account/delete',['as'=>'memo.account.delete','uses'=>'MemoAccountController@delete']);
-
+	Route::post('approval/delete', ['as'=>'memo.approval.delete','uses'=>'MemoApprovalController@delete']);
 	Route::get('setting', ['as'=>'memo.setting.index','uses'=>'MemoSettingController@index']);
 
 	// process 
@@ -123,7 +124,7 @@ Route::group([
 	Route::post('process/revise/{id}', ['as'=>'memo.process.revise', 'uses'=>'MemoProcessController@revise']);
 	Route::get('inbox', ['as'=>'memo.inbox.index','uses'=>'MemoInboxController@index']);
 	
-	// 
+	// revise
 	Route::get('revise/{id}', ['as'=>'memo.revise.edit','uses'=>'MemoController@edit']);
 	Route::post('revise/{id}', ['as'=>'memo.revise.update','uses'=>'MemoController@update']);
 
@@ -140,7 +141,7 @@ Route::group([
 
 // Group Supplier
 Route::group([
-	// 'middleware'=>'auth'
+	'middleware'=>'auth'
 ], function(){
 	Route::post('/supplier/delete', 'SupplierController@delete');
 	Route::resource('/supplier', 'SupplierController');

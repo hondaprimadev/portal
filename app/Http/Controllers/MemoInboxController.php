@@ -34,6 +34,8 @@ class MemoInboxController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('memo.open');
+
         $begin = $request->input('begin');
         $end = $request->input('end');
 
@@ -75,6 +77,8 @@ class MemoInboxController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('memo.create');
+
         $no_memo = $request->input('memo_no');
         $user='';
 
@@ -151,6 +155,8 @@ class MemoInboxController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('memo.edit');
+
         $memo = Memo::findOrFail($id);
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
         
@@ -219,6 +225,8 @@ class MemoInboxController extends Controller
 
     public function getApproval($approval, $branch_id)
     {
+        $this->authorize('memo.open');
+        
         if ($branch_id == 100) {
             $user = User::where('position_id', $approval)->get();
         }else{

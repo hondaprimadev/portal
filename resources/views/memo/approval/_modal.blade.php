@@ -95,7 +95,7 @@
 </div>
 
 {{-- Delete Modal --}}
-<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="Delete User">
+<div class="modal fade" id="deleteApprovalModal" tabindex="-1" role="dialog" aria-labelledby="Delete User">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -107,12 +107,12 @@
 			<div class="modal-body">
 				<p class="lead">
             	<i class="fa fa-question-circle fa-lg"></i>  
-            		Are you sure you want to delete this User?
+            		Are you sure you want to delete this Approval?
           		</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            	<button type="submit" class="btn btn-danger" onclick=deleteUser()><i class="fa fa-times-circle"></i> Yes
+            	<button type="submit" class="btn btn-danger" onclick=DeleteApproval()><i class="fa fa-times-circle"></i> Yes
 			</div>
 		</div>
 	</div>

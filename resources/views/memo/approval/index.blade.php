@@ -35,7 +35,7 @@
                 <button type="button" class="btn btn-red" onclick="addSetting()">
                   <i class="fa fa-plus" aria-hidden="true"></i> New
                 </button>
-                <button type="button" class="btn btn-red" onclick="DeleteSetting()">
+                <button type="button" class="btn btn-red" onclick="deleteApproval()">
                   <i class="fa fa-trash" aria-hidden="true"></i> Delete
                 </button>
 
@@ -66,7 +66,7 @@
             </div>
           </div>
 
-			{!! Form::open(['url'=>'/memo/approval/delete','id'=>'formHrdDelete']) !!}
+			{!! Form::open(['route'=>'memo.approval.delete','id'=>'formApprovalDelete']) !!}
 				<table id="tableUser" class="table table-striped table-color">
 					<thead>
 						<tr>

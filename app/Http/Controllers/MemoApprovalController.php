@@ -20,6 +20,8 @@ class MemoApprovalController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('memo.super');
+
         $begin = $request->input('begin');
         $end  = $request->input('end');
         $budget = empty($request->input('budget')) ? '0' : $request->input('budget');
@@ -36,18 +38,33 @@ class MemoApprovalController extends Controller
         }
     
         if ($budget > 0) {
-            $memos = MemoApproval::where('budget',$budget)
-                ->where('inv_date1', $begin->format('Y-m-d'))
-                ->where('inv_date2', $end->format('Y-m-d'))
-                ->where('branch_id', $bid)
-                ->get();
+            if ($bid=='all') {
+                $memos = MemoApproval::where('budget',$budget)
+                    ->where('inv_date1', $begin->format('Y-m-d'))
+                    ->where('inv_date2', $end->format('Y-m-d'))
+                    ->get();
+            }else{
+                $memos = MemoApproval::where('budget',$budget)
+                    ->where('inv_date1', $begin->format('Y-m-d'))
+                    ->where('inv_date2', $end->format('Y-m-d'))
+                    ->where('branch_id', $bid)
+                    ->get();
+            }
         }else{
-            $memos = MemoApproval::where('budget',$budget)->where('branch_id', $bid)->get();
+            if ($bid=='all') {
+                $memos = MemoApproval::where('budget',$budget)->get();
+            }else{
+                $memos = MemoApproval::where('budget',$budget)->where('branch_id', $bid)->get();
+            }
         }
 
         $userPosition = [''=>'---'] + UserPosition::lists('name', 'id')->all();
-        $branch = [''=>'--Branch--'] + Branch::lists('name', 'id')->all();
-        $category = [''=>'---'] + MemoCategory::lists('name', 'id')->all();
+        $branch = [''=>'--Branch--'] + ['all'=>'All Branch'] + Branch::lists('name', 'id')->all();
+        $category = [];
+        foreach (MemoCategory::all() as $value) {
+            $category += [$value->id => $value->name.' ('.$value->department->name.')'];
+        }
+        
         $department = [''=>'---'] + UserDepartment::lists('name', 'id')->all();
 
         return view('memo.approval.index', compact('memos','begin','end','budget','userPosition','branch','bid','category','department'));
@@ -71,32 +88,64 @@ class MemoApprovalController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('memo.super');
+
         $budget = empty($request->input('budget_total')) ? false : true;
         $prepayment = empty($request->input('prepayment')) ? false : true;
         $department = UserPosition::where('id', $request->input('user_approval'))->first();
-
-        $mp = MemoApproval::create([
-            'category_id'=>$request->input('category_id'),
-            'approval_path'=>$request->input('approval_path'),
-            'branch_id'=>$request->input('branch_id'),
-            'user_approval'=>$request->input('user_approval'),
-            'budget'=> $budget,
-            'budget_total'=>$request->input('budget_total'),
-            'prepayment'=>$prepayment,
-            'inv_date1'=>$request->input('inv_date1'),
-            'inv_date2'=>$request->input('inv_date2'),
-            'department_id'=>$department->department_id,
-        ]);
-        if ($mp->budget) {
-            $mt = MemoTransaction::create([
-                'user_id'=>auth()->user()->id,
-                'memo_id'=>'',
-                'debet'=>$mp->budget_total,
-                'branch_id'=>$mp->branch_id,
-                'category_id'=>$mp->category_id,
-                'approval_id'=>$mp->id,
+        $branches = Branch::all();
+        if ($request->input('branch_id') == 'all') {
+            foreach ($branches as $branch) {
+                if ($branch->id != '100') {
+                    $mp = MemoApproval::create([
+                        'category_id'=>$request->input('category_id'),
+                        'approval_path'=>$request->input('approval_path'),
+                        'branch_id'=>$branch->id,
+                        'user_approval'=>$request->input('user_approval'),
+                        'budget'=> $budget,
+                        'budget_total'=>$request->input('budget_total'),
+                        'prepayment'=>$prepayment,
+                        'inv_date1'=>$request->input('inv_date1'),
+                        'inv_date2'=>$request->input('inv_date2'),
+                        'department_id'=>$department->department_id,
+                    ]);
+                    if ($mp->budget) {
+                        $mt = MemoTransaction::create([
+                            'user_id'=>auth()->user()->id,
+                            'memo_id'=>'',
+                            'debet'=>$mp->budget_total,
+                            'branch_id'=>$mp->branch_id,
+                            'category_id'=>$mp->category_id,
+                            'approval_id'=>$mp->id,
+                            'department_id'=>$department->department_id,
+                        ]);
+                    }        
+                }    
+            }
+        }else{
+            $mp = MemoApproval::create([
+                'category_id'=>$request->input('category_id'),
+                'approval_path'=>$request->input('approval_path'),
+                'branch_id'=>$request->input('branch_id'),
+                'user_approval'=>$request->input('user_approval'),
+                'budget'=> $budget,
+                'budget_total'=>$request->input('budget_total'),
+                'prepayment'=>$prepayment,
+                'inv_date1'=>$request->input('inv_date1'),
+                'inv_date2'=>$request->input('inv_date2'),
                 'department_id'=>$department->department_id,
             ]);
+            if ($mp->budget) {
+                $mt = MemoTransaction::create([
+                    'user_id'=>auth()->user()->id,
+                    'memo_id'=>'',
+                    'debet'=>$mp->budget_total,
+                    'branch_id'=>$mp->branch_id,
+                    'category_id'=>$mp->category_id,
+                    'approval_id'=>$mp->id,
+                    'department_id'=>$department->department_id,
+                ]);
+            }
         }
 
         return redirect('memo/approval');
@@ -133,6 +182,8 @@ class MemoApprovalController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('memo.super');
+        
         $budget = empty($request->input('budget_total')) ? false : true;
         $prepayment = empty($request->input('prepayment')) ? false : true;
         $department = UserPosition::where('id', $request->input('user_approval'))->first();
@@ -168,8 +219,15 @@ class MemoApprovalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Request $request)
     {
-        //
+        $this->authorize('memo.super');
+
+        foreach ($request->input('id') as $app) {
+            $memo = MemoApproval::find($app);
+            $memo->delete();
+        }
+
+        return redirect()->back();
     }
 }
