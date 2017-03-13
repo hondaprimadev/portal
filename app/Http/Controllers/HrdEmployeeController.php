@@ -226,10 +226,15 @@ class HrdEmployeeController extends Controller
 
         foreach ($request->input('id') as $key => $value) {
             $user = User::findOrFail($value);
-            $user->is_user = true;
-            $user->password = bcrypt('1234567890');
-            $user->token = md5(uniqid($user->email, true));
-            $user->save();
+            if ($user->is_user == true) {
+                $user->is_user = false;
+                $user->save();
+            }else{
+                $user->is_user = true;
+                $user->password = bcrypt('1234567890');
+                $user->token = md5(uniqid($user->email, true));
+                $user->save();
+            }
         }
 
         session()->flash('flash_message', "Your Employee has been added to User Sistem");

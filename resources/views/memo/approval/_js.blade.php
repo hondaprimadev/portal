@@ -103,6 +103,21 @@
       $("#editApprovalModal").modal("show");
     }
 
+    function deleteApproval() {
+      if ($('.checkin').is(':checked')) 
+      {
+        $('#deleteApprovalModal').modal("show");
+      }
+      else
+      {
+        $('#deleteNoModal').modal("show");
+      }
+    }
+    function DeleteApproval()
+    {
+      $("#formApprovalDelete").submit();
+    }
+
     function updateQueryStringParam(key, value) {
       var baseUrl = [location.protocol, '//', location.host, location.pathname].join(''),
       urlQueryString = document.location.search,

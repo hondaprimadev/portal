@@ -36,7 +36,7 @@ class MemoController extends Controller
      */
     public function index(Request $request)
     {
-        //$this->authorize('memo.open');
+        $this->authorize('memo.open');
 
         $begin = $request->input('begin');
         $end = $request->input('end');
@@ -67,6 +67,8 @@ class MemoController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('memo.create');
+
         $url = Req::fullUrl();
         $user_app = [''=>'---'];
         $budget=0;
@@ -88,7 +90,7 @@ class MemoController extends Controller
         $branch = [''=>'---'] + Branch::where('company_id',$company_id)->lists('name', 'id')->all();
         $depts = [''=>'---'] + UserDepartment::lists('name', 'id')->all();
         $position = [''=>'---'] + UserPosition::lists('name', 'id')->all();
-        $category = [''=>'---'] + MemoCategory::where('department_id', $dept_id)->lists('name', 'id')->all();
+        $category = [''=>'---'] + MemoCategory::where('department_id', $dept_id)->orderBy('name', 'asc')->lists('name', 'id')->all();
         $supplier = [''=>'--get supplier--'] + Supplier::where('branch_id', $branch_id)
                     ->where('active', true)
                     ->lists('name','id')
@@ -155,6 +157,8 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('memo.create');
+
         $validator = Validator::make($request->all(), Memo::$rules);
 
         if ($validator->fails()) {
@@ -250,6 +254,8 @@ class MemoController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('memo.open');
+
         $memo = Memo::where('token', $id)->first();
 
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
@@ -301,6 +307,8 @@ class MemoController extends Controller
      */
     public function edit(Request $request, $id)
     {
+        $this->authorize('memo.edit');
+
         $memo = Memo::where('token', $id)->first();
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
 
@@ -393,6 +401,8 @@ class MemoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('memo.edit');
+
         $validator = Validator::make($request->all(), Memo::$rules);
 
         if ($validator->fails()) {
@@ -494,11 +504,13 @@ class MemoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->authorize('memo.delete');
     }
 
     public function getApproval($approval, $branch_id)
     {
+        $this->authorize('memo.open');
+
         if ($branch_id == 100) {
             $user = User::where('position_id', $approval)->get();
         }else{
@@ -512,6 +524,8 @@ class MemoController extends Controller
 
     public function getSupplierId(Request $request)
     {
+        $this->authorize('memo.open');
+
         $id = $request->input('id');
         $type = $request->input('type');
         if ($type=='employee') {
@@ -523,6 +537,8 @@ class MemoController extends Controller
 
     public function getSupplier(Request $request)
     {
+        $this->authorize('memo.open');
+
         $supplier = $request->input('s');
         $branch_id = $request->input('b');
 
@@ -548,6 +564,8 @@ class MemoController extends Controller
 
     public function getSaldo($branch, $category, $date1, $date2)
     {
+        $this->authorize('memo.open');
+        
         if ($branch == 100) {
             $mt = MemoTransaction::select(DB::raw('(SUM(debet)-SUM(credit)) as saldo'))
                 ->where('category_id', $category)

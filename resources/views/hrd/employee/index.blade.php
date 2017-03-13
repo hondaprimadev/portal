@@ -40,7 +40,7 @@
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
 
-          <button type="button" class="btn btn-red" onclick="AddUser()" data-toggle="tooltip" data-placement="bottom" title="Add Employee to user">
+          <button type="button" class="btn btn-red" onclick="AddUser()" data-toggle="tooltip" data-placement="bottom" title="Add/remove Employee to user">
             <i class="fa fa-user-plus" aria-hidden="true"></i>
           </button>
           <span style="margin-left: 10px;>
