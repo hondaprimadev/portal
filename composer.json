@@ -11,10 +11,7 @@
         "laravelcollective/html": "5.2.*",
         "intervention/image": "^2.3",
         "tymon/jwt-auth": "^0.5.9",
-        "barryvdh/laravel-dompdf": "^0.8.0",
-        "barryvdh/laravel-snappy": "^0.3.3",
-        "h4cc/wkhtmltopdf-amd64": "0.12.x",
-        "h4cc/wkhtmltoimage-amd64": "0.12.x"
+        "barryvdh/laravel-dompdf": "^0.8.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
