@@ -35,8 +35,6 @@ class MemoUploadController extends Controller
     	$files = $request->all();
     	$response = $this->manager->upload($files, $files['branch_id'], $files['no_memo']);
     	return $response;
-		// $file = $files['upload_memo'];
-		// return $files['upload_memo']->getMimeType();
     }
 
     public function showFile(Request $request,$file)
