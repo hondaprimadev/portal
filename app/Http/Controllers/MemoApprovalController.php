@@ -202,14 +202,15 @@ class MemoApprovalController extends Controller
             'department_id'=>$department->department_id,
         ]);
         $mt = MemoTransaction::where('approval_id', $mp->id)->first();
-        
-        $mt->user_id = auth()->user()->id;
-        $mt->memo_id = '';
-        $mt->debet = $mp->budget_total;
-        $mt->branch_id = $mp->branch_id;
-        $mt->category_id = $mp->category_id;
-        $mt->department_id = $mp->department_id;
-        $mt->save();
+        if ($mp->budget == true) {
+            $mt->user_id = auth()->user()->id;
+            $mt->memo_id = '';
+            $mt->debet = $mp->budget_total;
+            $mt->branch_id = $mp->branch_id;
+            $mt->category_id = $mp->category_id;
+            $mt->department_id = $mp->department_id;
+            $mt->save();
+        }
 
         return redirect('memo/approval');    }
 
