@@ -148,7 +148,7 @@ class MemoApprovalController extends Controller
             }
         }
 
-        return redirect('memo/approval');
+        return redirect()->back();
     }
 
     /**
@@ -212,7 +212,7 @@ class MemoApprovalController extends Controller
             $mt->save();
         }
 
-        return redirect('memo/approval');    }
+        return redirect()->back();
 
     /**
      * Remove the specified resource from storage.
