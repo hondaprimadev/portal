@@ -18,6 +18,8 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('supplier.index');
+
         $bid = empty($request->input('branch')) ? '' : $request->input('branch');
 
         $branch = ['0'=>'--All Branch--'] + Branch::lists('name', 'id')->all();
@@ -38,6 +40,8 @@ class SupplierController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('supplier.create');
+
         $bid = $request->input('b');
         $cid = $request->input('c');
         
@@ -59,6 +63,7 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('supplier.create');
 
         $supp = Supplier::create($request->all());
 
@@ -90,6 +95,8 @@ class SupplierController extends Controller
      */
     public function edit(Request $request,$id)
     {
+        $this->authorize('supplier.edit');
+
         $supplier = Supplier::findOrFail($id);
 
         $bid = $request->input('b');
@@ -114,6 +121,8 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('supplier.edit');
+
         $supp = Supplier::findOrFail($id);
         $supp->update($request->all());
 
@@ -135,6 +144,8 @@ class SupplierController extends Controller
 
     public function delete(Request $request)
     {
+        $this->authorize('supplier.delete');
+
         foreach ($request->input('id') as $key => $value) {
             $s = Supplier::findOrFail($value);
             $s->delete();
