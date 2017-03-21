@@ -79,7 +79,11 @@
 								<td>{{ $s->phone }}</td>
 								<td>{{ $s->name_pic }}</td>
 								<td>{{ $s->phone_pic }}</td>
-								<td>{{ $s->bank->name }}</td>
+								<td>
+									@if ($s->bank_id != 0)
+										{{ $s->bank->name }}
+									@endif
+								</td>
 								<td>{{ $s->account_number }}</td>
 								<td>
 									@if ($s->active)
