@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MemoTransaction extends Model
 {
-    protected $fillable = ['user_id', 'memo_id','debet', 'credit', 'branch_id', 'category_id','approval_id','department_id'];
+    protected $fillable = ['user_id', 'memo_id','debet', 'credit', 'branch_id', 'category_id','approval_id','department_id','memo_finish'];
 
     public function memo()
     {
