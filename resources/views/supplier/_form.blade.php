@@ -3,6 +3,7 @@
     <h3 class="box-title">
       @if ($editSupplier)
         Supplier <b>{{ $supplier->no_supplier }}</b>
+        <?php $branch_id = $supplier->branch_id; ?>
       @else
         Supplier <b>{{ $supplier->ofMaxno($branch_id, $category_id) }}</b>
       @endif
@@ -20,7 +21,11 @@
       <div class="form-group">
         {!! Form::label('branch_id', 'Branch', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id']) !!}
+          @if ($editSupplier)
+            {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id', 'disabled'=>'disabled']) !!}
+          @else
+            {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id']) !!}
+          @endif
         </div>
       </div>
 
@@ -31,12 +36,14 @@
         </div>
       </div>
 
+      @if ($editSupplier)
       <div class="form-group">
         {!! Form::label('active', 'Active', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
           {!! Form::select('active', ['1'=>'Active','0'=>'Deactive'], null, ['class'=>'form-control']) !!}
         </div>
       </div>
+      @endif
 
     </div>
   </div>

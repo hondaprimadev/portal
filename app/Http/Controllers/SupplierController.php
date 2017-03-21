@@ -67,7 +67,7 @@ class SupplierController extends Controller
 
         $supp = Supplier::create($request->all());
 
-        $supp->no_supplier = $supp->ofMaxno($supp->branch_id, $supp->category_id);
+        $supp->no_supplier = $supp->ofMaxno($request->input('branch_id'), $request->input('category_id'));
         $supp->active = true;
         $supp->save();
 
