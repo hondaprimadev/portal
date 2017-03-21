@@ -57,7 +57,7 @@
           </ul>
         </li>
 
-        <li class="treeview {{ set_active(['memo..index','memo.inbox.index','memo.setting.index','memo.approval.index','memo.sent.index','memo.report.index', 'memo.transaction.index']) }}">
+        <li class="treeview {{ set_active(['memo..index','memo.inbox.index','memo.setting.index','memo.approval.index','memo.sent.index','memo.report.index', 'memo.transaction.index', 'supplier.index']) }}">
           @can('memo.open')          
           <a href="#">
             <i class="fa fa-bookmark fa-lg" aria-hidden="true"></i> <span>Memo</span>
@@ -80,6 +80,10 @@
             @can('memo.super')
             <li class="{{ set_active('memo.report.index') }}"><a href="{{ route('memo.report.index') }}"><i 
             class="fa fa-circle-o fa-lg"></i> Report</a></li>
+            @endcan
+            @can('memo.super')
+            <li class="{{ set_active('supplier.index') }}"><a href="{{ route('supplier.index') }}"><i 
+            class="fa fa-circle-o fa-lg"></i> Supplier</a></li>
             @endcan
           </ul>
         </li>
