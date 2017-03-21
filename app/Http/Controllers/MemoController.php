@@ -240,7 +240,8 @@ class MemoController extends Controller
             'credit'=>$memo->total_memo,
             'branch_id'=>$request->input('branch_id'),
             'category_id'=>$request->input('category_id'),
-            'department_id'=>$department_id
+            'department_id'=>$department_id,
+            'memo_finish'=>false,
         ]);
 
         return redirect('/memo');
@@ -490,7 +491,8 @@ class MemoController extends Controller
             'credit'=>$memo->total_memo,
             'branch_id'=>$request->input('branch_id'),
             'category_id'=>$request->input('category_id'),
-            'department_id'=>$department_id
+            'department_id'=>$department_id,
+            'memo_finish'=>false,
         ]);
 
         return redirect('/memo');

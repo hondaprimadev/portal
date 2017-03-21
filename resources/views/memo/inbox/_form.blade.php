@@ -169,6 +169,7 @@
     <div class="col-md-6">
       <table class="table">
         @if ($memo->supplier_type == 'employee')
+          @if ($memo->supplierUser->count() > 0)
           <tr>
             <td><b>Name</b></td>
             <td>{{ $memo->supplierUser->name }}</td>
@@ -189,7 +190,9 @@
             <td><b>NPWP</b></td>
             <td>{{ $memo->supplierUser->npwp }}</td>
           </tr>
+          @endif
         @else
+          @if ($memo->supplier->count() > 0)
           <tr>
             <td><b>Name</b></td>
             <td>{{ $memo->supplier->account_name }}</td>
@@ -210,6 +213,7 @@
             <td><b>NPWP</b></td>
             <td>{{ $memo->supplier->npwp }}</td>
           </tr>
+          @endif
         @endif
         
       </table>

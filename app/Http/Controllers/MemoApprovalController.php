@@ -118,6 +118,7 @@ class MemoApprovalController extends Controller
                             'category_id'=>$mp->category_id,
                             'approval_id'=>$mp->id,
                             'department_id'=>$department->department_id,
+                            'memo_finish'=>true,
                         ]);
                     }        
                 }    
@@ -144,6 +145,7 @@ class MemoApprovalController extends Controller
                     'category_id'=>$mp->category_id,
                     'approval_id'=>$mp->id,
                     'department_id'=>$department->department_id,
+                    'memo_finish'=>true,
                 ]);
             }
         }
