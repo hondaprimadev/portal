@@ -325,9 +325,10 @@ class MemoController extends Controller
         $eid = $request->input('category');
         $date = date('Y-m-d');
 
+        $dept_cat = MemoCategory::find($memo->category_id);
         $branch_id = empty($bid) ? $memo->branch_id : $bid;
         $company_id= empty($cid) ? $memo->company_id : $cid;
-        $dept_id = empty($did) ? $memo->department_id : $did;
+        $dept_id = empty($did) ? $dept_cat->department_id : $did;
         $category_id = empty($eid) ? $memo->category_id : $eid;
         
         $company = [''=>'---'] + Company::lists('name', 'id')->all();
