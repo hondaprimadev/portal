@@ -55,8 +55,9 @@ class MemoController extends Controller
         $memos = Memo::where('from_memo', auth()->user()->id)
                     ->whereDate('created_at', '>=', $begin)
                     ->whereDate('created_at','<=', $end)
+                    ->orderBy('created_at', 'desc')
                     ->get();
-        
+                    
         return view('memo.index', compact('memos', 'begin','end'));
     }
 
