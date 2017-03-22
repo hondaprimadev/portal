@@ -28,6 +28,8 @@ class MemoCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('memo.super');
+
         $mc = MemoCategory::create($request->all());
 
         return redirect()->back()->with('tab','category');
@@ -64,6 +66,8 @@ class MemoCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('memo.super');
+
         $mc = MemoCategory::findOrFail($id);
         $mc->update($request->all());
 
@@ -83,6 +87,8 @@ class MemoCategoryController extends Controller
 
     public function delete(Request $request)
     {
+        $this->authorize('memo.super');
+        
         foreach ($request->input('id') as $key => $value) {
             $m = MemoCategory::findOrFail($value);
             $m->delete();

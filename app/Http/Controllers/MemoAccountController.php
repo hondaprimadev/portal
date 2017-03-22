@@ -36,6 +36,8 @@ class MemoAccountController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('memo.super');
+
         $j = JournalAccount::create($request->all());
 
         return redirect()->back()->with('tab','account');
@@ -72,6 +74,8 @@ class MemoAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('memo.super');
+
         $j = JournalAccount::findOrFail($id);
         $j->update($request->all());
 
@@ -91,6 +95,8 @@ class MemoAccountController extends Controller
 
     public function delete(Request $request)
     {
+        $this->authorize('memo.super');
+        
         foreach ($request->input('id') as $key => $value) {
             $j = JournalAccount::findOrFail($value);
             $j->delete();

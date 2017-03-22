@@ -17,6 +17,8 @@ class MemoSettingController extends Controller
      */
     public function index(Request $request)
     {   
+        $this->authorize('memo.super');
+
         $mc = MemoCategory::all();
         $journal = JournalAccount::all();
 
