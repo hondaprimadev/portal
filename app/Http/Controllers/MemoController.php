@@ -114,7 +114,7 @@ class MemoController extends Controller
         if($mp->count() > 0){
             foreach ($mp as $mp_null) {
                 $approval = explode("+",$mp_null->approval_path);
-                $getUser = $this->getApproval($approval[0], $branch_id);
+                $getUser = $this->getApproval($approval[0],$approval);
                 foreach ($getUser as $gu) {
                     $user_app = [$gu->id=>$gu->name];
                 }
@@ -137,7 +137,7 @@ class MemoController extends Controller
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
-                    $getUser = $this->getApproval($approval[0], $branch_id);
+                    $getUser = $this->getApproval($approval[0],$approval);
                     foreach ($getUser as $gu) {
                         $user_app = [$gu->id=>$gu->name];
                     }
@@ -284,7 +284,7 @@ class MemoController extends Controller
         $key = $search + 1;
 
         if (isset($approval_path[$key])) {
-            $user_app = $this->getApproval($approval_path[$key], $branch_id);
+            $user_app = $this->getApproval($approval_path[$key]);
             $user_app = $user_app->lists('name','id')->all();
         }else{
             // $user_app = $this->getApproval($approval_path[$search], $branch_id);
@@ -359,7 +359,7 @@ class MemoController extends Controller
         if($mp->count() > 0){
             foreach ($mp as $mp_null) {
                 $approval = explode("+",$mp_null->approval_path);
-                $getUser = $this->getApproval($approval[0], $branch_id);
+                $getUser = $this->getApproval($approval[0], $approval);
                 foreach ($getUser as $gu) {
                     $user_app = [$gu->id=>$gu->name];
                 }
@@ -382,7 +382,7 @@ class MemoController extends Controller
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
-                    $getUser = $this->getApproval($approval[0], $branch_id);
+                    $getUser = $this->getApproval($approval[0], $approval);
                     foreach ($getUser as $gu) {
                         $user_app = [$gu->id=>$gu->name];
                     }
@@ -511,16 +511,17 @@ class MemoController extends Controller
         $this->authorize('memo.delete');
     }
 
-    public function getApproval($approval, $branch_id)
+    public function getApproval($approval, $approval_path)
     {
         $this->authorize('memo.open');
 
-        if ($branch_id == 100) {
-            $user = User::where('position_id', $approval)->get();
+        if ($approval == auth()->user()->position_id) {
+            $search = array_search(auth()->user()->position_id, $approval_path);
+            $key = $search + 1;
+
+            $user = User::where('position_id', $approval_path[$key])->get();
         }else{
-            $user = User::where('position_id', $approval)
-                    ->where('branch_id', $branch_id)
-                    ->get();
+            $user = User::where('position_id', $approval)->get();
         }
 
         return $user;

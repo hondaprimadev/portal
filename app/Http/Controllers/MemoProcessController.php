@@ -39,7 +39,8 @@ class MemoProcessController extends Controller
         $branch = Branch::where('id',$memo->branch_id)->lists('name', 'id')->all();
         $branch_id = Branch::where('company_id', $memo->company_id)->first()->id;
         
-        $depts = UserDepartment::where('id', $memo->department_id)->lists('name', 'id')->all();
+        $cat_id = MemoCategory::where('id', $memo->category_id)->first();
+        $depts = UserDepartment::where('id', $cat_id->department_id)->lists('name', 'id')->all();
         $position = UserPosition::lists('name', 'id')->all();
 
         $category = MemoCategory::where('id', $memo->category_id)->lists('name','id')->all();
@@ -59,8 +60,6 @@ class MemoProcessController extends Controller
             $user_app = $this->getApproval($approval_path[$key], $branch_id);
             $user_app = $user_app->lists('name','id')->all();
         }else{
-            // $user_app = $this->getApproval($approval_path[$search], $branch_id);
-            // $user_app = $user_app->lists('name','id')->all();
             $user_app = ['0'=>'FINISH'];
         }
 
