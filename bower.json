@@ -1,0 +1,11 @@
+{
+  "name": "Portal Honda Prima",
+  "description": "Honda Prima Sistem",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "vendor/bower_dl",
+    "test",
+    "tests"
+  ]
+}

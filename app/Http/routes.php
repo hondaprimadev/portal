@@ -129,6 +129,7 @@ Route::group([
 	Route::post('revise/{id}', ['as'=>'memo.revise.update','uses'=>'MemoController@update']);
 
 	Route::get('show/{id}', ['as'=>'memo.memo.show', 'uses'=>'MemoController@show']);
+	Route::get('administrator', ['as'=>'memo.memo.administrator', 'uses'=>'MemoController@administrator']);
 
 	Route::resource('/', 'MemoController');
 	Route::resource('category', 'MemoCategoryController');
