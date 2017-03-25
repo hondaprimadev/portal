@@ -114,7 +114,13 @@ class MemoController extends Controller
         if($mp->count() > 0){
             foreach ($mp as $mp_null) {
                 $approval = explode("+",$mp_null->approval_path);
-                $getUser = $this->getApproval($approval[0],$approval);
+                $branch_choice = substr($approval[0], 0, 1);
+                if ($branch_choice == 'H') {
+                    $getUser = $this->getApproval($approval[0],$approval);
+                }else{
+                    $getUser = $this->getApproval($approval[0],$approval, $branch_id);
+                }
+                
                 foreach ($getUser as $gu) {
                     $user_app = [$gu->id=>$gu->name];
                 }
@@ -137,7 +143,7 @@ class MemoController extends Controller
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
-                    $getUser = $this->getApproval($approval[0],$approval);
+                    $getUser = $this->getApproval($approval[0],$approval, $branch_id);
                     foreach ($getUser as $gu) {
                         $user_app = [$gu->id=>$gu->name];
                     }
@@ -284,7 +290,7 @@ class MemoController extends Controller
         $key = $search + 1;
 
         if (isset($approval_path[$key])) {
-            $user_app = $this->getApproval($approval_path[$key]);
+            $user_app = $this->getApproval($approval_path[$key], $approval_path);
             $user_app = $user_app->lists('name','id')->all();
         }else{
             // $user_app = $this->getApproval($approval_path[$search], $branch_id);
@@ -511,7 +517,41 @@ class MemoController extends Controller
         $this->authorize('memo.delete');
     }
 
-    public function getApproval($approval, $approval_path)
+    public function administrator(Request $request)
+    {
+        $branch_id = empty($request->input('branch')) ? 0 : $request->input('branch');
+        $begin = $request->input('begin');
+        $end = $request->input('end');
+
+        if(!$begin && !$end)
+        {
+            $now = date('Y-m-');
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now.'01');
+            $end = new \DateTime($now.$d1);
+        }else{
+            $begin = new \DateTime($begin);
+            $end = new \DateTime($end);
+        }
+
+        $branch = Branch::lists('name','name')->all();
+
+        if ($branch_id!=0) {
+            $memos = Memo::where('branch_id', $branch_id)
+                        ->whereDate('created_at', '>=', $begin)
+                        ->whereDate('created_at','<=', $end)
+                        ->get();
+        }else
+        {
+            $memos = Memo::whereDate('created_at', '>=', $begin)
+                    ->whereDate('created_at','<=', $end)
+                    ->get();
+        }
+
+        return view('memo.administrator', compact('memos', 'branch_id', 'branch','begin','end'));
+    }
+
+    public function getApproval($approval, $approval_path, $branch=100)
     {
         $this->authorize('memo.open');
 
@@ -521,7 +561,13 @@ class MemoController extends Controller
 
             $user = User::where('position_id', $approval_path[$key])->get();
         }else{
-            $user = User::where('position_id', $approval)->get();
+            if ($branch == 100) {
+                $user = User::where('position_id', $approval)->get();
+            }else{
+                $user = User::where('position_id', $approval)
+                            ->where('branch_id', $branch)
+                            ->get();
+            }
         }
 
         return $user;
