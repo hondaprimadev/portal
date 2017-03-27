@@ -40,6 +40,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   {{-- select2 --}}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
+  {{-- custom css --}}
+  <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/admin.css') }}">
+
   @yield('head')
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -48,159 +51,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <style type="text/css">
-    .box-body-header{
-      border: 1px solid #ccc;
-      padding: 5px;
-      background: #485563; /* fallback for old browsers */
-      background: -webkit-linear-gradient(to left, #485563 , #29323c); /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to left, #485563 , #29323c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */      
-      color: white;
-    }
-    .table-color thead th{
-      background: #16a085; /* fallback for old browsers */
-      color: white;
-    }
-    .table-color tfoot td{
-      background: #ddd;
-      font-weight: bold;
-    }
-    .table-color tfoot{
-      text-align: center;
-    }
-    .content-header-create{
-      line-height: 10px;
-      top: 51px;
-      position: fixed;
-      width: 100%;
-      background-color: #fff;
-      padding:10px;
-      z-index: 999;
-    }
-    .content-create-form{
-      padding-top: 300px;
-      background-color: white;
-      padding-top: 20px;
-    }
-    /*profile hrm*/
-    .outer-div{
-        height: 210px;
-        width: 210px;
-        background-color: #fff;
-        border: 2px dashed #ccc;
-        position: relative;
-        border-radius: 10px;
-    }
-    .inner-div{
-        height: 200px;
-        width: 200px;
-        background-color: #ccc;
-        position: absolute;
-
-        margin: -100px 0 0 -100px;
-        left: 50%;
-        top: 50%;
-    }
-    .outer-div-lg{
-        height: 210px;
-        background-color: #fff;
-        border: 2px dashed #ccc;
-        position: relative;
-        border-radius: 10px;
-    }
-    .inner-div-lg{
-        height: 200px;
-        /*width: 100%;*/
-        background-color: #fff;
-        position: absolute;
-
-        margin: -100px 0 0 -100px;
-        left: 50%;
-        top: 50%;
-    }
-    .progress{
-        position: relative;
-        top: 50%;
-        z-index: 999;
-        display: none;
-    }
-    .progress-bar{
-        background-color: #5F3A74;
-    }
-    .btn-upload-profile{
-        position: absolute;
-        color: white;
-        border:0;
-        width: 40px;
-        height: 40px;
-        margin: -20px 0 0 -20px;
-        left: 50%;
-        top: 50%;
-    }
-    .btn-upload-profile:hover{
-        background-color: rgba(0,0,0, 0.3);
-    }
-    .btn-delete-profile{
-        display: none;
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background-color: #5F3A74;
-        color: white;
-        border:0;
-    }   
-    .btn-delete-profile:hover{
-        background-color: #7F6091;
-    }
-    /*end profile hrm*/
-    .fa-green{
-      color:#27ae60;
-    }
-    .fa-red{
-      color:#c0392b;
-    }
-    .fa-blue{
-      color:#2980b9;
-    }
-    .fa-yellow{
-      color:#f1c40f;
-    }
-    .fa-orange{
-      color: #f39c12;
-    }
-    /* upload style */
-    #UploadMemo ul li{
-    padding: 5px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #ecf0f1;
-  }
-
-  #UploadMemo ul li a{
-    font-style: italic;
-    font-weight: bold;
-    color:#2c3e50;
-    cursor: pointer;
-  }
-
-  #UploadMemo ul li a:hover{
-    color: #c0392b;
-  }
-
-  #UploadMemo ul li a i{
-    margin-right: 5px;
-  }
-
-  #UploadMemo ul li span{
-    margin-left: 10px;
-  }
-  /* end upload style */
-  </style>
   @yield('styles')
 </head>
 <!--
@@ -329,11 +179,7 @@ desired effect
 
 
 <!-- REQUIRED JS SCRIPTS -->
-
-<!-- jQuery 2.2.0 -->
-<script src="{{ asset('/admin-lte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="{{ asset('/admin-lte/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('/assets/js/admin.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('/admin-lte/dist/js/app.min.js') }}"></script>
 <!-- ChartJs -->
@@ -366,28 +212,6 @@ desired effect
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 {{-- Knob.Js --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
-<script type="text/javascript">
-  // check all table
-    $('#check_all').change(function(){
-    if ($('#check_all').is(':checked')) {
-      $('.checkin').prop('checked', true);
-      $('#tableGrid tbody tr').addClass('selected');
-    }
-    else{
-      $('.checkin').removeAttr('checked');
-      $('#tableGrid tbody tr').removeClass('selected');
-    }
-    });
-
-    $('.checkin').change(function(){
-    if ($('.checkin').is(':checked')) {
-      $(this).closest('tr').addClass('selected');
-    }
-    else{
-      $(this).closest('tr').removeClass('selected');
-    }
-    });
-</script>
 @yield('scripts')
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
