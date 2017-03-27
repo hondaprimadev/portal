@@ -96,7 +96,7 @@ class Memo extends Model
         	->get();
         }else{
             $dept = auth()->user()->department->name;
-            $kd_max =  $query->select(DB::raw('MAX( SUBSTR(`no_memo` , 4, 4 ) ) AS kd_max'))
+            $kd_max =  $query->select(DB::raw('MAX( SUBSTR(`no_memo` , 1, 4 ) ) AS kd_max'))
             ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
             ->where('branch_id',$branch_id)
             ->where('company_id', $company_id)
