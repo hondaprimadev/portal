@@ -365,7 +365,13 @@ class MemoController extends Controller
         if($mp->count() > 0){
             foreach ($mp as $mp_null) {
                 $approval = explode("+",$mp_null->approval_path);
-                $getUser = $this->getApproval($approval[0], $approval);
+                $branch_choice = substr($approval[0], 0, 1);
+                if ($branch_choice == 'H') {
+                    $getUser = $this->getApproval($approval[0],$approval);
+                }else{
+                    $getUser = $this->getApproval($approval[0],$approval, $branch_id);
+                }
+                
                 foreach ($getUser as $gu) {
                     $user_app = [$gu->id=>$gu->name];
                 }
@@ -388,7 +394,7 @@ class MemoController extends Controller
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
-                    $getUser = $this->getApproval($approval[0], $approval);
+                    $getUser = $this->getApproval($approval[0],$approval, $branch_id);
                     foreach ($getUser as $gu) {
                         $user_app = [$gu->id=>$gu->name];
                     }
