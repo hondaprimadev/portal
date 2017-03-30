@@ -149,7 +149,7 @@ class MemoProcessController extends Controller
 	        elseif ($user->position_id == 'H4FI') {
 	            $status = 'FINISHED BY '.$user->name.' '.$status_ext;
                 
-                $mt = MemoTransaction::where('memo_id', $memo->id);
+                $mt = MemoTransaction::where('memo_id', $memo->id)->first();
                 $mt->memo_finish = true;
                 $mt->save();
 	        }
