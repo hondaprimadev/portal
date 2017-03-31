@@ -115,6 +115,10 @@ Route::group([
 	Route::post('category/delete',['as'=>'memo.category.delete','uses'=>'MemoCategoryController@delete']);
 	Route::post('account/delete',['as'=>'memo.account.delete','uses'=>'MemoAccountController@delete']);
 	Route::post('approval/delete', ['as'=>'memo.approval.delete','uses'=>'MemoApprovalController@delete']);
+	Route::delete('detail/{detail}', ['as'=>'memo.detail.delete', 'uses'=>'MemoController@deleteDetail']);
+	Route::delete('finance/{finance}', ['as'=>'memo.finance.delete', 'uses'=>'MemoController@deleteFinance']);
+
+	// setting
 	Route::get('setting', ['as'=>'memo.setting.index','uses'=>'MemoSettingController@index']);
 
 	// process 

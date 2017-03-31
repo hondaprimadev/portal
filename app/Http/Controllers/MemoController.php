@@ -523,6 +523,45 @@ class MemoController extends Controller
         $this->authorize('memo.delete');
     }
 
+    public function deleteDetail($id)
+    {
+        $detail = MemoDetail::find($id);
+        $detail->delete();
+
+        if(!$detail){
+            return response()->json([ 
+                'error'=> true,
+                'message' => 'Server error while deleting Detail',
+                'code' => 500
+            ], 500);
+        }else{
+            return response()->json([
+                'error' => false,
+                'message' => 'Success delete Detail',
+                'code' => 200
+            ], 200);
+        }
+    }
+
+    public function deleteFinance($id)
+    {
+        $finance = MemoFinanceSupport::find($id);
+        $finance->delete();
+
+        if (!$finance) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Server error while deleting Finance Support',
+                'code' => 500
+            ], 500);
+        }else{
+            return response()->json([
+                'error' => false,
+                'message' => 'Success delete Finance',
+                'code'=> 200
+            ],200);
+        }
+    }
     public function administrator(Request $request)
     {
         $branch_id = empty($request->input('branch')) ? 0 : $request->input('branch');

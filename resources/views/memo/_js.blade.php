@@ -119,6 +119,7 @@
 	    if(rowCount > 2)
 	    {
 			trFam.remove();
+			all_total();
 			return false;
 	    }
 	    else{
@@ -127,52 +128,72 @@
 	});
 
 	$(".del_fin").click(function(){
+		var tokenId = $('input[name=_token]').val();
+		var id = $(this).closest("tr").find('.id_finance').val();
+
 		var rowCount = $('#tableFinance tr').length;
 		var trFam = $(this).closest("tr");
 
 	    if(rowCount > 2)
 	    {
-			trFam.remove();
-			return false;
+	    	if (rowCount > 2) {
+	    		$.ajax({
+	    			type: 'DELETE',
+	    			url: '/memo/finance/' + id,
+	    			data: {
+	    				_token: $('[name=_token').val()
+	    			},
+	    			dataType: 'html',
+	    			success: function(data){
+	    				trFam.remove();
+	    				all_total_finance();
+	    				return false;
+	    			}
+	    		})
+	    	}else{
+	    		trFam.remove();
+				all_total_finance();
+				return false;
+	    	}
 	    }
 	    else{
 	    	return false;
 	    }
+
+	    return false;
 	});
 
 	$(".del_rinc_edit").click(function(){
-		var rowCount = $('#tableDetail tr').length;
-		alert(rowCount);
 		var tokenId = $('input[name=_token]').val();
-		var id = $(this).closest("tr").find('.id_fam').val();
+		var id = $(this).closest("tr").find('.id_detail').val();
+		var rowCount = $('#tableDetail tr').length;
 		var trFam = $(this).closest("tr");
 		
-	    if (rowCount !=2 && id!='') 
+	    if(rowCount > 2)
 	    {
-	    	/*$(this).closest("tr").remove();*/
-	    	// $.ajax({
-	    	// 	url: '/hrm/hrm/deletefamily/' + id,
-	    	// 	type: 'POST',
-	    	// 	data:{
-	    	// 		'_token': tokenId,
-	    	// 		'method': 'DELETE',
-	    	// 	},
-	    	// 	success: function(response){
-	    	// 		trFam.remove();
-	    	// 		return false;
-	    	// 	}
-	    	// });
+	    	if (id != '') {
+	    		$.ajax({
+		            type: 'DELETE',
+		            url: '/memo/detail/'+id,
+		            data: {_token: $('[name=_token').val()},
+		            dataType: 'html',
+		            success: function(data){
+		            	trFam.remove();
+		            	all_total();
+		                return false;
+		            }
+        		});
+	    	}else{
+	    		trFam.remove();
+	    		all_total();
+				return false;
+	    	}
 	    }
-	    else if(rowCount!=2 && id=='')
-	    {
-	    	
-			trFam.remove();
-			return false;
+	    else{
+	    	return false;
 	    }
-	    else
-	    {
-			return false;
-	    }
+
+	    return false;
 	});
 
 	// on submit form
@@ -312,15 +333,7 @@
 		var id_val = $("#"+id).val();
 		var id_num = parseFloat(id_val.replace(/[^0-9-.]/g, ''));
 
-		var sum = 0;
-		$('#tableFinance').find('.total_finance_detail').each(function(){
-		    var value = $(this).val();
-		    var value_num = parseFloat(value.replace(/[^0-9-.]/g, ''));
-		    if (!isNaN(value_num)) sum += value_num;
-		});
-		var num = sum.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'');
-		var total = $('#all_total_finance').val(num);
-
+		all_total_finance();
 	}
 
 	function number(this_id) {
@@ -356,6 +369,16 @@
 		var total = $('#all_total_detail').val(num);
     }
 
+    function all_total_finance() {
+    	var sum = 0;
+		$('#tableFinance').find('.total_finance_detail').each(function(){
+		    var value = $(this).val();
+		    var value_num = parseFloat(value.replace(/[^0-9-.]/g, ''));
+		    if (!isNaN(value_num)) sum += value_num;
+		});
+		var num = sum.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'');
+		var total = $('#all_total_finance').val(num);
+    }
 	function get_mime(file) {
 		switch(file) {
     	case 'image/jpeg':
