@@ -164,7 +164,7 @@
             <tr>
               <td>
                 {!! Form::input('date','date_detail[]', $d->date,['class'=> 'form-control date_detail detail-table','id'=>'date_detail'.$no, 'placeholder'=> 'Date']) !!}
-                {!! Form::hidden('id_detail[]',$d->id, ['class'=>'detail-table']) !!}
+                {!! Form::hidden('id_detail[]',$d->id, ['class'=>'detail-table id_detail']) !!}
               </td>
               <td>
                 {!! Form::text('description[]', $d->description,['class'=> 'form-control detail-table description_detail', 'id'=>'description_detail'.$no,'placeholder'=> 'Description']) !!}
@@ -179,7 +179,7 @@
                 {!! Form::text('subtotal[]', number_format($d->qty * $d->total),['class'=> 'form-control total_detail detail-table','id'=>'total_detail'.$no,'disabled'=>'disabled']) !!}
               </td>
               <td>
-                  <a href="#" class="del_rinc"><i class="fa fa-times" style="color: red"></i></a>
+                  <a href="#" class="del_rinc_edit"><i class="fa fa-times" style="color: red"></i></a>
                 </td>
               </td>
             </tr>
@@ -307,7 +307,7 @@
             <tr>
               <td>
                 {!! Form::select('group_leasing[]',$leasing, $fin->group_leasing,['class'=> 'form-control leasing_detail detail-table','id'=>'group_leasing'.$no]) !!}
-                {!! Form::hidden('id_leasing[]', $fin->id, ['class'=>'detail-table']) !!}
+                {!! Form::hidden('id_leasing[]', $fin->id, ['class'=>'detail-table id_finance']) !!}
               </td>
               <td>
                 {!! Form::text('sub_total_finance[]', number_format($fin->total), ['class'=>'form-control total_finance_detail detail-table','id'=>'total'.$no,"onkeyup"=>"numberFinance(this)", "onkeypress"=>"numberFinance(this)"]) !!}
