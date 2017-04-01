@@ -125,20 +125,5 @@
         $('#deleteNoModal').modal("show");
       }
     }
-
-    function approve(id={{ $memo->id }}) {
-      $("#formInbox").attr('action', '/memo/process/approve/all');
-      $("#formInbox").submit();
-    }
-
-    function reject(id={{ $memo->id }}) {
-      $("#formInbox").attr('action', '/memo/process/reject/' + id);
-      $("#formInbox").submit();
-    }
-
-    function revise(id = {{ $memo->id }}) {
-      $("#formInbox").attr('action', '/memo/process/revise/' + id);
-      $("#formInbox").submit();
-    }
   </script>
 @stop
