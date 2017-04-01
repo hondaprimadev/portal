@@ -41,28 +41,13 @@
             <button type="button" class="btn btn-red" onclick="RejectMemo()">
               <i class="fa fa-trash" aria-hidden="true"></i> Reject
             </button>
-
-            <span style="margin-left: 10px;"">
-              <i class="fa fa-filter" aria-hidden="true"></i> Filter
-            </span>
-            <button type="button" class="btn btn-red" id="reportrange">
-              <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-              <span>
-                @if ($begin)
-                  {{ $begin->format('M d, Y') }}
-                  -
-                  {{  $end->format('M d, Y') }}
-              @endif
-              </span>
-              <b class="caret"></b>
-            </button>
         </div>
 
         <div class="col-md-4">
           <input type="text" id="searchDtbox" class="form-control" placeholder="search...">
         </div>
       </div>
-
+      {!! Form::open(['id'=>'formInbox','method'=>'POST']) !!}
 			<table id="tableInbox" class="table table-striped table-color">
 				<thead>
 					<tr>
@@ -99,12 +84,61 @@
           @endforeach
         </tbody>
 			</table>
+      {!! Form::close() !!}
 		</div>
 	</div>
 
-  {{-- @include('memo.approval._modal') --}}
+  @include('memo.inbox._modal')
 @stop
 
 @section('scripts')
-  {{-- @include('memo.approval._js') --}}
+  <script type="text/javascript">
+    function ApproveMemo() {
+      if ($('.checkin').is(':checked')) 
+      {
+        $('#approveMemo').modal("show");
+      }
+      else
+      {
+        $('#deleteNoModal').modal("show");
+      }
+    }
+
+    function RejectMemo() {
+      if ($('.checkin').is(':checked')) 
+      {
+        $('#rejectMemo').modal("show");
+      }
+      else
+      {
+        $('#deleteNoModal').modal("show");
+      } 
+    }
+
+    function ReviseMemo(){
+      if ($('.checkin').is(':checked')) 
+      {
+        $('#reviseMemo').modal("show");
+      }
+      else
+      {
+        $('#deleteNoModal').modal("show");
+      }
+    }
+
+    function approve(id={{ $memo->id }}) {
+      $("#formInbox").attr('action', '/memo/process/approve/all');
+      $("#formInbox").submit();
+    }
+
+    function reject(id={{ $memo->id }}) {
+      $("#formInbox").attr('action', '/memo/process/reject/' + id);
+      $("#formInbox").submit();
+    }
+
+    function revise(id = {{ $memo->id }}) {
+      $("#formInbox").attr('action', '/memo/process/revise/' + id);
+      $("#formInbox").submit();
+    }
+  </script>
 @stop
