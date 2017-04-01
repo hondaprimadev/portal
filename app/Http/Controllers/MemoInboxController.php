@@ -51,8 +51,6 @@ class MemoInboxController extends Controller
         }
 
         $memos = Memo::where('to_memo', auth()->user()->id)
-                ->whereDate('created_at', '>=', $begin)
-                ->whereDate('created_at','<=', $end)
                 ->where('status_memo','NOT LIKE','%REVISE BY%')
                 ->orderBy('updated_at', 'desc')
                 ->get();

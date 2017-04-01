@@ -122,6 +122,7 @@ Route::group([
 	Route::get('setting', ['as'=>'memo.setting.index','uses'=>'MemoSettingController@index']);
 
 	// process 
+	Route::post('process/{process}/all', ['as'=>'memo.process.all', 'uses'=>'MemoProcessController@all']);
 	Route::get('process/{process}/approve', ['as'=>'memo.process.process','uses'=>'MemoProcessController@process']);
 	Route::post('process/approve/{id}', ['as'=>'memo.process.approve','uses'=>'MemoProcessController@approve']);
 	Route::post('process/reject/{id}', ['as'=>'memo.process.reject','uses'=>'MemoProcessController@reject']);

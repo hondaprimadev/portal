@@ -72,6 +72,11 @@ class MemoProcessController extends Controller
         return view('memo.inbox.process', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app'));
     }
 
+    public function all($id)
+    {
+            
+    }
+
     public function approve(Request $request, $id)
     {
     	$stat = 'approve';
