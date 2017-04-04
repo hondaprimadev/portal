@@ -22,10 +22,10 @@ class MemoReportController extends Controller
 
         if(!$begin && !$end)
         {
-            $now = date('Y-m-');
-            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-            $begin = new \DateTime($now.'01');
-            $end = new \DateTime($now.$d1);
+            $now = date('Y-m-d');
+            // $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $begin = new \DateTime($now);
+            $end = new \DateTime($now);
         }else{
             $begin = new \DateTime($begin);
             $end = new \DateTime($end);
@@ -36,15 +36,15 @@ class MemoReportController extends Controller
             $memo = Memo::where('to_memo', 0)
             ->where('status_memo','LIKE', '%FINISH%')
             ->where('branch_id', $branch_id)
-            ->whereDate('created_at', '>=', $begin)
-            ->whereDate('created_at','<=', $end)
+            ->whereDate('updated_at', '>=', $begin)
+            ->whereDate('updated_at','<=', $end)
             ->orderBy('updated_at', 'desc')
             ->get();
         }else{
             $memo = Memo::where('to_memo', 0)
             ->where('status_memo','LIKE', '%FINISH%')
-            ->whereDate('created_at', '>=', $begin)
-            ->whereDate('created_at','<=', $end)
+            ->whereDate('updated_at', '>=', $begin)
+            ->whereDate('updated_at','<=', $end)
             ->orderBy('updated_at', 'desc')
             ->get();
         }
