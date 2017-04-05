@@ -54,5 +54,6 @@ class Kernel extends HttpKernel
         'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
         'memo.approve' => \App\Http\Middleware\MemoApproveMiddleware::class,
         'memo.revise' => \App\Http\Middleware\MemoReviseMiddleware::class,
+        'memo.open' => \App\Http\Middleware\MemoOpenMiddleware::class,
     ];
 }

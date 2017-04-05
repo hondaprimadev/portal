@@ -27,7 +27,9 @@ class MemoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('memo.revise')->only('edit','update','show');
+        $this->middleware('memo.revise')->only('edit','update');
+
+        $this->middleware('memo.open')->only('show');
     }
     /**
      * Display a listing of the resource.
