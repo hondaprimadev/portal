@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Memo;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class MemoOpenMiddleware
 {
