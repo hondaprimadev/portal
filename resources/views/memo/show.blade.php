@@ -42,13 +42,13 @@
     });
 
     function getUpload(){
-
+      var token = '{{ csrf_token() }}';
       $.ajax({
         type: 'POST',
         url: '{{ route('memo.upload.get') }}',
         data: {
           no_memo: $('[name=memo_no').val(), 
-          _token: $('[name=_token').val()
+          _token: token,
         },
         dataType: 'html',
           success: function(data){
