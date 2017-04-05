@@ -68,11 +68,12 @@ class UploadMemoManager
     	return Response::json([
 	      'error'=>false,
 	      'code'=> 200,
-          'id'=> $memo->id,
+        'id'=> $memo->id,
 	      'file_name' => $filenameExt,
 	      'original_name' => $originalName,
 	      'file_type' => $file->getMimeType(),
 	      'file_size' => $file->getSize(),
+        'branch_id'=>$branch_id,
 	    ], 200);
 	}
 

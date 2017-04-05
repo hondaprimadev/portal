@@ -1,6 +1,5 @@
 <script type="text/javascript">
 	all_total();
-
 	var params = '';
 	var branch_id = $('#branch_id :selected').val();
 	// Dropzone create
@@ -18,7 +17,7 @@
     	
     	init:function(){
     		var myDropzones = this;
-    		
+
     		$.ajax({
                 type: 'POST',
                 url: '{{ route('memo.upload.get') }}',
@@ -31,19 +30,13 @@
                 	var datas = JSON.parse(data);
                 	$.each(datas, function( key, value ) {
                 		getFile(value);
-  						console.log(value.file_name);
 					});
-                    // console.log(datas);
                 }
             });
     	}
   	});
 	
   	myDropzone.on("sending", function(file, xhr, formData){
-  		console.log(file);
-		console.log('token', $('[name=_token').val());
-		console.log('upload started', file);
-
 		formData.append("_token", $('[name=_token').val());
 		formData.append("branch_id", $('#branch_id :selected').val());
 		formData.append("no_memo",$('[name=memo_no').val());
@@ -81,21 +74,15 @@
 		updateQueryStringParam("branch", "");
 		updateQueryStringParam("dept", "");
 		updateQueryStringParam("company", $('#company_id :selected').val());
-		// window.location = myUrl;
-		// console.log(myUrl);
 	});
 
 	$('#branch_id').change(function() {
   		updateQueryStringParam("branch", $('#branch_id :selected').val());
-		// window.location = myUrl;
-		// console.log(myUrl);
 	});
 
 	$('#department_id_approval').change(function(){
 		updateQueryStringParam("category",null);
 		updateQueryStringParam("dept", $('#department_id_approval :selected').val());
-		// window.location = myUrl;
-		// console.log(myUrl);
 	});
 
 	$('#category_id').change(function(){
@@ -230,7 +217,6 @@
                 $(value).closest('li').remove();
             },
             error: function(message){
-            	console.log(message);
             	return false;
             }
         });
