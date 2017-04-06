@@ -184,6 +184,8 @@
               </td>
             </tr>
           @endforeach
+        @else
+          @include('memo._detaildefault')
         @endif
       </tbody>
     </table>
