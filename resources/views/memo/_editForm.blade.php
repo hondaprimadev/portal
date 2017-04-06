@@ -144,6 +144,7 @@
     </div>
   </div>
   <div class="box-body">
+    @if ($memo->details->count() > 0)
     <table class="table table-striped detail-table" id="tableDetail">
       <thead>
         <th>Date</th>
@@ -158,7 +159,6 @@
         </th>
       </thead>
       <tbody>
-        @if ($memo->details->count() > 0)
           @foreach ($memo->details as $d)
             <?php $no += 100 ?>
             <tr>
@@ -184,9 +184,6 @@
               </td>
             </tr>
           @endforeach
-        @else
-          @include('memo._detaildefault')
-        @endif
       </tbody>
     </table>
     <div class="col-md-6 pull-right" style="margin-top: 25px;">
@@ -197,6 +194,9 @@
         </div>
       </div>
     </div>
+    @else
+      @include('memo._detaildefault')
+    @endif
   </div>
 </div>
 
