@@ -191,6 +191,11 @@
         {!! Form::label('subject_memo', 'Total', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
           {!! Form::text('all_total_detail', null, ['class'=>'form-control all_total_detail','id'=>'all_total_detail','disabled'=>'disabled']) !!}
+          @if ($errors->has('all_total_detail'))
+            <span class="help-block">
+                <strong>{{ $errors->first('all_total_detail') }}</strong>
+            </span>
+          @endif
         </div>
       </div>
     </div>
