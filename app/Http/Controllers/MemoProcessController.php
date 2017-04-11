@@ -111,7 +111,9 @@ class MemoProcessController extends Controller
         $this->getProcess($id, $stat, $to_memo, $notes);
         
         $mt = MemoTransaction::where('memo_id', $id)->first();
-    	$mt->delete();
+        if ($mt) {
+            $mt->delete();   
+        }
 
         return redirect('memo/inbox');	
     }

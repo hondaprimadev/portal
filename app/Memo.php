@@ -16,7 +16,8 @@ class Memo extends Model
         'approval_memo'=>'required',
         'to_memo'=>'required',
         'category_id'=>'required',
-        'department_id_approval'=>'required'
+        'department_id_approval'=>'required',
+        'all_total_detail'=>'required'
     ];
 
     public function company()
