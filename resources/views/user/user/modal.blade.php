@@ -57,7 +57,7 @@
 						
 
 						{!! Form::label('branch_id', 'Dealer:') !!}
-						{!! Form::select('branch_id',$branch,null,['class'=>'form-control','id'=>'dealerUser']) !!}
+						{!! Form::select('branch_id',$branch,null,['class'=>'form-control','id'=>'branchUser']) !!}
 
 						{!! Form::label('role', 'Role:') !!}
 						{!! Form::select('role[]',$roles, null, ['class'=>'form-control','id'=>'roleUser', 'multiple'=>'multiple']) !!}

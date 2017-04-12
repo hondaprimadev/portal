@@ -81,13 +81,21 @@ class MemoController extends Controller
         $bid = $request->input('branch');
         $cid = $request->input('company');
         $did = $request->input('dept');
+        $duid = $request->input('dept-user');
         $eid = $request->input('category');
         $date = date('Y-m-d');
 
         $branch_id = empty($bid) ? auth()->user()->branch_id : $bid;
+        $dept_id_user = empty($duid) ? auth()->user()->department_id : $duid;
         $company_id= empty($cid) ? auth()->user()->company_id : $cid;
         $dept_id = empty($did) ? auth()->user()->department_id : $did;
         $category_id = empty($eid) ? '' : $eid;
+
+        if ($branch_id != 100) {
+            $dept_user = [''=>'---','D6'=>'BRANCH', 'D7'=>'SERVICE SPARE PART'];
+        }else{
+            $dept_user = [''=>'---'] + UserDepartment::lists('name', 'id')->all();    
+        }
         
         $company = [''=>'---'] + Company::lists('name', 'id')->all();
         $branch = [''=>'---'] + Branch::where('company_id',$company_id)->lists('name', 'id')->all();
@@ -148,6 +156,7 @@ class MemoController extends Controller
                     ->where('budget', false)
                     ->get();
             }
+
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
@@ -166,7 +175,7 @@ class MemoController extends Controller
             }   
         }
 
-        return view('memo.create', compact('url','company','company_id','branch','branch_id','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
+        return view('memo.create', compact('url','company','company_id','branch','branch_id','dept_user','dept_id_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
     }
 
     /**
@@ -195,14 +204,23 @@ class MemoController extends Controller
             }
         }
 
-        if ($request->input('memo_no') == Memo::ofMaxno($request->input('branch_id'), $request->input('company_id'))) {
+        if ($request->input('memo_no') == Memo::ofMaxno($request->input('branch_id'), $request->input('company_id'), $request->input('department_id'))) {
             $no_memo = $request->input('memo_no');
         }else{
             return redirect()->back()->withErrors(['no_memo'=>'required no memo']);
         }
 
         $user_memo = User::where('id', auth()->user()->id)->first();
-        $department_id = $request->input('branch_id') != 100 ? 'D6' : $user_memo->department_id;
+
+        // if ($request->input('branch_id') != 100) {
+        //     if ($user_memo->department_id != 'D6') {
+        //         $department_id = 'D7'; //AHASS
+        //     }else{
+        //         $department_id = 'D6'; // H1
+        //     }
+        // }else{
+        //     $department_id = $user_memo->department_id;
+        // }
 
         $memo = Memo::create($request->all());
 
@@ -210,7 +228,7 @@ class MemoController extends Controller
         $memo->status_memo = 'ON PROCESS';
         $memo->total_memo = intval(str_replace(',','',$request->input('all_total_detail')));
         $memo->from_memo= auth()->user()->id;
-        $memo->department_id = $department_id;
+        $memo->department_id = $request->input('department_id');
         $memo->token = md5(uniqid($memo->no_memo, true));
         $memo->save();
 
@@ -220,7 +238,7 @@ class MemoController extends Controller
             'status_memo' => 'ON PROCESS',
             'total_memo' => intval(str_replace(',','',$request->input('all_total_detail'))),
             'from_memo' => $memo->from_memo,
-            'department_id' => $department_id,
+            'department_id' => $memo->department_id,
             ]);
         $memoSent->update($request->all());
 
@@ -260,7 +278,7 @@ class MemoController extends Controller
             'credit'=>$memo->total_memo,
             'branch_id'=>$request->input('branch_id'),
             'category_id'=>$request->input('category_id'),
-            'department_id'=>$department_id,
+            'department_id'=>$memo->department_id,
             'memo_finish'=>false,
         ]);
 
@@ -342,14 +360,24 @@ class MemoController extends Controller
         $bid = $request->input('branch');
         $cid = $request->input('company');
         $did = $request->input('dept');
+        $duid = $request->input('dept-user');
         $eid = $request->input('category');
         $date = date('Y-m-d');
 
+
         $dept_cat = MemoCategory::find($memo->category_id);
         $branch_id = empty($bid) ? $memo->branch_id : $bid;
+        $dept_id_user = empty($duid) ? $memo->department_id : $duid;
         $company_id= empty($cid) ? $memo->company_id : $cid;
         $dept_id = empty($did) ? $dept_cat->department_id : $did;
         $category_id = empty($eid) ? $memo->category_id : $eid;
+
+        if ($branch_id != 100) {
+            $dept_user = [''=>'---','D6'=>'BRANCH', 'D7'=>'SERVICE SPARE PART'];
+        }else{
+            $dept_user = [''=>'---'] + UserDepartment::lists('name', 'id')->all();    
+        }
+
         
         $company = [''=>'---'] + Company::lists('name', 'id')->all();
         $branch = [''=>'---'] + Branch::where('company_id',$company_id)->lists('name', 'id')->all();
@@ -398,11 +426,18 @@ class MemoController extends Controller
                 );
             }
         }else{
-             $mps = MemoApproval::where('category_id', $category_id)
-                ->where('branch_id', $branch_id)
-                ->where('user_approval', auth()->user()->position_id)
-                ->where('budget', false)
-                ->get();
+            if (auth()->user()->can('memo.super')) {
+                $mps = MemoApproval::where('category_id', $category_id)
+                    ->where('branch_id', $branch_id)
+                    ->where('budget', false)
+                    ->get();
+            }else{
+                $mps = MemoApproval::where('category_id', $category_id)
+                    ->where('branch_id', $branch_id)
+                    ->where('user_approval', auth()->user()->position_id)
+                    ->where('budget', false)
+                    ->get();
+            }
 
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
@@ -422,7 +457,7 @@ class MemoController extends Controller
             }   
         }
 
-        return view('memo.edit', compact('memo','memo_sent','url','company','company_id','branch','branch_id','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
+        return view('memo.edit', compact('memo','memo_sent','url','company','company_id','branch','branch_id','dept_id_user','dept_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
     }
 
     /**
@@ -451,16 +486,12 @@ class MemoController extends Controller
                 return redirect()->back()->withErrors(['budget'=>'Your budget get to the limit']);
             }
         }
-        
-        $user_memo = User::where('id', auth()->user()->id)->first();
-        $department_id = $request->input('branch_id') != 100 ? 'D6' : $user_memo->department_id;
 
         $memo = Memo::where('token',$id)->first();
         $memo->update($request->all());
 
         $memo->status_memo = 'ON PROCESS (REVISE)';
         $memo->total_memo = intval(str_replace(',','',$request->input('all_total_detail')));
-        $memo->department_id = $department_id;
         $memo->save();
 
         
@@ -471,7 +502,7 @@ class MemoController extends Controller
             'subject_memo'=>$memo->subject_memo. " (REVISE)",
             'status_memo' => 'ON PROCESS (REVISE)',
             'total_memo' => intval(str_replace(',','',$request->input('all_total_detail'))),
-            'department_id' => $department_id,
+            'department_id' => $memo->department_id,
         ]);
 
         $memoSent->update($request->all());
@@ -523,7 +554,7 @@ class MemoController extends Controller
             'credit'=>$memo->total_memo,
             'branch_id'=>$request->input('branch_id'),
             'category_id'=>$request->input('category_id'),
-            'department_id'=>$department_id,
+            'department_id'=>$memo->department_id,
             'memo_finish'=>false,
         ]);
 

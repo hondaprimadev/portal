@@ -78,6 +78,11 @@
 
 	$('#branch_id').change(function() {
   		updateQueryStringParam("branch", $('#branch_id :selected').val());
+  		updateQueryStringParam("dept-user",null);
+	});
+
+	$('#department_id').change(function() {
+		updateQueryStringParam("dept-user",$('#department_id :selected').val());
 	});
 
 	$('#department_id_approval').change(function(){
