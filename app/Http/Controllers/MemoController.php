@@ -136,12 +136,18 @@ class MemoController extends Controller
                 );
             }
         }else{
-             $mps = MemoApproval::where('category_id', $category_id)
-                ->where('branch_id', $branch_id)
-                ->where('user_approval', auth()->user()->position_id)
-                ->where('budget', false)
-                ->get();
-
+            if (auth()->user()->can('memo.super')) {
+                $mps = MemoApproval::where('category_id', $category_id)
+                    ->where('branch_id', $branch_id)
+                    ->where('budget', false)
+                    ->get();
+            }else{
+                $mps = MemoApproval::where('category_id', $category_id)
+                    ->where('branch_id', $branch_id)
+                    ->where('user_approval', auth()->user()->position_id)
+                    ->where('budget', false)
+                    ->get();
+            }
             if ($mps->count() > 0) {
                 foreach ($mps as $mp_null) {
                     $approval = explode("+",$mp_null->approval_path);
