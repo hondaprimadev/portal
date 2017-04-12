@@ -17,7 +17,8 @@ class Memo extends Model
         'to_memo'=>'required',
         'category_id'=>'required',
         'department_id_approval'=>'required',
-        'all_total_detail'=>'required'
+        'department_id'=>'required',
+        'all_total_detail'=>'required',
     ];
 
     public function company()
@@ -80,28 +81,31 @@ class Memo extends Model
     {
         return $this->hasMany('App\MemoUpload', 'no_memo','no_memo');
     }
-    public function scopeofMaxno($query, $branch_id, $company_id)
+    public function scopeofMaxno($query, $branch_id, $company_id, $department_id=null)
     {
         $kd_fix;
         $year=substr(date('Y'), 2);
         $month=$this->romanNumerals(date('m'));
 
         $company = Company::where('id', $company_id)->first();
+        $user_department = UserDepartment::where('id', $department_id)->first();
 
         if ($branch_id != 100) {
             $dept = Branch::where('id', $branch_id)->first()->name;
+            $dept_name = $user_department->name;
         	$kd_max =  $query->select(DB::raw('MAX( SUBSTR(`no_memo` , 1, 4 ) ) AS kd_max'))
             ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
             ->where('branch_id',$branch_id)
             ->where('company_id', $company_id)
+            ->where('department_id', $department_id)
         	->get();
         }else{
-            $dept = auth()->user()->department->name;
+            $dept = $user_department->name;
             $kd_max =  $query->select(DB::raw('MAX( SUBSTR(`no_memo` , 1, 4 ) ) AS kd_max'))
             ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
             ->where('branch_id',$branch_id)
             ->where('company_id', $company_id)
-            ->where('department_id', auth()->user()->department_id)
+            ->where('department_id', $department_id)
             ->get();
         }
     	
@@ -116,6 +120,14 @@ class Memo extends Model
     		$kd_fix = '0001';
     	}
 
+        if ($department_id == 'D7') {
+            return $kd_fix.'/'.
+                $company->alias.'/'.
+                $branch_id.'-'.
+                $dept.'/'.
+                $dept_name.'/'.
+                $month.'/'.$year;
+        }
     	return $kd_fix.'/'.
                 $company->alias.'/'.
     			$branch_id.'-'.

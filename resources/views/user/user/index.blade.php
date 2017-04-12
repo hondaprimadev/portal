@@ -82,6 +82,7 @@
                 <td> 
                   @if ($user->branch()->count() > 0)
                     {{ $user->branch->name }}
+                    <input type="hidden" id="brachTableUser" value="{{ $user->branch_id }}">
                   @endif
                 </td>
                 <td>
@@ -132,9 +133,10 @@
         var id = $(this).find('#idTableUser').val();
         var name = $(this).find('#nameTableUser').val();
         var email = $(this).find('#emailTableUser').val();
+        var branch = $(this).find('#brachTableUser').val();
         var role = $(this).find('#roleTableUser').val();
 
-        editUser(id, name, email, role);
+        editUser(id, name, email, branch, role);
       }
     });
 
@@ -145,11 +147,12 @@
   		$("#createUserModal").modal("show");
   	}
 
-  	function editUser(id, name, email, role) {
+  	function editUser(id, name, email ,branch, role) {
   		$("#editUser").attr('action', '/admin/user/user/' + id);
     		$("#idUser").val(id);
     		$("#nameUser").val(name);
     		$("#emailUser").val(email);
+        $("#branchUser").val(branch);
     		$("#roleUser").val(JSON.parse(role));
 
     		$("#editUserModal").modal("show");

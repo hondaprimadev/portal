@@ -1,8 +1,8 @@
 <div class="box box-success">
   <div class="box-header with-border">
     <h3 class="box-title">
-        Memo Information - <b>{{ $memo->ofMaxno($branch_id, $company_id) }}</b>
-        {!! Form::hidden('memo_no', $memo->ofMaxno($branch_id, $company_id)) !!}  
+        Memo Information - <b>{{ $memo->ofMaxno($branch_id, $company_id, $dept_id_user) }}</b>
+        {!! Form::hidden('memo_no', $memo->ofMaxno($branch_id, $company_id, $dept_id_user)) !!}  
     </h3>
 
     <div class="box-tools pull-right">
@@ -35,6 +35,20 @@
             {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id']) !!}
           </div>
         </div>
+        <div class="form-group has-feedback{{ $errors->has('department_id') ? ' has-error' : '' }}">
+        {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+          @if ($branch_id == 100)
+            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','id'=>'department_id','disabled'=>'disabled']) !!}
+          @else
+            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','id'=>'department_id']) !!}
+          @endif
+          @if ($errors->has('department_id'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('department_id') }}</strong>
+                </span>
+          @endif
+        </div>
       @else
         <div class="form-group">
           {!! Form::label('company_id', 'Company', ['class'=>'col-sm-2 control-label']) !!}
@@ -48,6 +62,17 @@
             {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id','disabled'=>'disabled']) !!}
           </div>
         </div>
+        <div class="form-group has-feedback{{ $errors->has('department_id') ? ' has-error' : '' }}">
+        {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+          {!! Form::select('department_id', $depts, $dept_id,['class'=> 'form-control','disabled'=>'disabled']) !!}
+          @if ($errors->has('department_id'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('department_id') }}</strong>
+                </span>
+          @endif
+        </div>
+      </div>
       @endif
     </div>
   </div>

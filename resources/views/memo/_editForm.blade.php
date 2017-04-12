@@ -38,6 +38,12 @@
             {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id','disabled'=>'disabled']) !!}
           </div>
         </div>
+        <div class="form-group">
+          {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=>'form-control','id'=>'department_id', 'disabled'=>'disabled']) !!}
+          </div>
+        </div>
       @else
         <div class="form-group">
           {!! Form::label('company_id', 'Company', ['class'=>'col-sm-2 control-label']) !!}
@@ -49,6 +55,12 @@
           {!! Form::label('branch_id', 'Branch', ['class'=>'col-sm-2 control-label']) !!}
           <div class="col-sm-10">
             {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id','disabled'=>'disabled']) !!}
+          </div>
+        </div>
+        <div class="form-group">
+          {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=>'form-control','id'=>'department_id', 'disabled'=>'disabled']) !!}
           </div>
         </div>
       @endif
