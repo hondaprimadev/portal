@@ -65,7 +65,7 @@
         <div class="form-group has-feedback{{ $errors->has('department_id') ? ' has-error' : '' }}">
         {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::select('department_id', $depts, $dept_id,['class'=> 'form-control','disabled'=>'disabled']) !!}
+          {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','disabled'=>'disabled']) !!}
           @if ($errors->has('department_id'))
                 <span class="help-block">
                     <strong>{{ $errors->first('department_id') }}</strong>
