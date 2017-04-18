@@ -119,15 +119,19 @@ class MemoController extends Controller
             $mp = MemoApproval::where('category_id', $category_id)
                 ->where('branch_id', $branch_id)
                 ->where('budget', true)
+                ->whereDate('inv_date1', '<=',date('Y-m-d'))
+                ->whereDate('inv_date2', '>=',date('Y-m-d'))
                 ->get();
         }else{
             $mp = MemoApproval::where('category_id', $category_id)
                 ->where('branch_id', $branch_id)
                 ->where('user_approval', auth()->user()->position_id)
                 ->where('budget', true)
+                ->whereDate('inv_date1', '<=',date('Y-m-d'))
+                ->whereDate('inv_date2', '>=',date('Y-m-d'))
                 ->get();
         }
-
+        
         if($mp->count() > 0){
             foreach ($mp as $mp_null) {
                 $approval = explode("+",$mp_null->approval_path);
@@ -146,7 +150,7 @@ class MemoController extends Controller
                 $saldo = $this->getSaldo(
                     $branch_id, 
                     $category_id,
-                    $mp_null->inv_date1, 
+                    $mp_null->inv_date1,
                     $mp_null->inv_date2
                 );
             }
@@ -407,12 +411,16 @@ class MemoController extends Controller
             $mp = MemoApproval::where('category_id', $category_id)
                 ->where('branch_id', $branch_id)
                 ->where('budget', true)
+                ->whereDate('inv_date1', '<=',date('Y-m-d'))
+                ->whereDate('inv_date2', '>=',date('Y-m-d'))
                 ->get();
         }else{
             $mp = MemoApproval::where('category_id', $category_id)
                 ->where('branch_id', $branch_id)
                 ->where('user_approval', auth()->user()->position_id)
                 ->where('budget', true)
+                ->whereDate('inv_date1', '<=',date('Y-m-d'))
+                ->whereDate('inv_date2', '>=',date('Y-m-d'))
                 ->get();
         }
 
