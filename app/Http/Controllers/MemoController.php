@@ -19,6 +19,7 @@ use App\UserDepartment;
 use App\UserPosition;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request as Req;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -85,8 +86,14 @@ class MemoController extends Controller
         $eid = $request->input('category');
         $date = date('Y-m-d');
 
+        if (Gate::check('memo.super')) {
+            $duid = $request->input('dept-user');
+            $dept_id_user = empty($duid) ? auth()->user()->department_id : $duid;
+        }else{
+            $dept_id_user = auth()->user()->department_id;
+        }
+
         $branch_id = empty($bid) ? auth()->user()->branch_id : $bid;
-        $dept_id_user = empty($duid) ? auth()->user()->department_id : $duid;
         $company_id= empty($cid) ? auth()->user()->company_id : $cid;
         $dept_id = empty($did) ? auth()->user()->department_id : $did;
         $category_id = empty($eid) ? '' : $eid;
@@ -363,7 +370,13 @@ class MemoController extends Controller
         $duid = $request->input('dept-user');
         $eid = $request->input('category');
         $date = date('Y-m-d');
-
+        
+        if (Gate::check('memo.super')) {
+            $duid = $request->input('dept-user');
+            $dept_id_user = empty($duid) ? auth()->user()->department_id : $duid;
+        }else{
+            $dept_id_user = auth()->user()->department_id;
+        }
 
         $dept_cat = MemoCategory::find($memo->category_id);
         $branch_id = empty($bid) ? $memo->branch_id : $bid;
