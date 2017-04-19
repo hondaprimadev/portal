@@ -18,6 +18,9 @@ gulp.task("copyfiles", function(){
 
   	gulp.src("vendor/bower_dl/bootstrap/dist/fonts/**")
     .pipe(gulp.dest("public/assets/fonts"));
+
+    gulp.src("vendor/bower_dl/nanobar/nanobar.js")
+    .pipe(gulp.dest("resources/assets/js/"));
 });
 /*
  |--------------------------------------------------------------------------
@@ -34,6 +37,7 @@ elixir(function(mix) {
 	mix.scripts([
 		'js/jquery.js',
 		'js/bootstrap.js',
+		'js/nanobar.js',
 		'js/admin.js'
 	],
 		'public/assets/js/admin.js',

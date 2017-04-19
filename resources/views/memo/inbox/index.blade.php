@@ -32,15 +32,17 @@
 		<div class="box-body">
 			<div class="col-md-12 box-body-header">  
         <div class="col-md-8">
-            <button type="button" class="btn btn-red" onclick="ApproveMemo()">
-              <i class="fa fa-check-square" aria-hidden="true"></i> Approve
-            </button>
-            <button type="button" class="btn btn-red" onclick="ReviseMemo()">
-              <i class="fa fa-reply" aria-hidden="true"></i> Revise
-            </button>
-            <button type="button" class="btn btn-red" onclick="RejectMemo()">
-              <i class="fa fa-trash" aria-hidden="true"></i> Reject
-            </button>
+            @can('memo.super')
+              <button type="button" class="btn btn-red" onclick="ApproveMemo()">
+                <i class="fa fa-check-square" aria-hidden="true"></i> Approve
+              </button>
+              <button type="button" class="btn btn-red" onclick="ReviseMemo()">
+                <i class="fa fa-reply" aria-hidden="true"></i> Revise
+              </button>
+              <button type="button" class="btn btn-red" onclick="RejectMemo()">
+                <i class="fa fa-trash" aria-hidden="true"></i> Reject
+              </button>
+            @endcan
         </div>
 
         <div class="col-md-4">
@@ -54,7 +56,7 @@
 						<th data-sortable="false"><input type="checkbox" id="check_all"/></th>
             <th>Memo No.</th>
             <th>From</th>
-            <th>To</th>
+            <th>Approval</th>
             <th>Branch</th>
             <th>Subject</th>
             <th>Total</th>
@@ -70,7 +72,23 @@
               </td>
               <td>{{ $memo->no_memo }}</td>
               <td>{{ $memo->userFrom->name }} | {{ $memo->from_memo }}</td>
-              <td>{{ $memo->userTo->name }} | {{ $memo->to_memo }}</td>
+              <td>
+                <?php
+                  $approval_path = explode("+", $memo->approval_memo);
+                  $search = array_search(auth()->user()->position_id, $approval_path);
+                  $key = $search + 1;
+                  if(isset($approval_path[$key])){
+                    $user = App\User::where('position_id', $approval_path[$key])->first();
+                    echo $user->name." | ".$user->id;  
+                  }
+                ?>
+                @if (!empty($user))
+                  {{ Form::hidden('to_memo', $user->id) }}
+                @else
+                  <span>Finish</span>
+                  {{ Form::hidden('to_memo', '0') }}
+                @endif
+              </td>
               <td>{{ $memo->branch->name }}</td>
               <td>{{ $memo->subject_memo }}</td>
               <td>{{ number_format($memo->total_memo) }}</td>
@@ -124,6 +142,19 @@
       {
         $('#deleteNoModal').modal("show");
       }
+    }
+
+    function approveMemo(){
+      $("#formInbox").attr('action', '/memo/inbox/process/approval');
+      $('#formInbox').submit();
+    }
+    function rejectMemo(){
+      $("#formInbox").attr('action', '/memo/inbox/process/reject');
+      $('#formInbox').submit();
+    }
+    function reviseMemo(){
+      $("#formInbox").attr('action', '/memo/inbox/process/revise');
+      $('#formInbox').submit();
     }
   </script>
 @stop
