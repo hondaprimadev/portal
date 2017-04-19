@@ -1,12 +1,16 @@
+var nanobar = new Nanobar({
+  target: document.getElementById('myDivId'),
+  id: 'pageloadbar'
+});
+
+//move bar
+nanobar.go( 30 ); // size bar 30%
+
+// Finish progress bar
+nanobar.go(100);
+
 $('#check_all').change(function(){
-  if ($('#check_all').is(':checked')) {
-    $('.checkin').prop('checked', true);
-    $('#tableGrid tbody tr').addClass('selected');
-  }
-  else{
-    $('.checkin').removeAttr('checked');
-    $('#tableGrid tbody tr').removeClass('selected');
-  }
+  $('.checkin').not(this).prop('checked', this.checked);
 });
 
 $('.checkin').change(function(){

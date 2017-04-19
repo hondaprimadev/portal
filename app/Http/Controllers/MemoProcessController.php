@@ -72,9 +72,39 @@ class MemoProcessController extends Controller
         return view('memo.inbox.process', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app'));
     }
 
-    public function all($id)
+    public function all(Request $request, $id)
     {
-            
+        if ($id == 'approval') {
+            foreach ($request->input('id') as $val) {
+                $stat = 'approve';
+                $to_memo = $request->input('to_memo');
+                $notes = '';
+
+                $this->getProcess($val, $stat, $to_memo, $notes);
+
+                return redirect()->back();
+            }       
+        }elseif ($id =='revise') {
+            foreach ($request->input('id') as $val) {
+                $stat = 'revise';
+                $to_memo = 'revise';
+                $notes = '';
+
+                $this->getProcess($val, $stat, $to_memo, $notes);
+
+                return redirect()->back();
+            }
+        }else{
+            foreach ($request->input('id') as $val) {
+                $stat = 'reject';
+                $to_memo = '';
+                $notes = '';
+                
+                $this->getProcess($val, $stat, $to_memo, $notes);
+
+                return redirect()->back();
+            }
+        }
     }
 
     public function approve(Request $request, $id)
@@ -197,7 +227,5 @@ class MemoProcessController extends Controller
         $memo->status_memo = $status;
         $memo->notes_memo = $notes;
         $memo->save();
-
-        return redirect('/memo/inbox');
     }
 }

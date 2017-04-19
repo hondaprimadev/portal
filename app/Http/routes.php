@@ -127,6 +127,7 @@ Route::group([
 	Route::post('process/approve/{id}', ['as'=>'memo.process.approve','uses'=>'MemoProcessController@approve']);
 	Route::post('process/reject/{id}', ['as'=>'memo.process.reject','uses'=>'MemoProcessController@reject']);
 	Route::post('process/revise/{id}', ['as'=>'memo.process.revise', 'uses'=>'MemoProcessController@revise']);
+	Route::post('inbox/process/{id}',['as'=>'memo.inbox.process', 'uses'=>'MemoProcessController@all']);
 	Route::get('inbox', ['as'=>'memo.inbox.index','uses'=>'MemoInboxController@index']);
 	
 	// revise
