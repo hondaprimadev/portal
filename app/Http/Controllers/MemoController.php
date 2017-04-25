@@ -198,7 +198,7 @@ class MemoController extends Controller
     public function store(Request $request)
     {
         $this->authorize('memo.create');
-
+        
         $validator = Validator::make($request->all(), Memo::$rules);
 
         if ($validator->fails()) {
