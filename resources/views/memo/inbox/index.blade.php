@@ -33,7 +33,7 @@
 			<div class="col-md-12 box-body-header">  
         <div class="col-md-8">
             @can('memo.super')
-              <button type="button" class="btn btn-red" onclick="ApproveMemo()">
+              {{-- <button type="button" class="btn btn-red" onclick="ApproveMemo()">
                 <i class="fa fa-check-square" aria-hidden="true"></i> Approve
               </button>
               <button type="button" class="btn btn-red" onclick="ReviseMemo()">
@@ -41,7 +41,7 @@
               </button>
               <button type="button" class="btn btn-red" onclick="RejectMemo()">
                 <i class="fa fa-trash" aria-hidden="true"></i> Reject
-              </button>
+              </button> --}}
             @endcan
         </div>
 
@@ -73,10 +73,11 @@
               <td>{{ $memo->no_memo }}</td>
               <td>{{ $memo->userFrom->name }} | {{ $memo->from_memo }}</td>
               <td>
-                <?php
+                {{-- <?php
                   $approval_path = explode("+", $memo->approval_memo);
                   $search = array_search(auth()->user()->position_id, $approval_path);
                   $key = $search + 1;
+                  
                   if(isset($approval_path[$key])){
                     $user = App\User::where('position_id', $approval_path[$key])->first();
                     echo $user->name." | ".$user->id;  
@@ -87,7 +88,7 @@
                 @else
                   <span>Finish</span>
                   {{ Form::hidden('to_memo', '0') }}
-                @endif
+                @endif --}}
               </td>
               <td>{{ $memo->branch->name }}</td>
               <td>{{ $memo->subject_memo }}</td>
