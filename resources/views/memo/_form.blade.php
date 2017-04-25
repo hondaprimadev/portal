@@ -2,7 +2,7 @@
   <div class="box-header with-border">
     <h3 class="box-title">
         Memo Information - <b>{{ $memo->ofMaxno($branch_id, $company_id, $dept_id_user) }}</b>
-        {!! Form::hidden('memo_no', $memo->ofMaxno($branch_id, $company_id, $dept_id_user)) !!}  
+        {{-- {!! Form::hidden('memo_no', $memo->ofMaxno($branch_id, $company_id, $dept_id_user)) !!}   --}}
     </h3>
 
     <div class="box-tools pull-right">
