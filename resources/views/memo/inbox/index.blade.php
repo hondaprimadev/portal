@@ -73,22 +73,22 @@
               <td>{{ $memo->no_memo }}</td>
               <td>{{ $memo->userFrom->name }} | {{ $memo->from_memo }}</td>
               <td>
-                {{-- <?php
-                  $approval_path = explode("+", $memo->approval_memo);
-                  $search = array_search(auth()->user()->position_id, $approval_path);
-                  $key = $search + 1;
-                  
-                  if(isset($approval_path[$key])){
-                    $user = App\User::where('position_id', $approval_path[$key])->first();
-                    echo $user->name." | ".$user->id;  
-                  }
+                <?php
+                  // $approval_path = explode("+", $memo->approval_memo);
+                  // $search = array_search(auth()->user()->position_id, $approval_path);
+                  // $key = $search + 1;
+
+                  // if(isset($approval_path[$key])){
+                  //   $user = App\User::where('position_id', $approval_path[$key])->first();
+                  //   echo $user->name." | ".$user->id;  
+                  // }
                 ?>
-                @if (!empty($user))
-                  {{ Form::hidden('to_memo', $user->id) }}
-                @else
-                  <span>Finish</span>
-                  {{ Form::hidden('to_memo', '0') }}
-                @endif --}}
+                {{-- @if (!empty($user)) --}}
+                  {{-- {{ Form::hidden('to_memo', $user->id) }} --}}
+                {{-- @else --}}
+                  {{-- <span>Finish</span>
+                  {{ Form::hidden('to_memo', '0') }} --}}
+                {{-- @endif --}}
               </td>
               <td>{{ $memo->branch->name }}</td>
               <td>{{ $memo->subject_memo }}</td>
