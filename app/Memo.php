@@ -101,6 +101,7 @@ class Memo extends Model
         	->get();
         }else{
             $dept = $user_department->name;
+            $dept_name = $user_department->name;
             $kd_max =  $query->select(DB::raw('MAX( SUBSTR(`no_memo` , 1, 4 ) ) AS kd_max'))
             ->where(DB::raw('YEAR(created_at)'), '=', date('Y'))
             ->where('branch_id',$branch_id)
@@ -121,12 +122,20 @@ class Memo extends Model
     	}
 
         if ($department_id == 'D7') {
-            return $kd_fix.'/'.
-                $company->alias.'/'.
-                $branch_id.'-'.
-                $dept.'/'.
-                $dept_name.'/'.
-                $month.'/'.$year;
+            if ($branch_id == '100') {
+                return $kd_fix.'/'.
+                    $company->alias.'/'.
+                    $branch_id.'-'.
+                    $dept.'/'.
+                    $month.'/'.$year;
+            }else{
+                return $kd_fix.'/'.
+                    $company->alias.'/'.
+                    $branch_id.'-'.
+                    $dept.'/'.
+                    $dept_name.'/'.
+                    $month.'/'.$year;
+            }
         }
     	return $kd_fix.'/'.
                 $company->alias.'/'.
