@@ -529,24 +529,43 @@ class MemoController extends Controller
         $memoSent->update($request->all());
 
 
-        // Detail Memo
-        foreach ($request->input('id_detail') as $key => $value) {
-            if (empty($value)) {
-                MemoDetail::create([
-                    'memo_id' => $memo->id,
+        if (empty($request->input('id_detail'))) {
+            $detail = [];
+            foreach($request->input('date_detail') as $key=>$val)
+            {
+                $detail = [
+                    'date'=> $val,
+                    'memo_id'=>$memo->id,
                     'category_id'=>$memo->category_id,
-                    'description'=>$request->input('description')[$key],
+                    'description'=> $request->input('description')[$key],
                     'qty'=>$request->input('qty')[$key],
                     'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
-                    'date'=>$request->input('date_detail')[$key],
-                ]);
-            }else{
-                $memoDetail = MemoDetail::find($value);
-                $memoDetail->qty = $request->input('qty')[$key];
-                $memoDetail->description = $request->input('description')[$key];
-                $memoDetail->total = intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
-                $memoDetail->date = $request->input('date_detail')[$key];
-                $memoDetail->save();
+                ];
+                if($val !='')
+                {
+                    MemoDetail::create($detail);
+                }
+            }
+        }else{
+            // Detail Memo
+            foreach ($request->input('id_detail') as $key => $value) {
+                if (empty($value)) {
+                    MemoDetail::create([
+                        'memo_id' => $memo->id,
+                        'category_id'=>$memo->category_id,
+                        'description'=>$request->input('description')[$key],
+                        'qty'=>$request->input('qty')[$key],
+                        'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
+                        'date'=>$request->input('date_detail')[$key],
+                    ]);
+                }else{
+                    $memoDetail = MemoDetail::find($value);
+                    $memoDetail->qty = $request->input('qty')[$key];
+                    $memoDetail->description = $request->input('description')[$key];
+                    $memoDetail->total = intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
+                    $memoDetail->date = $request->input('date_detail')[$key];
+                    $memoDetail->save();
+                }
             }
         }
 
