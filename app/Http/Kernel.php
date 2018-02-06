@@ -55,5 +55,7 @@ class Kernel extends HttpKernel
         'memo.approve' => \App\Http\Middleware\MemoApproveMiddleware::class,
         'memo.revise' => \App\Http\Middleware\MemoReviseMiddleware::class,
         'memo.open' => \App\Http\Middleware\MemoOpenMiddleware::class,
+        'memo.prepayment.finish' => \App\Http\Middleware\MemoPrepaymentFinishMiddleware::class,
+        'memo.inbox.valid' => \App\Http\Middleware\MemoInboxValidMiddleware::class,
     ];
 }

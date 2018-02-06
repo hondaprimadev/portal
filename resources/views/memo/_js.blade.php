@@ -1,4 +1,9 @@
 <script type="text/javascript">
+	@if($errors->has())
+   		@foreach ($errors->all() as $error)
+      		notif('{{ $error }}');
+  		@endforeach
+	@endif
 	all_total();
 	var params = '';
 	var branch_id = $('#branch_id :selected').val();
@@ -35,7 +40,7 @@
             });
     	}
   	});
-	
+
   	myDropzone.on("sending", function(file, xhr, formData){
 		formData.append("_token", $('[name=_token').val());
 		formData.append("branch_id", $('#branch_id :selected').val());
@@ -190,21 +195,26 @@
 
 	// on submit form
 	$('#formMemo').submit(function(e){
+		var budgets = $("input[name='budget']").val();
+		var prepayment = $("input[name='prepayment_no']").val();
 
-		if ($("input[name='budget']").val()) {
-			var budget = parseFloat($("input[name='budget']").val().replace(/[^0-9-.]/g, ''));
-			var amount = parseFloat($("#all_total_detail").val().replace(/[^0-9-.]/g, ''));
-			if (amount > budget ) {
-				alert('Your budget get to the limit');
-				return false;
+		if (prepayment){
+			$(".form-control").prop('disabled',false);
+		}else{
+			if (budgets) {
+				var budget = parseFloat($("input[name='budget']").val().replace(/[^0-9-.]/g, ''));
+				var amount = parseFloat($("#all_total_detail").val().replace(/[^0-9-.]/g, ''));
+
+				if (amount > budget ) {
+					alert('Your budget get to the limit');
+					return false;
+				}else{
+					$(".form-control").prop('disabled',false);
+				}
 			}else{
 				$(".form-control").prop('disabled',false);
 			}
-		}else{
-			$(".form-control").prop('disabled',false);
 		}
-
-
 	});
 
 	$('.delete-upload').click(function(){
@@ -357,7 +367,10 @@
 		    if (!isNaN(value_num)) sum += value_num;
 		});
 		var num = sum.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'');
-		var total = $('#all_total_detail').val(num);
+		
+		if(num != 0){
+			var total = $('#all_total_detail').val(num);
+		}
     }
 
     function all_total_finance() {
@@ -400,5 +413,12 @@
 	function getFile(value) {
 		var markup =$('<li><a href="/memo/upload/show/'+value.file_name+'?branch='+value.branch_id+'" target="_blank">'+get_mime(value.file_type)+value.file_name+'</a><span class="pull-right"><a onclick="deleteUpload(this, '+value.id+')"><i class="fa fa-times fa-red" aria-hidden="true"></i></a></span></li>');
 		$("#UploadMemo ul").append(markup);
+	}
+
+	function notif(msg) {
+		$.notify(
+			msg,
+  			{ position:"bottom right" }
+		);
 	}
 </script>

@@ -43,6 +43,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   {{-- custom css --}}
   <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/admin.css') }}">
 
+
   @yield('head')
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -52,6 +53,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
   @yield('styles')
+  <style type="text/css">
+    #picture-profile-memo{
+      width: 60px;
+      height: 60px;
+    }
+  </style>
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -212,11 +219,52 @@ desired effect
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 {{-- Knob.Js --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+
+{{-- nofity  --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.js"></script>
+
 @yield('scripts')
+{{-- CK Editor --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/1.0.0-alpha.2/classic/ckeditor.js"></script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the
      fixed layout. -->
+<script type="text/javascript">
+  getInboxCount();
+  getInbox();
+  function getInboxCount(){
+    $.ajax({
+      type: 'GET',
+      url: '{{ url('api/memo/inbox/count/') }}/{{ Auth::id() }}',
+      success: function(data){
+                  $("#memo-inbox-header").text('You have '+data.count+' memo in Inbox');
+                  $("#memo-inbox-count").text(data.count);
+                  $("#memo-inbox-sidebar-count").text(data.count);
+              }
+    });
+  }
+
+  function getInbox() {
+    $.ajax({
+      type: 'Get',
+      url: '{{ url('api/memo/inbox/') }}/{{ Auth::id() }}',
+      success: function(response){
+        $.each(response.data, function(key, value){
+          // console.log(value.user_from.pictures[0].filename);
+          var pic = value.user_from.pictures;
+          if(pic != ''){
+            var profile_picture = value.user_from.pictures[0].filename;
+            $('#memo-inbox-list').append('<li ><a href="{{ url('memo/process/') }}/'+value.token+'/approve"><div class="pull-left"><img src="{{ url('hrd/employee/profile') }}/'+profile_picture+'" class="img-circle" alt="User Image"></div><h4>'+value.user_from.name+'</h4><p>'+value.no_memo+'</p><p>'+value.subject_memo+'</p></a></li>');
+          }else{
+            var profile_picture = '/admin-lte/dist/img/user2-160x160.jpg'
+            $('#memo-inbox-list').append('<li ><a href="{{ url('memo/process/') }}/'+value.token+'/approve"><div class="pull-left"><img src="/admin-lte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"></div><h4>'+value.user_from.name+'</h4><p>'+value.no_memo+'</p><p>'+value.subject_memo+'</p></a></li>');
+          }
+        });
+      }
+    })
+  }
+</script>
 </body>
 </html>

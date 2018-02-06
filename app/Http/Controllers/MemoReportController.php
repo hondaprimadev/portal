@@ -23,7 +23,7 @@ class MemoReportController extends Controller
         if(!$begin && !$end)
         {
             $now = date('Y-m-d');
-            // $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            $d1 = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
             $begin = new \DateTime($now);
             $end = new \DateTime($now);
         }else{
@@ -32,9 +32,10 @@ class MemoReportController extends Controller
         }
 
         $branch = [''=>'--Branch--'] + Branch::lists('name', 'id')->all();
+
         if ($branch_id) {
             $memo = Memo::where('to_memo', 0)
-            ->where('status_memo','LIKE', '%FINISH%')
+            ->where('status_memo','LIKE', '%FINISHED%')
             ->where('branch_id', $branch_id)
             ->whereDate('updated_at', '>=', $begin)
             ->whereDate('updated_at','<=', $end)
@@ -42,13 +43,12 @@ class MemoReportController extends Controller
             ->get();
         }else{
             $memo = Memo::where('to_memo', 0)
-            ->where('status_memo','LIKE', '%FINISH%')
+            ->where('status_memo','LIKE', '%FINISHED%')
             ->whereDate('updated_at', '>=', $begin)
             ->whereDate('updated_at','<=', $end)
             ->orderBy('updated_at', 'desc')
             ->get();
         }
-    	
 
     	return view('memo.report.index',compact('memo', 'begin','end','branch','branch_id'));
     }
@@ -59,7 +59,11 @@ class MemoReportController extends Controller
 
     	$mc = MemoCategory::where('id', $memo->category_id)->first();
 
-		$pdf = PDF::loadView('memo.report.print', compact('memo','mc'));
+        if ($memo->prepayment_total > 0){
+            $pdf = PDF::loadView('memo.report.prepayment', compact('memo','mc'));
+        }else{
+            $pdf = PDF::loadView('memo.report.print', compact('memo','mc'));
+        }
 		return $pdf->stream($memo->no_memo.'.pdf');
     }
 }

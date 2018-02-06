@@ -42,7 +42,6 @@
               {!! Form::select('branch_id', $branch, $branch_id, ['class'=>'btn btn-red', 'id'=>'branch_id', 'disabled'=>'disabled']) !!}
               {!! Form::select('department_id', $department, $dept_id, ['class'=>'btn btn-red', 'id'=>'department_id','disabled'=>'disabled']) !!}
             @endif
-            {!! Form::select('memo_finish', ['0'=>'not finish', '1'=>'finish'], $memo_finish, ['class'=>'btn btn-red', 'id'=>'memo_finish']) !!}
           </span>
           <button type="button" class="btn btn-red" id="reportrange">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
@@ -66,6 +65,7 @@
           <th>No</th>
           <th>Memo No.</th>
           <th>Branch</th>
+          <th>Notes</th>
           <th>Date</th>
           <th>Debet</th>
           <th>Credit</th>
@@ -97,6 +97,7 @@
               @endif
             </td>
             <td>{{ $mTran->branch->name }}</td>
+            <td>{{ $mTran->notes }}</td>
             <td>{{ date('d/M/Y', strtotime($mTran->created_at)) }}</td>
             @if ($no == 1 && $mTran->debet != 0)
               <td>{{ number_format($mTran->debet) }}</td>
@@ -119,6 +120,7 @@
         
         <tfoot>
           <tr style="text-align: left">
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

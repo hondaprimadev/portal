@@ -24,7 +24,6 @@ class MemoTransactionController extends Controller
         $branch_id = empty($request->input('b')) ? auth()->user()->branch_id : $request->input('b');
         $category_id = $request->input('c');
         $dept_id = (empty($request->input('d')) || $branch_id != 100) ? 'D6' : $request->input('d');
-        $memo_finish = empty($request->input('f')) ? '' : $request->input('f');
         $begin = $request->input('begin');
         $end = $request->input('end');
         if (empty($request->input('d'))) {
@@ -57,9 +56,9 @@ class MemoTransactionController extends Controller
         $mt = MemoTransaction::where('category_id', $category_id)
                 ->where('branch_id', $branch_id)
                 ->where('department_id', $dept_id)
-                ->where('memo_finish', $memo_finish)
                 ->whereDate('created_at', '>=', $begin)
                 ->whereDate('created_at','<=', $end)
+                ->orderBy('created_at','asc')
                 ->get();
 
         return view('memo.transaction.index', compact('mt','journal','journal_id','branch','category','department','begin','end', 'branch_id','category_id','dept_id', 'memo_finish'));

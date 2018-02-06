@@ -68,7 +68,10 @@
           @endcan
           <ul class="treeview-menu">
             <li class="{{ set_active('memo..index') }}"><a href="{{ route('memo..index') }}"><i class="fa fa-circle-o fa-lg"></i> Memo</a></li>
-            <li class="{{ set_active('memo.inbox.index') }}"><a href="{{ route('memo.inbox.index') }}"><i class="fa fa-circle-o fa-lg"></i> Inbox</a></li>
+            <li class="{{ set_active('memo.prepayment.index') }}"><a href="{{ route('memo.prepayment.index') }}"><i class="fa fa-circle-o fa-lg"></i> Prepayment</a></li>
+            <li class="{{ set_active('memo.inbox.index') }}"><a href="{{ route('memo.inbox.index') }}"><i class="fa fa-circle-o fa-lg"></i> Inbox<span class="pull-right-container">
+              <span class="label label-danger pull-right" id="memo-inbox-sidebar-count">0</span>
+            </span></a></li>
             @can('memo.super')
             <li class="{{ set_active('memo.setting.index') }}"><a href="{{ route('memo.setting.index') }}"><i class="fa fa-circle-o fa-lg"></i> Setting</a></li>
             <li class="{{ set_active('memo.approval.index') }}"><a href="{{ route('memo.approval.index') }}"><i class="fa fa-circle-o fa-lg"></i> Approval</a></li>

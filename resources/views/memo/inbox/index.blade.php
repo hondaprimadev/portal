@@ -54,6 +54,7 @@
 				<thead>
 					<tr>
 						<th data-sortable="false"><input type="checkbox" id="check_all"/></th>
+            <th>&nbsp;</th>
             <th>Memo No.</th>
             <th>From</th>
             <th>Approval</th>
@@ -61,6 +62,7 @@
             <th>Subject</th>
             <th>Total</th>
             <th>Status</th>
+            <th>Prepayment</th>
             <th>Action</th>
 					</tr>
 				</thead>
@@ -69,6 +71,14 @@
             <tr>
               <td>
                   <input type="checkbox" id="idTableInbox" value="{{ $memo->id }}" name="id[]" class="checkin">
+              </td>
+              <td>
+                @if (is_array($memo->userFrom->pictures))
+                  <img src="{{ url('hrd/employee/profile') }}/{{ $memo->userFrom->pictures[0]->filename }}" class="img-circle" alt="User Image" id="picture-profile-memo">
+                @else 
+                  <img src="/admin-lte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" id="picture-profile-memo">
+                @endif
+                
               </td>
               <td>{{ $memo->no_memo }}</td>
               <td>{{ $memo->userFrom->name }} | {{ $memo->from_memo }}</td>
@@ -92,10 +102,24 @@
               </td>
               <td>{{ $memo->branch->name }}</td>
               <td>{{ $memo->subject_memo }}</td>
-              <td>{{ number_format($memo->total_memo) }}</td>
+              <td>
+                @if ($memo->prepayment_total>0)
+                  {{ number_format($memo->prepayment_total) }}
+                @else 
+                  {{ number_format($memo->total_memo) }}  
+                @endif
+                
+              </td>
               <td>{{ $memo->status_memo }}</td>
               <td>
-                <a href="{{ route('memo.process.process', $memo->id) }}" class="btn btn-success">
+                @if ($memo->prepayment_total>0)
+                  <i class="fa fa-check-circle" aria-hidden="true" style="color: #2ecc71"></i>
+                @else
+                  <i class="fa fa-times" aria-hidden="true" style="color: #c0392b"></i>
+                @endif
+              </td>
+              <td>
+                <a href="{{ route('memo.process.process', $memo->token) }}" class="btn btn-success">
                   <i class="fa fa-paper-plane-o" aria-hidden="true"></i> Process
                 </a>
               </td>

@@ -141,7 +141,33 @@
           @endif
         </div>
       </div>
-      
+    </div>
+    <div class="col-md-6">
+      @if ($memo_prepayment)
+        <div class="form-group has-feedback{{ $errors->has('prepayment_no') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_no', 'Prepayment No', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_no',$memo_prepayment->no_memo,['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_no'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_no') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+
+        <div class="form-group has-feedback{{ $errors->has('prepayment_total') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_total', 'Prepayment Total', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_total',number_format($memo_prepayment->prepayment_total),['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_total'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_total') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+      @endif
     </div>
   </div>
 </div>

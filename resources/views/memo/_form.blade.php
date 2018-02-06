@@ -1,8 +1,12 @@
 <div class="box box-success">
   <div class="box-header with-border">
     <h3 class="box-title">
+      @if ($edit)
+        Memo Information - <b>{{ $memo->no_memo }}</b>
+      @else 
         Memo Information - <b>{{ $memo->ofMaxno($branch_id, $company_id, $dept_id_user) }}</b>
         {!! Form::hidden('memo_no', $memo->ofMaxno($branch_id, $company_id, $dept_id_user)) !!}  
+      @endif
     </h3>
 
     <div class="box-tools pull-right">
@@ -17,7 +21,7 @@
       <div class="form-group">
         {!! Form::label('date', 'Date',['class'=>'col-sm-2 control-label']) !!}  
         <div class="col-sm-10">
-          {!! Form::text('created_at', date('d F Y'), ['class'=> 'form-control', 'disabled'=>'disabled']) !!}
+          {!! Form::text('created_at', date('d F Y'), ['class'=> 'form-control', 'readonly']) !!}
         </div>
       </div>
 
@@ -39,7 +43,7 @@
         {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
           @if ($branch_id == 100)
-            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','id'=>'department_id','disabled'=>'disabled']) !!}
+            {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','id'=>'department_id','readonly']) !!}
           @else
             {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','id'=>'department_id']) !!}
           @endif
@@ -53,19 +57,19 @@
         <div class="form-group">
           {!! Form::label('company_id', 'Company', ['class'=>'col-sm-2 control-label']) !!}
           <div class="col-sm-10">
-              {!! Form::select('company_id', $company, $company_id,['class'=> 'form-control','id'=>'company_id','disabled'=>'disabled']) !!}
+              {!! Form::select('company_id', $company, $company_id,['class'=> 'form-control','id'=>'company_id','readonly']) !!}
           </div>
         </div>
         <div class="form-group">
           {!! Form::label('branch_id', 'Branch', ['class'=>'col-sm-2 control-label']) !!}
           <div class="col-sm-10">
-            {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id','disabled'=>'disabled']) !!}
+            {!! Form::select('branch_id', $branch, $branch_id,['class'=> 'form-control','id'=>'branch_id','readonly']) !!}
           </div>
         </div>
         <div class="form-group has-feedback{{ $errors->has('department_id') ? ' has-error' : '' }}">
         {!! Form::label('department_id', 'Department', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','disabled'=>'disabled']) !!}
+          {!! Form::select('department_id', $dept_user, $dept_id_user,['class'=> 'form-control','readonly']) !!}
           @if ($errors->has('department_id'))
                 <span class="help-block">
                     <strong>{{ $errors->first('department_id') }}</strong>
@@ -130,7 +134,7 @@
       <div class="form-group has-feedback{{ $errors->has('budget') ? ' has-error' : '' }}">
         {!! Form::label('budget', 'Budget Outstanding', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::text('budget',number_format($saldo),['class'=> 'form-control','disabled'=>'disabled']) !!}
+          {!! Form::text('budget',number_format($saldo),['class'=> 'form-control','readonly']) !!}
           @if ($errors->has('budget'))
                 <span class="help-block">
                     <strong>{{ $errors->first('budget') }}</strong>
@@ -143,7 +147,12 @@
       <div class="form-group has-feedback{{ $errors->has('subject_memo') ? ' has-error' : '' }}">
         {!! Form::label('subject_memo', 'Activity Name', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::text('subject_memo',old('subject_memo'),['class'=> 'form-control']) !!}
+          @if ($prepayment_subject)
+            {!! Form::text('subject_memo',$prepayment_subject.' (Claim)',['class'=> 'form-control','readonly']) !!}
+          @else 
+            {!! Form::text('subject_memo',old('subject_memo'),['class'=> 'form-control']) !!}
+          @endif
+
           @if ($errors->has('subject_memo'))
                 <span class="help-block">
                     <strong>{{ $errors->first('subject_memo') }}</strong>
@@ -151,7 +160,34 @@
           @endif
         </div>
       </div>
-      
+    </div>
+
+    <div class="col-md-6">
+      @if ($prepayment_no)
+        <div class="form-group has-feedback{{ $errors->has('prepayment_no') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_no', 'Prepayment No', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_no',$prepayment_no,['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_no'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_no') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+
+        <div class="form-group has-feedback{{ $errors->has('prepayment_total') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_total', 'Prepayment Total', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_total',number_format($prepayment_total),['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_total'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_total') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+      @endif
     </div>
   </div>
 </div>
@@ -242,7 +278,7 @@
       <div class="form-group">
         {!! Form::label('supplier_id', 'Supplier', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
-          {!! Form::select('supplier_id', $supplier,null, ['class'=>'form-control','id'=>'supplier_id']) !!}
+            {!! Form::select('supplier_id', $supplier,null, ['class'=>'form-control','id'=>'supplier_id']) !!}
         </div>
       </div>
       <div id="get_supp"></div>
