@@ -28,7 +28,7 @@ class DataController extends Controller
         $this->authorize('upload.sales');
 
         $branch = $request->input('branch_id');
-
+	set_time_limit(1000);
         if (Input::hasFile('import_sales')) {
             $path = Input::file('import_sales')->getRealPath();
             $data = Excel::load($path, function($reader){})->get();

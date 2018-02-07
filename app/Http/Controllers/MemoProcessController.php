@@ -31,7 +31,8 @@ class MemoProcessController extends Controller
 
     public function process($id)
     {
-    	$memo = Memo::findOrFail($id);
+    	$memo = Memo::where('token',$id)->first();
+        
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
 
         $company = Company::where('id',$memo->company_id)->lists('name', 'id')->all();
@@ -68,8 +69,14 @@ class MemoProcessController extends Controller
                 ->where('user_approval', auth()->user()->position_id)
                 ->where('budget', true)
                 ->get();
+        $memo_prepayment = '';
+        if ($memo->prepayment_no) {
+            $memo_prepayment = Memo::where('prepayment_no', $memo->no_memo)->first();
 
-        return view('memo.inbox.process', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app'));
+            $remaining = $memo_prepayment->prepayment_total - $memo->total_memo;
+        }
+
+        return view('memo.inbox.process', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app','memo_prepayment','remaining'));
     }
 
     public function all(Request $request, $id)
@@ -126,8 +133,20 @@ class MemoProcessController extends Controller
 
         $this->getProcess($id, $stat, $to_memo, $notes);
 
-        $mt = MemoTransaction::where('memo_id', $id)->first();
-    	$mt->delete();
+        $mt = MemoTransaction::where('memo_id', $id)->get();
+        if ($mt) {
+            foreach ($mt as $value) {
+                $value->delete();
+            }
+
+            $memo = Memo::find($id);
+            $memo_prepayment = Memo::where('no_memo', $memo->prepayment_no)->first();
+            $memo_prepayment->prepayment_no = '';
+            $memo_prepayment->save();
+
+            $memo->prepayment_no = null;
+            $memo->save();
+        }
 
         return redirect('memo/inbox');	
     }
@@ -140,9 +159,11 @@ class MemoProcessController extends Controller
 
         $this->getProcess($id, $stat, $to_memo, $notes);
         
-        $mt = MemoTransaction::where('memo_id', $id)->first();
+        $mt = MemoTransaction::where('memo_id', $id)->get();
         if ($mt) {
-            $mt->delete();   
+            foreach ($mt as $value) {
+                $value->delete();
+            }
         }
 
         return redirect('memo/inbox');	
@@ -165,6 +186,7 @@ class MemoProcessController extends Controller
     {
         $user='';
         $memo = Memo::where('id', $id)->first();
+        $prepayment_finish = false;
 
         if ($memo->to_memo == auth()->user()->id) {
             if ($to_memo == 0) {
@@ -184,7 +206,12 @@ class MemoProcessController extends Controller
 	            $status = 'APPROVED BY '.$user->name.' '.$status_ext;
 	        }
 	        elseif ($user->position_id == 'H4FI') {
-	            $status = 'FINISHED BY '.$user->name.' '.$status_ext;
+                if ($memo->prepayment_total > 0) {
+                    $status = 'FINISHED PREPAYMENT BY '.$user->name.' '.$status_ext;
+                    $prepayment_finish = true;
+                }else{
+                    $status = 'FINISHED BY '.$user->name.' '.$status_ext;
+                }
                 
                 $mt = MemoTransaction::where('memo_id', $memo->id)->first();
                 $mt->memo_finish = true;
@@ -226,6 +253,9 @@ class MemoProcessController extends Controller
         $memo->last_approval_memo = $user->id;
         $memo->status_memo = $status;
         $memo->notes_memo = $notes;
+        if ($memo->prepayment_total > 0) {
+            $memo->prepayment_finish = $prepayment_finish;
+        }
         $memo->save();
     }
 }

@@ -11,7 +11,11 @@
         "laravelcollective/html": "5.2.*",
         "intervention/image": "^2.3",
         "tymon/jwt-auth": "^0.5.9",
+<<<<<<< HEAD
         "barryvdh/laravel-dompdf": "^0.8.0"
+=======
+        "barryvdh/laravel-dompdf": "^0.8.1"
+>>>>>>> 4d18ac95267e21507b5edfc305199269440c088d
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

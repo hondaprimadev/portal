@@ -58,6 +58,7 @@ class MemoController extends Controller
         $memos = Memo::where('from_memo', auth()->user()->id)
                     ->whereDate('created_at', '>=', $begin)
                     ->whereDate('created_at','<=', $end)
+                    ->where('prepayment_total','=',0)
                     ->orderBy('created_at', 'desc')
                     ->get();
                     
@@ -77,13 +78,26 @@ class MemoController extends Controller
         $user_app = [''=>'---'];
         $budget=0;
         $approval_path='';
+        $prepayment = Memo::where('token', $request->input('prepayment'))->first();
 
         // from get response
+        if ($prepayment) {
+            $did = MemoCategory::where('id', $prepayment->category_id)->first()->department_id;
+            $eid = $prepayment->category_id;
+            $prepayment_no = $prepayment->no_memo;
+            $prepayment_total = $prepayment->prepayment_total;
+            $prepayment_subject = $prepayment->subject_memo;
+        }else{
+            $did = $request->input('dept');
+            $eid = $request->input('category');
+            $prepayment_no = '';
+            $prepayment_total = '';
+            $prepayment_subject = '';
+        }
+
         $bid = $request->input('branch');
         $cid = $request->input('company');
-        $did = $request->input('dept');
         $duid = $request->input('dept-user');
-        $eid = $request->input('category');
         $date = date('Y-m-d');
 
         if (Gate::check('memo.super')) {
@@ -186,7 +200,7 @@ class MemoController extends Controller
             }   
         }
 
-        return view('memo.create', compact('url','company','company_id','branch','branch_id','dept_user','dept_id_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
+        return view('memo.create', compact('url','company','company_id','branch','branch_id','dept_user','dept_id_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo','prepayment_total','prepayment_no','prepayment_subject'));
     }
 
     /**
@@ -198,30 +212,35 @@ class MemoController extends Controller
     public function store(Request $request)
     {
         $this->authorize('memo.create');
-        
-        $validator = Validator::make($request->all(), Memo::$rules);
+
+        $validator = Validator::make($request->all(), [
+            'memo_no' => 'required',
+            'subject_memo'=>'required',
+            'approval_memo'=>'required',
+            'to_memo'=>'required',
+            'category_id'=>'required',
+            'department_id_approval'=>'required',
+            'department_id'=>'required',
+        ]);
 
         if ($validator->fails()) {
             $messages = $validator->messages();
-            return redirect()->back()->withErrors($validator);
-        }
-
-        if ($request->input('budget')) {
-            $getBudget = intval(str_replace(',','',$request->input('budget')));
-            $getTotal = intval(str_replace(',','',$request->input('all_total_detail')));
-
-            if ($getTotal > $getBudget) {
-                return redirect()->back()->withErrors(['budget'=>'Your budget get to the limit']);
-            }
+            return redirect()
+                        ->back()
+                        ->withErrors($validator)
+                        ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo','all_total_detail']));
         }
 
         if ($request->input('memo_no') == Memo::ofMaxno($request->input('branch_id'), $request->input('company_id'), $request->input('department_id'))) {
             $no_memo = $request->input('memo_no');
         }else{
-            return redirect()->back()->withErrors(['no_memo'=>'required no memo']);
+            return redirect()
+            ->back()
+            ->withErrors(['no_memo'=>'required no memo'])
+            ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
         }
 
-        $user_memo = User::where('id', auth()->user()->id)->first();
+        // $user_memo = User::where('id', auth()->user()->id)->first();
 
         // if ($request->input('branch_id') != 100) {
         //     if ($user_memo->department_id != 'D6') {
@@ -233,14 +252,90 @@ class MemoController extends Controller
         //     $department_id = $user_memo->department_id;
         // }
 
-        $memo = Memo::create($request->all());
+        $memoPrepayment = Memo::where('no_memo', $request->prepayment_no)->first();
+        
+        if ($memoPrepayment) {
+            if ($memoPrepayment->prepayment_no != null) {
+                return redirect()
+                ->back()
+                ->withErrors(['no_memo'=>'prepayment has been created'])
+                ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }
 
-        $memo->no_memo = $no_memo;
-        $memo->status_memo = 'ON PROCESS';
-        $memo->total_memo = intval(str_replace(',','',$request->input('all_total_detail')));
-        $memo->from_memo= auth()->user()->id;
-        $memo->department_id = $request->input('department_id');
-        $memo->token = md5(uniqid($memo->no_memo, true));
+            $total_memo_check = 0;
+            foreach($request->input('date_detail') as $key=>$val)
+            {
+                $total_memo_check = $total_memo_check + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
+            }
+
+            $transaction = $memoPrepayment->prepayment_total - $total_memo_check;
+            
+            if ($transaction < 0) {
+                return redirect()
+                ->back()
+                ->withErrors(['prepayment_total'=>'Check your budget prepayment'])
+                ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }
+        }else{
+            if ($request->input('budget')) {
+                $getBudget = intval(str_replace(',','',$request->input('budget')));
+                $getTotal = intval(str_replace(',','',$request->input('all_total_detail')));
+
+                if ($getTotal > $getBudget) {
+                    return redirect()
+                    ->back()
+                    ->withErrors(['budget'=>'Your budget get to the limit'])
+                    ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+                }
+            }
+        }
+
+        $memo = Memo::create([
+            'no_memo' => $no_memo,
+            'category_id' => $request->category_id,
+            'to_memo' => $request->input('to_memo'),
+            'from_memo' => auth()->user()->id,
+            'approval_memo' => $request->approval_memo,
+            'subject_memo' => $request->subject_memo,
+            // 'last_approval_memo' => $request->,
+            // 'last_revise_memo',
+            'notes_memo' => $request->notes_memo,
+            'branch_id' => $request->branch_id,
+            'status_memo' => 'ON PROCESS',
+            'supplier_id' => $request->supplier_id,
+            'company_id' => $request->company_id,
+            'department_id' => $request->input('department_id'),
+            'token' => md5(uniqid($no_memo, true)),
+            'supplier_type'=> $request->supplier_type,
+        ]);
+
+        // $detail = [];
+        $total_memo = 0;
+        foreach($request->input('date_detail') as $key=>$val)
+        {
+            $detail = [
+                'date'=> $val,
+                'memo_id'=>$memo->id,
+                'category_id'=>$memo->category_id,
+                'description'=> $request->input('description')[$key],
+                'qty'=>$request->input('qty')[$key],
+                'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
+            ];
+            $total_memo = $total_memo + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
+            if($val !='')
+            {
+                MemoDetail::create($detail);
+            }
+        }
+
+        // save all memo
+        $memo->total_memo = $total_memo;
+        if($request->prepayment_no){
+            $memo->prepayment_no = $memoPrepayment->no_memo;
+            $memoPrepayment->prepayment_no = $memo->no_memo;
+            $memoPrepayment->save();
+        }
+        
         $memo->save();
 
         $memoSent = MemoSent::create([
@@ -252,23 +347,6 @@ class MemoController extends Controller
             'department_id' => $memo->department_id,
             ]);
         $memoSent->update($request->all());
-
-        $detail = [];
-        foreach($request->input('date_detail') as $key=>$val)
-        {
-            $detail = [
-                'date'=> $val,
-                'memo_id'=>$memo->id,
-                'category_id'=>$memo->category_id,
-                'description'=> $request->input('description')[$key],
-                'qty'=>$request->input('qty')[$key],
-                'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
-            ];
-            if($val !='')
-            {
-                MemoDetail::create($detail);
-            }
-        }
 
         $leasing = [];
         foreach ($request->input('group_leasing') as $key => $value) {
@@ -283,15 +361,99 @@ class MemoController extends Controller
             }
         }
 
-        MemoTransaction::create([
-            'user_id'=>$memo->from_memo,
-            'memo_id'=>$memo->id,
-            'credit'=>$memo->total_memo,
-            'branch_id'=>$request->input('branch_id'),
-            'category_id'=>$request->input('category_id'),
-            'department_id'=>$memo->department_id,
-            'memo_finish'=>false,
-        ]);
+        if ($memoPrepayment) {
+            $transaction = $memoPrepayment->prepayment_total - $total_memo;
+            if ($transaction < 0) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['prepayment_total'=>'Check your budget prepayment'])
+                    ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }elseif ($transaction > 0) {
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$transaction,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Bank In'
+                ]);
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$total_memo,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Biaya'
+                ]);
+                if ($request->input('budget')) {
+                    MemoTransaction::create([
+                        'user_id'=>$memo->from_memo,
+                        'memo_id'=>$memo->id,
+                        'credit'=>$total_memo,
+                        'branch_id'=>$request->input('branch_id'),
+                        'category_id'=>$request->input('category_id'),
+                        'department_id'=>$memo->department_id,
+                        'memo_finish'=>false,
+                        'notes'=>'Piutang'
+                    ]);
+                }else{
+                    MemoTransaction::create([
+                        'user_id'=>$memo->from_memo,
+                        'memo_id'=>$memo->id,
+                        'credit'=>$memoPrepayment->prepayment_total,
+                        'branch_id'=>$request->input('branch_id'),
+                        'category_id'=>$request->input('category_id'),
+                        'department_id'=>$memo->department_id,
+                        'memo_finish'=>false,
+                        'notes'=>'Piutang'
+                    ]);
+                }
+            }else{
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$memoPrepayment->prepayment_total,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Piutang'
+                ]);
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'credit'=>$total_memo,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Biaya'
+                ]);
+            }
+        }else{
+            MemoTransaction::create([
+                'user_id'=>$memo->from_memo,
+                'memo_id'=>$memo->id,
+                'debet'=>$total_memo,
+                'branch_id'=>$request->input('branch_id'),
+                'category_id'=>$request->input('category_id'),
+                'department_id'=>$memo->department_id,
+                'memo_finish'=>false,
+            ]);
+            MemoTransaction::create([
+                'user_id'=>$memo->from_memo,
+                'memo_id'=>$memo->id,
+                'credit'=>$total_memo,
+                'branch_id'=>$request->input('branch_id'),
+                'category_id'=>$request->input('category_id'),
+                'department_id'=>$memo->department_id,
+                'memo_finish'=>false,
+            ]);
+        }
 
         return redirect('/memo');
     }
@@ -324,6 +486,7 @@ class MemoController extends Controller
                     ->where('active', true)
                     ->lists('name','id')
                     ->all();
+
         $leasing = LeasingGroup::lists('name','name')->all();
 
         // get user next approval
@@ -345,8 +508,14 @@ class MemoController extends Controller
                 ->where('user_approval', auth()->user()->position_id)
                 ->where('budget', true)
                 ->get();
+        $memo_prepayment = '';
+        if ($memo->prepayment_no) {
+            $memo_prepayment = Memo::where('prepayment_no', $memo->no_memo)->first();
 
-        return view('memo.show', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app'));
+            $remaining = $memo_prepayment->prepayment_total - $memo->total_memo;
+        }
+
+        return view('memo.show', compact('memo','memo_sent','company','branch','depts','position','category','supplier','leasing','user_app','memo_prepayment','remaining'));
     }
 
     /**
@@ -361,7 +530,13 @@ class MemoController extends Controller
 
         $memo = Memo::where('token', $id)->first();
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
-
+        
+        if ($memo->prepayment_no) {
+            $memo_prepayment = Memo::where('no_memo', $memo->prepayment_no)->first();
+        }else{
+            $memo_prepayment = '';
+        }
+        
         $url = Req::fullUrl();
         $user_app = [''=>'---'];
         $budget=0;
@@ -478,7 +653,7 @@ class MemoController extends Controller
             }   
         }
 
-        return view('memo.edit', compact('memo','memo_sent','url','company','company_id','branch','branch_id','dept_id_user','dept_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo'));
+        return view('memo.edit', compact('memo','memo_sent','url','company','company_id','branch','branch_id','dept_id_user','dept_user','depts','dept_id','position','category','category_id','user_app','budget','supplier','leasing','approval_path','saldo','memo_prepayment'));
     }
 
     /**
@@ -492,27 +667,79 @@ class MemoController extends Controller
     {
         $this->authorize('memo.edit');
 
-        $validator = Validator::make($request->all(), Memo::$rules);
+        $validator = Validator::make($request->all(), [
+            'memo_no' => 'required',
+            'subject_memo'=>'required',
+            'approval_memo'=>'required',
+            'to_memo'=>'required',
+            'category_id'=>'required',
+            'department_id_approval'=>'required',
+            'department_id'=>'required',
+        ]);
 
         if ($validator->fails()) {
             $messages = $validator->messages();
-            return redirect()->back()->withErrors($validator);
+            return redirect()
+                        ->back()
+                        ->withErrors($validator)
+                        ->withInput($request->except(['date_detail','id_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
         }
 
-        if ($request->input('budget')) {
-            $getBudget = intval(str_replace(',','',$request->input('budget')));
-            $getTotal = intval(str_replace(',','',$request->input('all_total_detail')));
+        $memoPrepayment = Memo::where('no_memo', $request->prepayment_no)->first();
 
-            if ($getTotal > $getBudget) {
-                return redirect()->back()->withErrors(['budget'=>'Your budget get to the limit']);
+        if ($memoPrepayment) {
+            if ($memoPrepayment->prepayment_no != null) {
+                return redirect()
+                ->back()
+                ->withErrors(['no_memo'=>'prepayment has been created'])
+                ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }
+            
+            $total_memo_check = 0;
+            foreach($request->input('date_detail') as $key=>$val)
+            {
+                $total_memo_check = $total_memo_check + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
+            }
+            
+            $transaction = $memoPrepayment->prepayment_total - $total_memo_check;
+            
+            if ($transaction < 0) {
+                return redirect()
+                ->back()
+                ->withErrors(['prepayment_total'=>'Check your budget prepayment'])
+                ->withInput($request->except(['date_detail','id_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }
+        }else{
+            if ($request->input('budget')) {
+                $getBudget = intval(str_replace(',','',$request->input('budget')));
+                $getTotal = intval(str_replace(',','',$request->input('all_total_detail')));
+
+                if ($getTotal > $getBudget) {
+                    return redirect()
+                    ->back()
+                    ->withErrors(['budget'=>'Your budget get to the limit'])
+                    ->withInput($request->except(['date_detail','id_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+                }
             }
         }
 
         $memo = Memo::where('token',$id)->first();
-        $memo->update($request->all());
-
+        $memo->category_id = $request->category_id;
+        $memo->to_memo = $request->input('to_memo');
+        $memo->from_memo = auth()->user()->id;
+        $memo->approval_memo = $request->approval_memo;
+        $memo->subject_memo = $request->subject_memo;
+        // 'last_approval_memo' => $request->,
+        // 'last_revise_memo',
+        $memo->notes_memo = $request->notes_memo;
+        $memo->branch_id = $request->branch_id;
         $memo->status_memo = 'ON PROCESS (REVISE)';
-        $memo->total_memo = intval(str_replace(',','',$request->input('all_total_detail')));
+        $memo->supplier_id = $request->supplier_id;
+        $memo->company_id = $request->company_id;
+        $memo->department_id = $request->input('department_id');
+        $memo->token = md5(uniqid($memo->no_memo, true));
+        $memo->supplier_type = $request->supplier_type;
+        // $memo->prepayment_no = $memoPrepayment->no_memo;
         $memo->save();
 
         
@@ -528,7 +755,7 @@ class MemoController extends Controller
 
         $memoSent->update($request->all());
 
-
+        $total_memo = 0;
         if (empty($request->input('id_detail'))) {
             $detail = [];
             foreach($request->input('date_detail') as $key=>$val)
@@ -541,6 +768,7 @@ class MemoController extends Controller
                     'qty'=>$request->input('qty')[$key],
                     'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
                 ];
+                $total_memo = $total_memo + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
                 if($val !='')
                 {
                     MemoDetail::create($detail);
@@ -566,8 +794,16 @@ class MemoController extends Controller
                     $memoDetail->date = $request->input('date_detail')[$key];
                     $memoDetail->save();
                 }
+                $total_memo = $total_memo + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
             }
         }
+
+        // save all memo
+        $memo->total_memo = $total_memo;
+        $memo->save();
+
+        // $memoPrepayment->prepayment_no = $memo->no_memo;
+        // $memoPrepayment->save();
 
         if (!empty($request->input('id_leasing'))) {
             foreach ($request->input('id_leasing') as $key => $value) {
@@ -588,17 +824,110 @@ class MemoController extends Controller
             }
         }
 
-        MemoTransaction::create([
-            'user_id'=>$memo->from_memo,
-            'memo_id'=>$memo->id,
-            'credit'=>$memo->total_memo,
-            'branch_id'=>$request->input('branch_id'),
-            'category_id'=>$request->input('category_id'),
-            'department_id'=>$memo->department_id,
-            'memo_finish'=>false,
-        ]);
+        // MemoTransaction::create([
+        //     'user_id'=>$memo->from_memo,
+        //     'memo_id'=>$memo->id,
+        //     'credit'=>$memo->total_memo,
+        //     'branch_id'=>$request->input('branch_id'),
+        //     'category_id'=>$request->input('category_id'),
+        //     'department_id'=>$memo->department_id,
+        //     'memo_finish'=>false,
+        // ]);
 
-        return redirect('/memo');
+        if ($memoPrepayment) {
+            $transaction = $memoPrepayment->prepayment_total - $total_memo;
+            if ($transaction < 0) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['prepayment_total'=>'Check your budget prepayment'])
+                    ->withInput($request->except(['date_detail','description','qty','sub_total_memo','subtotal','group_leasing','sub_total_finance','notes','total','notes_memo']));
+            }elseif ($transaction > 0) {
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$transaction,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Bank In'
+                ]);
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$total_memo,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Biaya'
+                ]);
+                if ($request->input('budget')) {
+                    MemoTransaction::create([
+                        'user_id'=>$memo->from_memo,
+                        'memo_id'=>$memo->id,
+                        'credit'=>$total_memo,
+                        'branch_id'=>$request->input('branch_id'),
+                        'category_id'=>$request->input('category_id'),
+                        'department_id'=>$memo->department_id,
+                        'memo_finish'=>false,
+                        'notes'=>'Piutang'
+                    ]);
+                }else{
+                    MemoTransaction::create([
+                        'user_id'=>$memo->from_memo,
+                        'memo_id'=>$memo->id,
+                        'credit'=>$memoPrepayment->prepayment_total,
+                        'branch_id'=>$request->input('branch_id'),
+                        'category_id'=>$request->input('category_id'),
+                        'department_id'=>$memo->department_id,
+                        'memo_finish'=>false,
+                        'notes'=>'Piutang'
+                    ]);
+                }
+            }else{
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'debet'=>$memoPrepayment->prepayment_total,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Piutang'
+                ]);
+                MemoTransaction::create([
+                    'user_id'=>$memo->from_memo,
+                    'memo_id'=>$memo->id,
+                    'credit'=>$total_memo,
+                    'branch_id'=>$request->input('branch_id'),
+                    'category_id'=>$request->input('category_id'),
+                    'department_id'=>$memo->department_id,
+                    'memo_finish'=>false,
+                    'notes'=>'Biaya'
+                ]);
+            }
+        }else{
+            MemoTransaction::create([
+                'user_id'=>$memo->from_memo,
+                'memo_id'=>$memo->id,
+                'debet'=>$total_memo,
+                'branch_id'=>$request->input('branch_id'),
+                'category_id'=>$request->input('category_id'),
+                'department_id'=>$memo->department_id,
+                'memo_finish'=>false,
+            ]);
+            MemoTransaction::create([
+                'user_id'=>$memo->from_memo,
+                'memo_id'=>$memo->id,
+                'credit'=>$total_memo,
+                'branch_id'=>$request->input('branch_id'),
+                'category_id'=>$request->input('category_id'),
+                'department_id'=>$memo->department_id,
+                'memo_finish'=>false,
+            ]);
+        }
+        return redirect('/memo')->with('success', 'Successfully Revise Memo');
     }
 
     /**

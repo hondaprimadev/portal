@@ -15,6 +15,12 @@
   <div class="box-body">
     <div class="col-md-6">
       <div class="form-group">
+        {!! Form::label('from', 'From',['class'=>'col-sm-2 control-label']) !!}  
+        <div class="col-sm-10">
+          {!! Form::text('from_memo', $memo->userFrom->name, ['class'=> 'form-control', 'disabled'=>'disabled']) !!}
+        </div>
+      </div>
+      <div class="form-group">
         {!! Form::label('date', 'Date',['class'=>'col-sm-2 control-label']) !!}  
         <div class="col-sm-10">
           {!! Form::text('created_at', date('d F Y'), ['class'=> 'form-control', 'disabled'=>'disabled']) !!}
@@ -67,7 +73,7 @@
           {!! Form::select('category_id', $category,null,['class'=> 'form-control']) !!}
         </div>
       </div>
-
+      @if ($stat != 'show')
       <div class="form-group">
         {!! Form::label('to_memo', 'Approval', ['class'=>'col-sm-2 control-label']) !!}
         <div class="col-sm-10">
@@ -75,6 +81,7 @@
           {{-- {!! Form::hidden('approval_memo', ) !!} --}}
         </div>
       </div>
+      @endif
       
       {{-- @if ($budget)
       <div class="form-group">
@@ -84,7 +91,46 @@
         </div>
       </div>
       @endif --}}
-      
+    </div>
+
+    <div class="col-md-6">
+      @if ($memo->prepayment_no)
+        <div class="form-group has-feedback{{ $errors->has('prepayment_no') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_no', 'Prepayment No', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_no',$memo_prepayment->no_memo,['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_no'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_no') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+
+        <div class="form-group has-feedback{{ $errors->has('prepayment_total') ? ' has-error' : '' }}">
+          {!! Form::label('prepayment_total', 'Prepayment Total', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('prepayment_total',number_format($memo_prepayment->prepayment_total),['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('prepayment_total'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('prepayment_total') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+
+        <div class="form-group has-feedback{{ $errors->has('remaining') ? ' has-error' : '' }}">
+          {!! Form::label('remaining', 'Remaining Total', ['class'=>'col-sm-2 control-label']) !!}
+          <div class="col-sm-10">
+            {!! Form::text('remaining',number_format($remaining),['class'=> 'form-control','readonly']) !!}
+            @if ($errors->has('remaining'))
+                  <span class="help-block">
+                      <strong>{{ $errors->first('remaining') }}</strong>
+                  </span>
+            @endif
+          </div>
+        </div>
+      @endif
     </div>
   </div>
 </div>
@@ -99,34 +145,11 @@
     </div>
   </div>
   <div class="box-body">
-    <table class="table table-striped table-color detail-table" id="tableDetail">
-      <thead>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Qty</th>
-        <th>Amount</th>
-        <th>Sub Total</th>
-      </thead>
-      <tbody>
-        <?php $sum = 0;?>
-        @foreach ($memo->details as $me)
-          <tr>
-            <td>{{ date('d/M/Y', strtotime($me->date)) }}</td>
-            <td>{{ $me->description }}</td>
-            <td>{{ $me->qty }}</td>
-            <td>{{ number_format($me->total) }}</td>
-            <td>{{ number_format($me->qty * $me->total) }}</td>
-            <?php $sum += $me->qty * $me->total;?>
-          </tr>
-        @endforeach
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4">Total</td>
-          <td style="text-align: left;">{{ number_format($sum) }}</td>
-        </tr>
-      </tfoot>
-    </table>
+    @if ($memo->prepayment_total > 0)
+      @include('memo.inbox._detailPrepaymentTable')
+    @else
+      @include('memo.inbox._detailDefaultTable')
+    @endif
   </div>
 </div>
 

@@ -15,10 +15,6 @@
     updateQueryStringParam('d', this.value);
   });
 
-  $('#memo_finish').on('change', function(){
-    updateQueryStringParam('f', this.value);
-  });
-
 	$('#reportrange').daterangepicker({
       buttonClasses: ['btn', 'btn-sm'],
       applyClass: 'btn-red',

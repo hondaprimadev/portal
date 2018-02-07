@@ -137,6 +137,9 @@ Route::group([
 	Route::get('show/{id}', ['as'=>'memo.memo.show', 'uses'=>'MemoController@show']);
 	Route::get('administrator', ['as'=>'memo.memo.administrator', 'uses'=>'MemoController@administrator']);
 
+	Route::get('prepayment/revise/{id}', ['as'=>'memo.prepayment.revise.edit','uses'=>'MemoPrepaymentController@edit']);
+	Route::post('prepayment/revise/{id}', ['as'=>'memo.prepayment.revise.update','uses'=>'MemoPrepaymentController@update']);
+
 	Route::resource('/', 'MemoController');
 	Route::resource('category', 'MemoCategoryController');
 	Route::resource('approval', 'MemoApprovalController');
@@ -170,4 +173,7 @@ Route::group(['prefix' => 'api'], function()
     Route::resource('authenticate', 'Auth\AuthenticateJWTController', ['only' => ['index']]);
     Route::post('authenticate', 'Auth\AuthenticateJWTController@authenticate');
     Route::get('authenticate/user', 'Auth\AuthenticateJWTController@getAuthenticatedUser');
+
+    Route::get('memo/inbox/count/{id}', ['as'=>'api.memo.inbox.count', 'uses'=>'Api\MemoController@InboxCount']);
+    Route::get('memo/inbox/{id}', ['as'=>'api.memo.inbox.index', 'uses'=>'Api\MemoController@InboxIndex']);
 });
