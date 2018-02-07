@@ -20,8 +20,10 @@ class MemoApproveMiddleware
     {
         $id = $request->route()->parameter('process');
         
-        $memo = Memo::find($id);
+        $memo = Memo::where('token',$id)->first();
+
         $roles = Auth::user()->roles()->first()->name;
+
         if ($roles == 'super') {
             return $next($request);
         }else{
