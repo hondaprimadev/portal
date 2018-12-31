@@ -56,9 +56,9 @@ class MemoReportController extends Controller
     public function getPrint($id)
     {
     	$memo = Memo::where('token',$id)->first();
-
+	
     	$mc = MemoCategory::where('id', $memo->category_id)->first();
-
+	
         if ($memo->prepayment_total > 0){
             $pdf = PDF::loadView('memo.report.prepayment', compact('memo','mc'));
         }else{

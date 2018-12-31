@@ -117,7 +117,7 @@
 		</tr>
 	</table>
 	<br>
-
+	
 	<h4>Data Supplier</h4>
 	<hr>
 		<table class="table">
@@ -143,6 +143,7 @@
             <td>{{ $memo->supplierUser->npwp }}</td>
           </tr>
         @else
+		@if($memo->supplier)
           <tr>
             <td><b>Name</b></td>
             <td>{{ $memo->supplier->account_name }}</td>
@@ -163,6 +164,7 @@
             <td><b>NPWP</b></td>
             <td>{{ $memo->supplier->npwp }}</td>
           </tr>
+		@endif
         @endif
       	</table>
 
