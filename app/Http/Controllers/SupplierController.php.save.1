@@ -64,33 +64,13 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $this->authorize('supplier.create');
-	
-	$supp = new Supplier();
-	$supp->no_supplier = $supp->OfMaxno($request->branch_id, $request->category_id);
-	$supp->branch_id = $request->branch_id;
-	$supp->category_id = $request->category_id;
-	$supp->name = $request->name;
-	$supp->npwp = $request->npwp;
-	$supp->pkp = $request->pkp;
-	$supp->address = $request->address;
-	$supp->business_field = $request->business_field;
-	$supp->phone = $request->phone;
-	$supp->fax = $request->fax;
-	$supp->name_pic = $request->name_pic;
-	$supp->phone_pic = $request->phone_pic;
-	$supp->account_number = $request->account_number;
-	$supp->account_name = $request->account_name;
-	$supp->bank_id = $request->bank_id;
-	$supp->bank_branch = $request->bank_branch;
-	$supp->active = true;
-	$supp->save();
 
-/*        $supp = Supplier::create($request->all());
+        $supp = Supplier::create($request->all());
 
-        $supp->no_supplier = $supp->OfMaxno($request->input('branch_id'), $request->input('category_id'));
+        $supp->no_supplier = $supp->ofMaxno($request->input('branch_id'), $request->input('category_id'));
         $supp->active = true;
-        $supp->save();
-*/
+//        $supp->save();
+	return $supp;
 
         session()->flash('flash_message', 'Your Supplier has been created!');
 
