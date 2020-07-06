@@ -264,6 +264,7 @@
 	function getSupplierId(s_id, t_id) {
 		var tokenId = $('input[name=_token]').val();
 		if(s_id > 0){
+			console.log('{{ route('memo.supplier.get') }}?id='+s_id+'&type='+t_id)
 			$.ajax({
 				url: '{{ route('memo.supplier.get') }}?id='+s_id+'&type='+t_id,
 				type: 'GET',

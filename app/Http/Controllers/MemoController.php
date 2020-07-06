@@ -1062,16 +1062,16 @@ class MemoController extends Controller
                     ->lists('name','id')
                     ->all();
         }else{
-            if ($branch_id=='100') {
+//            if ($branch_id=='100') {
                 $supp = User::where('job_status', 'Active')
                             ->lists('name', 'id')
                             ->all();
-            }else{
-                $supp = User::where('branch_id', $branch_id)
-                            ->where('job_status', 'Active')
-                            ->lists('name', 'id')
-                            ->all();
-            }
+//            }else{
+//                $supp = User::where('branch_id', $branch_id)
+//                            ->where('job_status', 'Active')
+//                            ->lists('name', 'id')
+//                            ->all();
+//            }
         }   
         return $supp;
     }
