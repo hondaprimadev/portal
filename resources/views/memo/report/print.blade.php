@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>{{ $memo->no_memo }}</title>
 	<style type="text/css">
@@ -8,6 +7,7 @@
     		include(public_path().'/admin-lte/bootstrap/css/bootstrap.min.css');
     		include(public_path().'/admin-lte/dist/css/font-awesome.min.css');
     	?>
+	@page { margin: 0.5cm; }
     	.table {
 		    border-bottom:1px !important;
 		}
@@ -16,13 +16,21 @@
 		    padding:1px;
 		}
 
-		.table-color tr th{
+	    .table-color tr th{
 	      	background: #c0392b; /* fallback for old browsers */
 	      	color: white;
-	    }
+	    }	    
 	    .table-color .tfooter td{
 	      	background: #ddd;
 	      	font-weight: bold;
+	    }
+	    .table-color-green tr th {
+		background: green;
+		color: white;
+	    }
+	    .table-color-green .tfooter td {
+		background: #ddd;
+		font-weight: bold;
 	    }
 	    .footer{
 	    	bottom: 0px
@@ -31,8 +39,7 @@
     		page-break-after: always;
 		}
 	</style>
-</head>
-<body>
+</head><body>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-6">
@@ -86,9 +93,23 @@
 			<td><b>Request Budget</b></td>
 			<td>{{ number_format($memo->total_memo) }}</td>
 		</tr>
+		<tr>
+			<td><b>Approve By</b></td>
+			<td>
+				<?php
+					$appr = $memo->sents()->where('status_memo', 'like', 'APPROVED BY%')->first();
+					$apprU = str_replace('APPROVED BY', '', $appr['status_memo']);
+				?>
+				{{  $apprU }}
+			</td>
+		</tr>
 	</table>
-
+	
+	@if ($memo->department_id == 'D7')
+	<table class="table table-striped table-color-green">
+	@else
 	<table class="table table-striped table-color">
+	@endif
 		<tr>	
 			<th>Date</th>
 			<th>Description</th>
@@ -145,7 +166,11 @@
         @else
 		@if($memo->supplier)
           <tr>
-            <td><b>Name</b></td>
+		<td><b>Name</b></td>
+		<td>{{ $memo->supplier->name }}</td>
+	  </tr>
+          <tr>
+            <td><b>Account Name</b></td>
             <td>{{ $memo->supplier->account_name }}</td>
           </tr>
           <tr>
@@ -154,7 +179,11 @@
           </tr>
           <tr>
             <td><b>Bank</b></td>
-            <td>{{ $memo->supplier->bank->name }}</td>
+            <td>
+		@if($memo->supplier->bank)
+		{{ $memo->supplier->bank->name }}
+		@endif
+	    </td>
           </tr>
           <tr>
             <td><b>Branch</b></td>
@@ -181,5 +210,4 @@
       	</table>
 	@endif --}}
 
-</body>
-</html>
+</body></html>

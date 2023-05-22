@@ -1,0 +1,207 @@
+# PRIMA FRONT
+server {
+        listen 80;
+        server_name localhost;
+
+        charset utf-8;
+        root /var/www/prima/retail_front/dist;
+        index index.html index.htm;
+
+        location / {
+                root /var/www/prima/retail_front/dist;
+                try_files $uri $uri/ /index.html;
+        }
+        error_log /var/log/nginx/vue-prima-error.log;
+        access_log /var/log/nginx/vue-prima-access.log;
+}
+server {
+        listen 81;
+        server_name app.hondaprima.co.id;
+
+        charset utf-8;
+        root /var/www/prima/retail_front/dist;
+        index index.html index.htm;
+
+        location / {
+                root /var/www/prima/retail_front/dist;
+                try_files $uri $uri/ /index.html;
+        }
+        error_log /var/log/nginx/vue-prima2-error.log;
+        access_log /var/log/nginx/vue-prima2-access.log;
+}
+server {
+        listen 7070;
+        server_name app.hondaprima.co.id;
+
+        charset utf-8;
+        root /var/www/trial/retail_front/dist;
+        index index.html index.htm;
+
+        location / {
+                root /var/www/trial/retail_front/dist;
+                try_files $uri $uri/ /index.html;
+        }
+        error_log /var/log/nginx/vue-trial-error.log;
+        access_log /var/log/nginx/vue-trial-access.log;
+}
+# PUJA FRONT
+server {
+        listen 9090;
+        server_name pujapp.hondaprima.co.id;
+
+        charset utf-8;
+        root /var/www/puja/retail_front/dist;
+        index index.html index.htm;
+
+        location / {
+                root /var/www/puja/retail_front/dist;
+                try_files $uri $uri/ /index.html;
+        }
+        error_log /var/log/nginx/vue-puja-error.log;
+        access_log /var/log/nginx/vue-puja-access.log;
+}
+#PRIMA MAIN BACKEND
+server {
+        listen 8000;
+        server_name localhost;
+
+        root /var/www/prima/retail-sync-astra/public;
+        index index.php index.html index.htm;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+                fastcgi_read_timeout 100000;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        access_log /var/log/nginx/lumen-prima-access.log;
+        error_log /var/log/nginx/lumen-prima-error.log;
+}
+# TRIAL BACKEND
+server {
+        listen 7000;
+        server_name localhost;
+
+        root /var/www/trial/retail-sync-astra/public;
+        index index.php index.html index.htm;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+                fastcgi_read_timeout 100000;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        access_log /var/log/nginx/lumen-trial-access.log;
+        error_log /var/log/nginx/lumen-trial-error.log;
+}
+# PUJA MAIN BACKEND
+server {
+        listen 9000;
+        server_name localhost;
+
+        root /var/www/puja/retail-sync-astra/public;
+        index index.php index.html index.htm;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+                fastcgi_read_timeout 100000;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        access_log /var/log/nginx/lumen-puja-access.log;
+        error_log /var/log/nginx/lumen-puja-error.log;
+}
+#PRIMA SECOND BACKEND
+server {
+        listen 8888;
+        server_name localhost;
+
+        root /var/www/prima/retail_backend/public;
+        index index.php index.html index.htm;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+                fastcgi_read_timeout 100000;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        access_log /var/log/nginx/laravel-prima-access.log;
+        error_log /var/log/nginx/laravel-prima-access.log;
+}
+#PUJA SECOND BACKEND
+server {
+        listen 9999;
+        server_name localhost;
+
+        root /var/www/puja/retail_backend/public;
+        index index.php index.html index.htm;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+                fastcgi_read_timeout 100000;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        access_log /var/log/nginx/laravel-puja-access.log;
+        error_log /var/log/nginx/laravel-puja-access.log;
+}

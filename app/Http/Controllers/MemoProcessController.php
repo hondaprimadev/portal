@@ -140,9 +140,9 @@ class MemoProcessController extends Controller
             }
 
             $memo = Memo::find($id);
-            $memo_prepayment = Memo::where('no_memo', $memo->prepayment_no)->first();
-            $memo_prepayment->prepayment_no = '';
-            $memo_prepayment->save();
+            // $memo_prepayment = Memo::where('no_memo', $memo->prepayment_no)->first();
+            // $memo_prepayment->prepayment_no = '';
+            // $memo_prepayment->save();
 
             $memo->prepayment_no = null;
             $memo->save();

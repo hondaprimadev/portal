@@ -3,7 +3,7 @@
 @section('content-header')
 	<section class="content-header">
     <h1>
-      <i class="fa fa-newspaper-o"></i> Memo
+      <i class="fa fa-newspaper-o"></i> Memos
     </h1>
     <ol class="breadcrumb">
       <li><a href="/memo">Memo</a></li>

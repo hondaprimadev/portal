@@ -321,7 +321,7 @@ class MemoController extends Controller
                 'qty'=>$request->input('qty')[$key],
                 'total'=>intval(str_replace(',','',$request->input('sub_total_memo')[$key])),
             ];
-            $total_memo = $total_memo + intval(str_replace(',','',$request->input('sub_total_memo')[$key]));
+            $total_memo = $total_memo + ($request->input('qty')[$key] * intval(str_replace(',','',$request->input('sub_total_memo')[$key])));
             if($val !='')
             {
                 MemoDetail::create($detail);
@@ -469,7 +469,7 @@ class MemoController extends Controller
         $this->authorize('memo.open');
 
         $memo = Memo::where('token', $id)->first();
-
+	
         $memo_sent = MemoSent::where('memo_id', $memo->id)->get();
 
         $company = Company::where('id',$memo->company_id)->lists('name', 'id')->all();
@@ -486,7 +486,7 @@ class MemoController extends Controller
                     ->where('active', true)
                     ->lists('name','id')
                     ->all();
-
+	
         $leasing = LeasingGroup::lists('name','name')->all();
 
         // get user next approval

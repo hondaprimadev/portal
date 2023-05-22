@@ -49,13 +49,19 @@ class MemoInboxController extends Controller
             $begin = new \DateTime($begin);
             $end = new \DateTime($end);
         }
-
-        $memos = Memo::with('userFrom.pictures')
-                ->where('to_memo', auth()->user()->id)
-                ->where('status_memo','NOT LIKE','%REVISE BY%')
-                ->orderBy('updated_at', 'desc')
-                ->get();
-
+	if (auth()->user()->position_id == 'H1'){
+		$memos =  Memo::with('userFrom.pictures')
+				->where('status_memo', 'NOT LIKE', '%REVISE BY%')
+				->whereIn('to_memo', [1000, 1001])
+				->orderBy('updated_at', 'desc')
+				->get();
+	}else{
+		$memos = Memo::with('userFrom.pictures')
+        	        ->where('to_memo', auth()->user()->id)
+                	->where('status_memo','NOT LIKE','%REVISE BY%')
+	                ->orderBy('updated_at', 'desc')
+        	        ->get();
+	}
         return view('memo.inbox.index', compact('memos', 'begin','end'));
     }
 

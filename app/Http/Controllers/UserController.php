@@ -52,6 +52,7 @@ class UserController extends Controller
             'name'=> $request->input('name'),
             'email' => $request->input('email'),
             'branch_id'=>$request->input('branch_id'),
+	    'company_id' => 1,
             'password'=>bcrypt($request->input('password')),
             'is_user'=>true,
         ]);

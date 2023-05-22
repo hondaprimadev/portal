@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class MemoCategory extends Model
 {
     protected $fillable = ['name','department_id','account_id'];
+    
+    public function memos()
+    {
+	return $this->hasMany('App\Memo', 'category_id', 'id');
+    }
 
     public function journal()
     {

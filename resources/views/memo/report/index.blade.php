@@ -88,8 +88,15 @@
                 </td>
                 <td>
                 @if ($memo->from_memo != 0)
-                  {{ $memo->userFrom->name }} | {{ $memo->from_memo }}
-                @endif
+                   {{ $memo->userFrom->name }} | {{ $memo->from_memo }}
+                 @endif
+		{{-- @php
+			$fromMemo = null;
+			if ($memo->from_memo != 0) {
+				$fromMemo = $memo->userFrom ? $memo->userFrom->name :  null;
+			}
+			echo $fromMemo | $memo->from_memo;
+		@endphp --}}
                 </td>
                 <td>{{ $memo->category->name }}</td>
                 <td>{{ $memo->branch->name }}</td>

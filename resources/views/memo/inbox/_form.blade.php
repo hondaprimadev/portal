@@ -214,25 +214,37 @@
             <td>{{ $memo->supplierUser->npwp }}</td>
           </tr>
         @else
+	  <tr>
+	    <td><b>Name:</b></td>
+	    <td>{{ $memo->supplier ? $memo->supplier->name : null }}</td>
+	  </td>
           <tr>
-            <td><b>Name</b></td>
-            <td>{{ $memo->supplier->account_name }}</td>
+            <td><b>Account Name</b></td>
+            <td>
+		{{ $memo->supplier ? $memo->supplier->account_name : null }}
+	    </td>
           </tr>
           <tr>
             <td><b>Account No.</b></td>
-            <td>{{ $memo->supplier->account_number }}</td>
+            <td>{{ $memo->supplier ? $memo->supplier->account_number : null }}</td>
           </tr>
           <tr>
             <td><b>Bank</b></td>
-            <td>{{ $memo->supplier->bank->name }}</td>
+            <td>
+		@if ($memo->supplier->bank)
+			{{ $memo->supplier->bank->name }}
+		@endif
+	    </td>
           </tr>
           <tr>
             <td><b>Branch</b></td>
-            <td>{{ $memo->supplier->bank_branch }}</td>
+            <td>
+		{{ $memo->supplier ? $memo->supplier->bank_branch : null }}
+	    </td>
           </tr>
           <tr>
             <td><b>NPWP</b></td>
-            <td>{{ $memo->supplier->npwp }}</td>
+            <td>{{ $memo->supplier ? $memo->supplier->npwp : null }}</td>
           </tr>
         @endif
       @endif
@@ -296,11 +308,16 @@
 
   <div class="box-body">
     <div class="col-md-12">
+      <?php
+	$fromMemo = null;
+	$fromName = null;
+      ?>
       @foreach ($memo_sent as $key => $ms)
         @if ($key == 0)
           <div class="callout callout-success col-md-3">
-            <h5>{{ $ms->from_memo }} | {{ $ms->userFrom->name }}</h5>
+            <h5>{{ $ms->from_memo }} | {{ $ms->userFrom ? $ms->userFrom->name : null }}</h5>
             <p>{{ $ms->notes_memo }}</p>
+	   <?php $fromMemo = $ms->from_memo; $fromName = $ms->userFrom ? $ms->userFrom->name : null; ?>
           </div>
         @else
           @if ($ms->last_approval_memo != 0)
@@ -316,6 +333,11 @@
                 {{ $ms->last_revise_memo }} | {{ App\User::where('id', $ms->last_revise_memo)->first()->name }}
               </h5>
               <p>{{ $ms->notes_memo }}</p>
+            </div>
+	  @elseif ($ms->last_revise_memo == "" || $ms->last_approve_memo == "")
+	    <div class="callout callout-success col-md-3">
+		<h5>{{ $fromMemo }} | {{ $fromName }}</h5>
+                <p>{{ $ms->notes_memo }}</p>
             </div>
           @endif
         @endif

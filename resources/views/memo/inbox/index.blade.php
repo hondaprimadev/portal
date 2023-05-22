@@ -136,6 +136,12 @@
 
 @section('scripts')
   <script type="text/javascript">
+    var tableInbox = $("#tableInbox").DataTable({
+	"sDom": 'rt',
+      	"scrollY": "50vh",
+	"scrollCollapse": true,
+	"paging": false
+    });
     function ApproveMemo() {
       if ($('.checkin').is(':checked')) 
       {
